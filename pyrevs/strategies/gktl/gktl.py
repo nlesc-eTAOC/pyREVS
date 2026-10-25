@@ -334,11 +334,11 @@ class GKTL(BaseSamplingStrategy):
     def _update_weights(self, database: Database) -> None:
         """Set the estimator weight of each active trajectory in the ensemble."""
         weights = self._req_db_ext().clone_weights()
-        pool_db = database.get_pool_db()
         for i, t in enumerate(database.traj_list()):
             t.set_weight(float(weights[i]))
-            if pool_db:
-                pool_db.update_trajectory_weight(t.id(), float(weights[i]))
+        pool_db = database.get_pool_db()
+        if pool_db:
+            pool_db.update_trajectory_weights({t.id(): t.weight() for t in database.traj_list()})
 
     @staticmethod
     def _plot_scores(database: Database, n: int) -> None:
