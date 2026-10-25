@@ -42,7 +42,7 @@ class SystemConfig:
     def __load__(cls, cfg: Config) -> SystemConfig:
         sampler = cfg.load(SamplerConfig)
 
-        strategy_cls: type[AMSConfig | MCConfig]
+        strategy_cls: type[AMSConfig | MCConfig | GKTLConfig]
 
         if sampler.strategy == "ams":
             strategy_cls = AMSConfig
