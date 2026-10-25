@@ -633,6 +633,10 @@ class Database(Generic[T_Noise, T_State]):
         """
         return len(self._archived_trajs_db)
 
+    def archive_discarded(self) -> bool:
+        """Return True if discarded trajectories should be archived."""
+        return self._database_cfg.archive_discarded
+
     def update_traj_list(self, a_traj_list: list[Trajectory[T_Noise, T_State]]) -> None:
         """Overwrite the trajectory list.
 
