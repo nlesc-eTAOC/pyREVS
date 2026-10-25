@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from dataclasses import field
+from math import isfinite
 from pyrevs.core import MergePolicy
+
+GKTL_OBSERVABLES = ("integral", "increment")
 
 
 @dataclass(frozen=True)
@@ -34,6 +37,13 @@ class GKTLConfig:
             "doc": "Amplitude of the statistical bias.",
         },
     )
+    bias_observable: str = field(
+        default="integral",
+        metadata={
+            "doc": "Observable used to compute the clone weights over a resampling interval: "
+            "'integral' (time integral of the score) or 'increment' (change in score).",
+        },
+    )
     use_custom_termination: bool = field(
         default=False,
         metadata={
@@ -52,5 +62,13 @@ class GKTLConfig:
             raise ValueError(err_msg)
 
         if self.resampling_interval <= 0.0 or self.resampling_interval > self.end_time:
-            err_msg = " GKTLConfig.resampling_interval must be > 0 and < GKTLConfig.end_time"
+            err_msg = " GKTLConfig.resampling_interval must be > 0 and <= GKTLConfig.end_time"
+            raise ValueError(err_msg)
+
+        if not isfinite(self.k):
+            err_msg = " GKTLConfig.k must be finite"
+            raise ValueError(err_msg)
+
+        if self.bias_observable not in GKTL_OBSERVABLES:
+            err_msg = f" GKTLConfig.bias_observable must be one of {GKTL_OBSERVABLES}"
             raise ValueError(err_msg)
