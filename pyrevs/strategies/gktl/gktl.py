@@ -319,7 +319,8 @@ class GKTL(BaseSamplingStrategy):
             if p == j:
                 continue
             killed = database.get_traj(j)
-            database.archive_trajectory(killed)
+            if database.archive_discarded():
+                database.archive_trajectory(killed)
             clone = Trajectory.clone_from_trajectory(database.get_traj(p), killed, database.get_traj(p).weight())
             update_trajectory_in_sql(clone, pool_db, database.path())
             if database.to_disk():
