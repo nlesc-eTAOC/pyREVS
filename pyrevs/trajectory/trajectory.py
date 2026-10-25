@@ -209,6 +209,35 @@ class Trajectory(Generic[T_Noise, T_State]):
         self._ddb: DiagDB | None = None
         self._initialized_diags = False
 
+    def __getstate__(self) -> dict[str, Any]:
+        """Return the trajectory state for pickling.
+
+        The snapshots are stored column-wise, which is much faster
+        to pickle than a list of snapshot objects.
+        """
+        state = self.__dict__.copy()
+        snaps = state.pop("_snaps")
+        state["_snaps"] = (
+            [s.time for s in snaps],
+            [s.score for s in snaps],
+            [s.noise for s in snaps],
+            [s.state for s in snaps],
+        )
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore the trajectory from its pickled state.
+
+        Args:
+            state: the state returned by __getstate__
+        """
+        times, scores, noises, states = state.pop("_snaps")
+        self.__dict__.update(state)
+        self._snaps = [
+            Snapshot(time=t, score=s, noise=n, state=x)
+            for t, s, n, x in zip(times, scores, noises, states, strict=True)
+        ]
+
     def set_checkfile(self, path: Path) -> None:
         """Setter of the trajectory checkFile.
 
@@ -553,7 +582,8 @@ class Trajectory(Generic[T_Noise, T_State]):
             self._snaps.append(
                 Snapshot[T_Noise, T_State](
                     time=self._t_cur,
-                    score=score if score else self._fmodel.score(),
+                    # Cast to builtin float: numpy scalars are slow to pickle
+                    score=float(score if score is not None else self._fmodel.score()),
                     noise=self._fmodel.noise,
                     state=self._fmodel.get_current_state() if need_state else None,
                 ),
