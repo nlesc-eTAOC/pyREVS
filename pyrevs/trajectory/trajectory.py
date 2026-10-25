@@ -8,6 +8,7 @@ import shutil
 import time
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
+from dataclasses import replace
 from enum import Enum
 from math import isclose
 from pathlib import Path
@@ -48,6 +49,7 @@ class TrajectoryStateType(Enum):
         TERMINATED : trajectory has been terminated
         CONVERGED : trajectory has converged
     """
+
     UNINIT = 0
     ONGOING = 1
     INTERRUPTED = 2
@@ -311,27 +313,19 @@ class Trajectory(Generic[T_Noise, T_State]):
 
         # or from runtime arguments (end time, nstep_end)
         # (A previous call to advance with other arguments might have switched the boolean)
-        self._has_terminated = any(
-            c.should_terminate(self._fmodel, self) == TrajectoryStateType.TERMINATED for c in termination_criteria
-        ) or self._runtime_termination(end_time, nstep_end)
-
-        interrupt = False
+        # An interruption criterion already met (e.g. when resuming a run) prevents
+        # taking any step.
+        self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
 
         while not (self._has_terminated or self._has_converged or interrupt):
             # Do a single model step
             score = self._one_step()
 
-            # Check for termination/convergence
+            # Check for termination/convergence/interruption
             self._has_converged = self._fmodel.check_convergence(
                 self._step, self._t_cur, score, self._traj_cfg.targetscore
             )
-            self._has_terminated = any(
-                c.should_terminate(self._fmodel, self) == TrajectoryStateType.TERMINATED for c in termination_criteria
-            ) or self._runtime_termination(end_time, nstep_end)
-
-            interrupt = any(
-                c.should_terminate(self._fmodel, self) == TrajectoryStateType.INTERRUPTED for c in termination_criteria
-            )
+            self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
 
             # Handle diagnostics
             self._update_diagnostics()
@@ -392,6 +386,26 @@ class Trajectory(Generic[T_Noise, T_State]):
         pyrevs_stop file in the run folder.
         """
         return Path("./pyrevs_stop").exists()
+
+    def _check_criteria(
+        self, termination_criteria: list[TerminationCriterion], end_time: float, nstep_end: int
+    ) -> tuple[bool, bool]:
+        """Evaluate the termination criteria, each only once.
+
+        Args:
+            termination_criteria: a list of termination criterion
+            end_time: the end time of the advance
+            nstep_end: the number of steps to advance
+
+        Returns:
+            a tuple of bool: (should terminate, should interrupt)
+        """
+        if self._fmodel is None:
+            return self._runtime_termination(end_time, nstep_end), False
+        states = [c.should_terminate(self._fmodel, self) for c in termination_criteria]
+        terminate = TrajectoryStateType.TERMINATED in states or self._runtime_termination(end_time, nstep_end)
+        interrupt = TrajectoryStateType.INTERRUPTED in states
+        return terminate, interrupt
 
     def _runtime_termination(self, end_time: float, nstep_end: int) -> bool:
         """Returns True if the trajectory should terminate from the runtime arguments."""
@@ -685,6 +699,69 @@ class Trajectory(Generic[T_Noise, T_State]):
         return rest_traj
 
     @classmethod
+    def clone_from_trajectory(
+        cls,
+        from_traj: Trajectory[T_Noise, T_State],
+        rst_traj: Trajectory[T_Noise, T_State],
+        new_weight: float,
+    ) -> Trajectory:
+        """Create a new trajectory as a clone of an ancestor at its current time.
+
+        Unlike :meth:`branch_from_trajectory`, the entire history of the ancestor
+        is copied. If the last snapshot of the ancestor does not hold a model
+        state (sparse state), the noise needed to reconstruct the history from
+        the last available state is put in the backlog and replayed upon the
+        next call to advance.
+
+        The noise the ancestor has already drawn for its upcoming step is *not*
+        transferred: the clone draws fresh noise beyond the ancestor current time,
+        such that clones diverge from their ancestor.
+
+        Although the rst_traj is provided as an argument, it is
+        only used to set metadata of the cloned trajectory.
+
+        Args:
+            from_traj: an already existing trajectory to clone
+            rst_traj: the trajectory being replaced
+            new_weight: the weight of the clone trajectory
+        """
+        # Initialize the new trajectory object (handles path and ID logic)
+        rest_traj = cls._init_branched_trajectory(from_traj, rst_traj, new_weight)
+
+        # Return empty the empty trajectory immediately
+        if not from_traj._snaps:
+            return rest_traj
+
+        last_idx = len(from_traj._snaps) - 1
+        state_idx = from_traj.get_last_state_id()
+        if state_idx is None:
+            err_msg = f"Unable to clone {from_traj.idstr()}: no state available in the trajectory"
+            _logger.error(err_msg)
+            raise RuntimeError(err_msg)
+
+        # Everything up to the last state is a full snapshot
+        rest_traj._snaps = from_traj._snaps[: state_idx + 1]
+
+        # The noise from the last state up to (excluding) the last snapshot
+        # is needed to reconstruct the ancestor history
+        for k in range(state_idx, last_idx):
+            rest_traj.noise_backlog.append(from_traj._snaps[k].noise)
+        rest_traj.noise_backlog.reverse()
+
+        # Finalize branching
+        ancestor_workdir = from_traj.get_workdir()
+        cls._finalize_branch(from_traj.unique_id(), rst_traj.unique_id(), rest_traj, new_weight, ancestor_workdir)
+
+        # Without replay, the clone starts with freshly drawn noise: make the last
+        # snapshot consistent with it so that restoring from a checkfile replays the
+        # clone history, not the ancestor one
+        if state_idx == last_idx and rest_traj._fmodel:
+            last_snap = rest_traj._snaps[-1]
+            rest_traj._snaps[-1] = replace(last_snap, noise=rest_traj._fmodel.noise)
+
+        return rest_traj
+
+    @classmethod
     def _init_branched_trajectory(
         cls, from_traj: Trajectory[T_Noise, T_State], rst_traj: Trajectory[T_Noise, T_State], weight: float
     ) -> Trajectory[T_Noise, T_State]:
@@ -866,6 +943,10 @@ class Trajectory(Generic[T_Noise, T_State]):
             weight: the (new) trajectory weight in the ensemble
         """
         self._weight = weight
+
+    def weight(self) -> float:
+        """Return the trajectory weight in the ensemble."""
+        return self._weight
 
     def update_metadata(self) -> None:
         """Update trajectory score/ending metadata.
