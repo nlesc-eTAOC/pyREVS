@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 T_Noise = TypeVar("T_Noise")
 T_State = TypeVar("T_State")
 
+
 class TerminationCriterion(Protocol):
     """Termination criterion interface."""
 
@@ -21,7 +22,7 @@ class TerminationCriterion(Protocol):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> int:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate.
 
         Args:
@@ -53,11 +54,13 @@ class TimeTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> int:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         _ = model
-        if (isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
-                or trajectory.current_time() >= self._end_time):
+        if (
+            isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
+            or trajectory.current_time() >= self._end_time
+        ):
             return TrajectoryStateType.TERMINATED
         return TrajectoryStateType.ONGOING
 
@@ -81,11 +84,13 @@ class TimeInterruptionCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> int:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         _ = model
-        if (isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
-                or trajectory.current_time() >= self._end_time):
+        if (
+            isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
+            or trajectory.current_time() >= self._end_time
+        ):
             return TrajectoryStateType.INTERRUPTED
         return TrajectoryStateType.ONGOING
 
@@ -110,7 +115,7 @@ class LowScoreTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> int:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         _ = trajectory
         if model.score() <= self._score_threshold:
@@ -128,9 +133,8 @@ class ModelTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> int:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         if model.check_termination(trajectory.current_step(), trajectory.current_time()):
             return TrajectoryStateType.TERMINATED
         return TrajectoryStateType.ONGOING
-
