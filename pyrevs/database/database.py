@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 import copy
-import datetime
+import datetime as dt
 import importlib
 import logging
 import sys
@@ -94,7 +94,7 @@ class Database(Generic[T_Noise, T_State]):
         self._read_only = read_only
 
         # Metadata and immutable parameters
-        self._creation_date = datetime.datetime.now(tz=datetime.timezone.utc)
+        self._creation_date = dt.datetime.now(tz=dt.timezone.utc)
         self._version = version("pyrevs")
         self._name = "pyREVS_" + fmodel_t.name()
         self._strategy = "unknown"

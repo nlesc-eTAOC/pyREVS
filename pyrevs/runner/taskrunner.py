@@ -211,7 +211,7 @@ class AsIORunner(BaseRunner):
         """A synchronous wrapper to run_tasks."""
         if not self._loop:
             err_msg = "AsIORunner has not been initialized."
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         try:
             res = self._loop.run_until_complete(self.run_tasks())
@@ -286,7 +286,7 @@ class DaskRunner(BaseRunner):
             if self.slurm_config_file:
                 if not Path(self.slurm_config_file).exists():
                     err_msg = f"Specified slurm_config_file do not exists: {self.slurm_config_file}"
-                    _logger.exception(err_msg)
+                    _logger.error(err_msg)
                     raise FileNotFoundError(err_msg)
 
                 config_file = ntpath.basename(self.slurm_config_file)
@@ -323,7 +323,7 @@ class DaskRunner(BaseRunner):
 
                 if self.client.loop is None:
                     err_msg = "Dask client loop is None."
-                    _logger.exception(err_msg)
+                    _logger.error(err_msg)
                     raise RuntimeError(err_msg)
 
                 asyncio_loop = self.client.loop.asyncio_loop  # type: ignore[attr-defined]
@@ -341,7 +341,7 @@ class DaskRunner(BaseRunner):
 
         else:
             err_msg = f"Unknown [dask] backend: {backend}"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RunnerError(err_msg)
 
         # Setup the worker logging
@@ -356,7 +356,7 @@ class DaskRunner(BaseRunner):
         if hasattr(self, "local_worker") and self.local_worker:
             if self.client.loop is None:
                 err_msg = "Dask client loop is None."
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise RuntimeError(err_msg)
 
             asyncio_loop = self.client.loop.asyncio_loop  # type: ignore[attr-defined]
@@ -432,7 +432,7 @@ def make_runner(
 
     if runner_type not in runner_map:
         err_msg = f"Unknown runner type: {runner_type}"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise ValueError(err_msg)
 
     runner_cls = runner_map[runner_type]

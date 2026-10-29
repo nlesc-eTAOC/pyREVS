@@ -482,7 +482,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """
         if not self._fmodel:
             err_msg = f"Trajectory {self.idstr()} is frozen, without forward model. Advance() deactivated."
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         # Add the initial snapshot to the list
@@ -639,7 +639,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """Return a trajectory restored from an XML chkfile."""
         if not checkfile.exists():
             err_msg = f"Trajectory {checkfile} does not exist."
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise FileNotFoundError
 
         rest_traj: Trajectory[T_Noise, T_State] = Trajectory.init_from_metadata(
@@ -1071,7 +1071,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """Return the number of branching events."""
         if len(self._branching_history) > self.max_nbranch:
             err_msg = f"Branching history size exceeds maximum of {self.max_nbranch}!"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return len(self._branching_history)
 

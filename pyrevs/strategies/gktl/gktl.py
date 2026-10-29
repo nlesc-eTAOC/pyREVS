@@ -161,7 +161,7 @@ class GKTL(BaseSamplingStrategy):
     def _req_db_ext(self) -> GKTLDatabaseExtension:
         if self._db_ext is None:
             err_msg = "Database extension not initialized"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return self._db_ext
 
@@ -381,7 +381,7 @@ class GKTL(BaseSamplingStrategy):
         # Check that the database extension is initialized
         if self._db_ext is None:
             err_msg = "Database extension is not initialized ! Call initialize_database_schema() first"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         proba = self.compute_probability(database, plot_diags)

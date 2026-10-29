@@ -75,7 +75,7 @@ class AMSDatabaseExtension(StrategyDatabaseExtension):
     def _req_ams_db(self) -> AMSDB:
         if self._ams_db is None:
             err_msg = "AMSDB has not been initialized ! Call initialize()"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return self._ams_db
 
@@ -83,7 +83,7 @@ class AMSDatabaseExtension(StrategyDatabaseExtension):
         pool_db = self._tdb.get_pool_db()
         if pool_db is None:
             err_msg = "CoreDB has not been initialized ! Database is not ready"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return pool_db
 
@@ -174,7 +174,7 @@ class AMSDatabaseExtension(StrategyDatabaseExtension):
             self._req_ams_db().dump_file_json()
             err_msg = f"Attempting to add splitting iteration with splitting index {ksplit} \
                     incompatible with the last entry of the database {self.k_split()} !"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise ValueError(err_msg)
 
         # Check that the new min of maxes is larger than
@@ -216,7 +216,7 @@ class AMSDatabaseExtension(StrategyDatabaseExtension):
             self._req_ams_db().dump_file_json()
             err_msg = f"Attempting to update splitting iteration with splitting index {ksplit + bias} \
                     incompatible with the last entry of the database {self.k_split()} !"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise ValueError(err_msg)
 
         self._req_ams_db().update_splitting_data(
@@ -329,13 +329,13 @@ class AMSDatabaseExtension(StrategyDatabaseExtension):
                 f"Attempting to read splitting iteration {k_in} data"
                 f"larger than stored data {self._req_ams_db().get_iteration_count()}"
             )
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise ValueError(err_msg)
 
         # Check that archived trajectories are stored
         if self._tdb.archived_traj_list_len() == 0:
             err_msg = "Cannot reconstruct active set without stored archives !"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         # First get the location and indices of the trajectories

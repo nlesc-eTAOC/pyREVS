@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 import asyncio
-import datetime
+import datetime as dt
 import functools
 import logging
 import multiprocessing
@@ -117,7 +117,7 @@ def traj_advance_with_exception(
 def pool_worker(
     traj: Trajectory,
     termination_criteria: list[TerminationCriterion],
-    end_date: datetime.date,
+    end_date: dt.date,
     trajdb_path: str | None = None,
     db_path: str | None = None,
 ) -> Trajectory:
@@ -135,9 +135,9 @@ def pool_worker(
     """
     # Get wall time
     wall_time = -1.0
-    timedelta: datetime.timedelta = end_date - datetime.datetime.now(tz=datetime.timezone.utc)
-    if timedelta:
-        wall_time = timedelta.total_seconds()
+    remaining: dt.timedelta = end_date - dt.datetime.now(tz=dt.timezone.utc)
+    if remaining:
+        wall_time = remaining.total_seconds()
 
     if wall_time > 0.0 and not traj.is_terminated():
         # Try to lock the trajectory in the DB
@@ -162,7 +162,7 @@ def ms_worker(
     min_val: float,
     new_weight: float,
     termination_criteria: list[TerminationCriterion],
-    end_date: datetime.date,
+    end_date: dt.date,
     trajdb_path: str | None = None,
     db_path: str | None = None,
 ) -> Trajectory:
@@ -180,9 +180,9 @@ def ms_worker(
     """
     # Get wall time
     wall_time = -1.0
-    timedelta: datetime.timedelta = end_date - datetime.datetime.now(tz=datetime.timezone.utc)
-    if timedelta:
-        wall_time = timedelta.total_seconds()
+    remaining: dt.timedelta = end_date - dt.datetime.now(tz=dt.timezone.utc)
+    if remaining:
+        wall_time = remaining.total_seconds()
 
     trajdb = None
     if trajdb_path:

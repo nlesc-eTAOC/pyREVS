@@ -104,7 +104,7 @@ class CoreDB(BaseSQLManager):
                 traj.t_metadata = metadata
             else:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
     def update_trajectory_file(self, traj_id: int, traj_file: str) -> None:
@@ -123,7 +123,7 @@ class CoreDB(BaseSQLManager):
                 traj.traj_file = traj_file
             else:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
     def update_trajectory_weight(self, traj_id: int, weight: float) -> None:
@@ -140,7 +140,7 @@ class CoreDB(BaseSQLManager):
             traj = session.get(Trajectory, traj_id + 1)
             if traj is None:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
             metadata_d = dict(traj.t_metadata)
@@ -163,7 +163,7 @@ class CoreDB(BaseSQLManager):
                 traj = session.get(Trajectory, traj_id + 1)
                 if traj is None:
                     err_msg = f"Trajectory {traj_id} not found !"
-                    _logger.exception(err_msg)
+                    _logger.error(err_msg)
                     raise ValueError(err_msg)
 
                 metadata_d = dict(traj.t_metadata)

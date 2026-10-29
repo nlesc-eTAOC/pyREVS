@@ -92,7 +92,7 @@ class AMS(BaseSamplingStrategy):
             # Check for None. TODO: validate() above does not satisfy mypy
             if self._ams_cfg.min_score is None:
                 err_msg = "AMSConfig.min_score must be set for AMS"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
             self._term_crit.append(LowScoreTerminationCriterion(self._ams_cfg.min_score))
         elif strategy_cfg.variant == "tams":
@@ -101,13 +101,13 @@ class AMS(BaseSamplingStrategy):
             # Check for None. TODO: validate() above does not satisfy mypy
             if self._ams_cfg.min_score is None:
                 err_msg = "AMSConfig.min_score must be set for HAMS"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
             self._term_crit.append(TimeTerminationCriterion(self._ams_cfg.end_time))
             self._term_crit.append(LowScoreTerminationCriterion(self._ams_cfg.min_score))
         else:
             err_msg = f"Unknown variant {self._ams_cfg.variant}"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise ValueError(err_msg)
 
         # If requested, also add the custom model termination check
@@ -117,7 +117,7 @@ class AMS(BaseSamplingStrategy):
     def _req_db_ext(self) -> AMSDatabaseExtension:
         if self._db_ext is None:
             err_msg = "Database extension not initialized"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return self._db_ext
 
@@ -204,7 +204,7 @@ class AMS(BaseSamplingStrategy):
         # Exit if splitting is stalled
         if (np.amax(maxes) - np.amin(maxes)) < STALL_TOL:
             err_msg = f"Splitting is stalling with all trajectories stuck at a score_max: {np.amax(maxes)}"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         return False, maxes
@@ -528,7 +528,7 @@ class AMS(BaseSamplingStrategy):
         # Check that the database extension is initialized
         if self._db_ext is None:
             err_msg = "Database extension is not initialized ! Call initialize_database_schema() first"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         proba = self.compute_probability(database, plot_diags)
