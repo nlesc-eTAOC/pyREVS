@@ -93,6 +93,13 @@ data structures of the code:
     ntrajectories = 20          # [REQ] Number of ensemble members
     end_time = 10.0             # [OPT, DEF = -1] End time
 
+    [gktl]
+    ntrajectories = 20          # [REQ] Number of clones
+    end_time = 10.0             # [REQ] End time
+    resampling_interval = 0.5   # [REQ] Time interval between resampling steps
+    k = 1.0                     # [OPT, DEF = 0.01] Amplitude of the bias
+    bias_observable = "integral" # [OPT, DEF = "integral"] "integral" (time integral of the score) or "increment"
+
   Depending on the strategy prescribed, one of the above blocks is required.
   Whem running AMS, one must specify the number of members in the ensemble :math:`N`
   (``ntrajectories`` in the snippet above) as well as the maximum number of (splitting) iterations :math:`J`
@@ -101,6 +108,12 @@ data structures of the code:
   When running a Monte Carlo run, only the number of ensemble members is required (``ntrajectories`` above).
   If no end time is provided when using Monte-Carlo, trajectory will continue until convergence, which might
   take a long time, so it is recommended to provide an end time if only to avoid infinite trajectories.
+  When running GKTL, the ensemble of :math:`N` clones (``ntrajectories``) is advanced up to ``end_time`` and
+  resampled every ``resampling_interval``: each clone is killed or cloned according to a weight
+  :math:`e^{k \Delta A}`, where :math:`\Delta A` is either the time integral or the increment of the score
+  over the interval (``bias_observable``). The event probability returned accounts for the bias, and the
+  extension also provides ``get_exceedance_probability(threshold)`` for any score threshold. Clones reaching
+  the target score before ``end_time`` are frozen (this behavior might change in the future).
 
 
 - Trajectory parameters:
