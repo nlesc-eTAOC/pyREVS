@@ -1,0 +1,1343 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>pyrevs.database.database - pyREVS 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/theme.css?v=df66b05f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">pyREVS 1.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <span class="sidebar-brand-text">pyREVS 1.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Extension.html">Extension</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/index.html">pyrevs</a><input aria-label="Toggle navigation of pyrevs" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/bin/index.html">pyrevs.bin</a><input aria-label="Toggle navigation of pyrevs.bin" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/bin/bin/index.html">pyrevs.bin.bin</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/core/index.html">pyrevs.core</a><input aria-label="Toggle navigation of pyrevs.core" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/config/index.html">pyrevs.core.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/fmodel/index.html">pyrevs.core.fmodel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/runtime_cfg/index.html">pyrevs.core.runtime_cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/snapshot/index.html">pyrevs.core.snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/sqlcore/index.html">pyrevs.core.sqlcore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/sqlmanager/index.html">pyrevs.core.sqlmanager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/database/index.html">pyrevs.database</a><input aria-label="Toggle navigation of pyrevs.database" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/bootstrap/index.html">pyrevs.database.bootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/config/index.html">pyrevs.database.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/database/index.html">pyrevs.database.database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/extension/index.html">pyrevs.database.extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/index.html">pyrevs.diagnostics</a><input aria-label="Toggle navigation of pyrevs.diagnostics" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/diagdb/index.html">pyrevs.diagnostics.diagdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html">pyrevs.diagnostics.diagnostic</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/runner/index.html">pyrevs.runner</a><input aria-label="Toggle navigation of pyrevs.runner" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/config/index.html">pyrevs.runner.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/taskrunner/index.html">pyrevs.runner.taskrunner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/worker/index.html">pyrevs.runner.worker</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/index.html">pyrevs.sampler</a><input aria-label="Toggle navigation of pyrevs.sampler" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/config/index.html">pyrevs.sampler.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/sampler/index.html">pyrevs.sampler.sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/system_config/index.html">pyrevs.sampler.system_config</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/index.html">pyrevs.strategies</a><input aria-label="Toggle navigation of pyrevs.strategies" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/index.html">pyrevs.strategies.ams</a><input aria-label="Toggle navigation of pyrevs.strategies.ams" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/ams/index.html">pyrevs.strategies.ams.ams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/config/index.html">pyrevs.strategies.ams.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/extension/index.html">pyrevs.strategies.ams.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/sql/index.html">pyrevs.strategies.ams.sql</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/index.html">pyrevs.strategies.base</a><input aria-label="Toggle navigation of pyrevs.strategies.base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/strategy/index.html">pyrevs.strategies.base.strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/termination/index.html">pyrevs.strategies.base.termination</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/index.html">pyrevs.strategies.gktl</a><input aria-label="Toggle navigation of pyrevs.strategies.gktl" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/config/index.html">pyrevs.strategies.gktl.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/extension/index.html">pyrevs.strategies.gktl.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/gktl/index.html">pyrevs.strategies.gktl.gktl</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/index.html">pyrevs.strategies.montecarlo</a><input aria-label="Toggle navigation of pyrevs.strategies.montecarlo" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/config/index.html">pyrevs.strategies.montecarlo.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/extension/index.html">pyrevs.strategies.montecarlo.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/montecarlo/index.html">pyrevs.strategies.montecarlo.montecarlo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/index.html">pyrevs.trajectory</a><input aria-label="Toggle navigation of pyrevs.trajectory" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/utils/index.html">pyrevs.utils</a><input aria-label="Toggle navigation of pyrevs.utils" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/dbutils/index.html">pyrevs.utils.dbutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/utils/index.html">pyrevs.utils.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/xmlutils/index.html">pyrevs.utils.xmlutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/yamlutils/index.html">pyrevs.utils.yamlutils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for pyrevs.database.database</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""A database class for the pyREVS sampler."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ET</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cloudpickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">toml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreDB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.diagnostics</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiagDB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trajectory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrajectoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.trajectory.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">form_trajectory_id</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_module_local_import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.utils.xmlutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_element</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.utils.xmlutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">xml_to_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseConfig</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForwardModelBaseClass</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.extension</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrategyDatabaseExtension</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="T_Noise">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.T_Noise">[docs]</a>
+<span class="n">T_Noise</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T_Noise"</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="T_State">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.T_State">[docs]</a>
+<span class="n">T_State</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T_State"</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="DatabaseCoreSpec">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.DatabaseCoreSpec">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseCoreSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A dataclass for the database core specification."""</span>
+
+<div class="viewcode-block" id="DatabaseCoreSpec.ntraj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.DatabaseCoreSpec.ntraj">[docs]</a>
+    <span class="n">ntraj</span><span class="p">:</span> <span class="nb">int</span></div>
+
+<div class="viewcode-block" id="DatabaseCoreSpec.strategy">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.DatabaseCoreSpec.strategy">[docs]</a>
+    <span class="n">strategy</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="DatabaseCoreSpec.deterministic">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.DatabaseCoreSpec.deterministic">[docs]</a>
+    <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="DatabaseCoreSpec.diag_configs">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/database/index.html#pyrevs.database.database.DatabaseCoreSpec.diag_configs">[docs]</a>
+    <span class="n">diag_configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Config</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Database">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Database</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""A database class for the pyREVS sampler.</span>
+
+<span class="sd">    The database class is a container for</span>
+<span class="sd">    all the trajectory (and splitting data). When the</span>
+<span class="sd">    user provides a path to store the database, a local folder is</span>
+<span class="sd">    created holding a number of readable files, any output</span>
+<span class="sd">    from the model and SQL files used to lock/release</span>
+<span class="sd">    trajectories as the sampling algorithm proceeds.</span>
+
+<span class="sd">    The readable files are currently in an XML format.</span>
+
+<span class="sd">    A database can be loaded independently from the sampling</span>
+<span class="sd">    algorithm and used for post-processing.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _fmodel_t: the forward model type</span>
+<span class="sd">        _database_cfg: the database configuration dataclass</span>
+<span class="sd">        _parameters: the dictionary of parameters</span>
+<span class="sd">        _trajs_db: the list of trajectories</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fmodel_t</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ForwardModelBaseClass</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]],</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span>
+        <span class="n">read_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize a pyREVS database.</span>
+
+<span class="sd">        Initialize pyREVS database object, bare in-memory or on-disk.</span>
+
+<span class="sd">        On-disk database trigger if a path is provided in the</span>
+<span class="sd">        parameters dictionary. The user can chose to not append/override</span>
+<span class="sd">        the existing database in which case the existing path</span>
+<span class="sd">        will be copied to a new random name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fmodel_t: the forward model type</span>
+<span class="sd">            config: a Config object with the full configuration</span>
+<span class="sd">            read_only: the database access mode</span>
+<span class="sd">        """</span>
+        <span class="c1"># Access mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_only</span> <span class="o">=</span> <span class="n">read_only</span>
+
+        <span class="c1"># Metadata and immutable parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_creation_date</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">dt</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s2">"pyrevs"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">"pyREVS_"</span> <span class="o">+</span> <span class="n">fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span> <span class="o">=</span> <span class="s2">"unknown"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span> <span class="o">=</span> <span class="n">fmodel_t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">DatabaseConfig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_params</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">section_dict</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+
+        <span class="c1"># Trajectory ensemble parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ntraj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># Database format/storage parameters</span>
+        <span class="c1"># Update the database name and create an absolute path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span> <span class="o">!=</span> <span class="s2">"XML"</span><span class="p">:</span>
+                <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Unsupported pyREVS database format: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s2"> !"</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+        <span class="c1"># Trajectory ensembles: in-memory</span>
+        <span class="c1"># - one for active trajectories</span>
+        <span class="c1"># - one for archived (discarded) trajectories</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Trajectory ensemble: persistent SQL database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sql_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span><span class="p">:</span> <span class="n">CoreDB</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Diagnostics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Config</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Strategy-specific database extension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span><span class="p">:</span> <span class="n">StrategyDatabaseExtension</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Database.create">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">fmodel_t</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ForwardModelBaseClass</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]],</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Database</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Create a new pyREVS database.</span>
+
+<span class="sd">        If no path is provided in the TOML configuration,</span>
+<span class="sd">        the database is created in-memory and this is equivalent</span>
+<span class="sd">        to calling the constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fmodel_t: the forward model type</span>
+<span class="sd">            config: a Config object with the full configuration</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            a pyREVS database object</span>
+<span class="sd">        """</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fmodel_t</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">db</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">init_traj_pool</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">db</span>
+
+        <span class="n">db</span><span class="o">.</span><span class="n">_setup_folder</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">_write_metadata</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">_serialize_fmodel</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">init_traj_pool</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">db</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Database.load">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">read_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Database</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Instantiate a pyREVS database from disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            a_path: the path to the database</span>
+<span class="sd">            read_only: the database access mode</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            a pyREVS database object</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">a_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Database </span><span class="si">{</span><span class="n">a_path</span><span class="si">}</span><span class="s2"> does not exist !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+        <span class="c1"># Load Config</span>
+        <span class="n">cfg_path</span> <span class="o">=</span> <span class="n">a_path</span> <span class="o">/</span> <span class="s2">"input_params.toml"</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Database </span><span class="si">{</span><span class="n">cfg_path</span><span class="si">}</span><span class="s2"> does not exist !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">cfg_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+        <span class="c1"># Load picked forward model</span>
+        <span class="n">model_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">a_path</span> <span class="o">/</span> <span class="s2">"fmodel.pkl"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Picked forward model </span><span class="si">{</span><span class="n">model_file</span><span class="si">}</span><span class="s2"> is missing from the database !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">model_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">module_name</span><span class="p">,</span> <span class="n">cls_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+            <span class="n">fmodel_t</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">cls_name</span><span class="p">)</span>
+
+        <span class="n">db</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fmodel_t</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">read_only</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">_load_metadata</span><span class="p">()</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">init_traj_pool</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">db</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the trajectory database folders on disk."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="c1"># Create the top-level folder</span>
+            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+
+            <span class="c1"># Empty trajectories subfolder</span>
+            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="s2">"trajectories"</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_serialize_fmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Serialize the model</span>
+        <span class="c1"># We need to pickle by value the local modules</span>
+        <span class="c1"># which might not be available if we move the database</span>
+        <span class="c1"># Note: only one import depth is handled at this point, we might</span>
+        <span class="c1">#       want to make this recursive in the future</span>
+        <span class="n">model_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="s2">"fmodel.pkl"</span><span class="p">)</span>
+        <span class="n">cloudpickle</span><span class="o">.</span><span class="n">register_pickle_by_value</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="vm">__module__</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">get_module_local_import</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="vm">__module__</span><span class="p">):</span>
+            <span class="n">cloudpickle</span><span class="o">.</span><span class="n">register_pickle_by_value</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">mods</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">model_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">"."</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Write the database Metadata to disk."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">"XML"</span><span class="p">:</span>
+            <span class="n">header_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_file</span><span class="p">()</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span>
+            <span class="n">mdata</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">"metadata"</span><span class="p">)</span>
+            <span class="n">mdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">(</span><span class="s2">"pyREVS_version"</span><span class="p">,</span> <span class="n">version</span><span class="p">(</span><span class="s2">"pyrevs"</span><span class="p">)))</span>
+            <span class="n">mdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_creation_date</span><span class="p">))</span>
+            <span class="n">mdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">(</span><span class="s2">"model_t"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+            <span class="n">mdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">(</span><span class="s2">"strategy"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span><span class="p">))</span>
+            <span class="n">mdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">(</span><span class="s2">"ntraj"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()))</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="n">ET</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Unsupported pyREVS database format: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s2"> !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Read the database Metadata from the header."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">"XML"</span><span class="p">:</span>
+                <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_file</span><span class="p">())</span>
+                <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+                <span class="n">mdata</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">)</span>
+                <span class="n">datafromxml</span> <span class="o">=</span> <span class="n">xml_to_dict</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ntraj</span> <span class="o">=</span> <span class="n">datafromxml</span><span class="p">[</span><span class="s2">"ntraj"</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span> <span class="o">=</span> <span class="n">datafromxml</span><span class="p">[</span><span class="s2">"strategy"</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">datafromxml</span><span class="p">[</span><span class="s2">"pyREVS_version"</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">!=</span> <span class="n">version</span><span class="p">(</span><span class="s2">"pyrevs"</span><span class="p">):</span>
+                    <span class="n">warn_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Database pyREVS version </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="si">}</span><span class="s2"> is different from </span><span class="si">{</span><span class="n">version</span><span class="p">(</span><span class="s1">'pyrevs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warn_msg</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_creation_date</span> <span class="o">=</span> <span class="n">datafromxml</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span>
+                <span class="n">db_model</span> <span class="o">=</span> <span class="n">datafromxml</span><span class="p">[</span><span class="s2">"model_t"</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">db_model</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">():</span>
+                    <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Database model </span><span class="si">{</span><span class="n">db_model</span><span class="si">}</span><span class="s2"> is different from call </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Unsupported pyREVS database format: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s2"> !"</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Database.initialize_core_state">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.initialize_core_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_core_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">DatabaseCoreSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the core state of the database.</span>
+
+<span class="sd">        From a specification dataclass. It also updates the metadata</span>
+<span class="sd">        on disk if the database is on-disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            spec: the database core specification</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ntraj</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">ntraj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">deterministic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">diag_configs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ping_diag_database</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_metadata</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.init_traj_pool">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.init_traj_pool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_traj_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the trajectory pool."""</span>
+        <span class="c1"># If an in-memory database is requested, a temporary (hidden)</span>
+        <span class="c1"># sql database is still created</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sql_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">/trajPool.db"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sql_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">".sqldb_pyrevs_</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">999999</span><span class="p">)</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">.db"</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_only</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span> <span class="o">=</span> <span class="n">CoreDB</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_file</span><span class="p">(),</span> <span class="n">ro_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span> <span class="o">=</span> <span class="n">CoreDB</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_file</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Database.attach_extension">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.attach_extension">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attach_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="n">StrategyDatabaseExtension</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Attach an extension to the database."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span> <span class="o">=</span> <span class="n">ext</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.extension">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.extension">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extension</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrategyDatabaseExtension</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the extension attached to the database."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">"No strategy extension attached to the database !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span></div>
+
+
+<div class="viewcode-block" id="Database.init_active_ensemble">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.init_active_ensemble">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_active_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the requested number of trajectories."""</span>
+        <span class="n">traj_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">TrajectoryConfig</span><span class="p">)</span>
+        <span class="n">traj_cfg</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">check_trajectory_exist</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">workdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"trajectories/</span><span class="si">{</span><span class="n">form_trajectory_id</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">t</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span>
+                    <span class="n">traj_id</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
+                    <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                    <span class="n">fmodel_t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="p">,</span>
+                    <span class="n">traj_cfg</span><span class="o">=</span><span class="n">traj_cfg</span><span class="p">,</span>
+                    <span class="n">diag_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span><span class="p">,</span>
+                    <span class="n">model_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_params</span><span class="p">,</span>
+                    <span class="n">workdir</span><span class="o">=</span><span class="n">workdir</span><span class="p">,</span>
+                    <span class="n">deterministic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append_traj</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.save_trajectory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.save_trajectory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save a trajectory to disk in the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            traj: the trajectory to save</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="n">traj</span><span class="o">.</span><span class="n">store</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.load_data">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.load_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_archived_trajectories</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load data stored into the database.</span>
+
+<span class="sd">        The initialization of the database only populate the metadata</span>
+<span class="sd">        but not the full trajectories data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            load_archived_trajectories: whether to load archived trajectories</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Counter for number of trajectory loaded</span>
+        <span class="n">n_traj_restored</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n_traj_initialized</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">load_frozen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_only</span>
+        <span class="n">traj_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">TrajectoryConfig</span><span class="p">)</span>
+        <span class="n">traj_cfg</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+        <span class="n">ntraj_in_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_trajectory_count</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ntraj_in_db</span><span class="p">):</span>
+            <span class="n">checkpath</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">fetch_trajectory</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">traj_checkfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">checkpath</span>
+            <span class="n">workdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"trajectories/</span><span class="si">{</span><span class="n">traj_checkfile</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">traj_checkfile</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">n_traj_restored</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append_traj</span><span class="p">(</span>
+                    <span class="n">Trajectory</span><span class="o">.</span><span class="n">restore_from_checkfile</span><span class="p">(</span>
+                        <span class="n">traj_checkfile</span><span class="p">,</span>
+                        <span class="n">metadata</span><span class="p">,</span>
+                        <span class="n">fmodel_t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="p">,</span>
+                        <span class="n">traj_cfg</span><span class="o">=</span><span class="n">traj_cfg</span><span class="p">,</span>
+                        <span class="n">diag_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span><span class="p">,</span>
+                        <span class="n">model_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_params</span><span class="p">,</span>
+                        <span class="n">workdir</span><span class="o">=</span><span class="n">workdir</span><span class="p">,</span>
+                        <span class="n">frozen</span><span class="o">=</span><span class="n">load_frozen</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_traj_initialized</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append_traj</span><span class="p">(</span>
+                    <span class="n">Trajectory</span><span class="o">.</span><span class="n">init_from_metadata</span><span class="p">(</span>
+                        <span class="n">metadata</span><span class="p">,</span>
+                        <span class="n">fmodel_t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="p">,</span>
+                        <span class="n">traj_cfg</span><span class="o">=</span><span class="n">traj_cfg</span><span class="p">,</span>
+                        <span class="n">diag_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span><span class="p">,</span>
+                        <span class="n">model_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_params</span><span class="p">,</span>
+                        <span class="n">workdir</span><span class="o">=</span><span class="n">workdir</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_traj_restored</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">inf_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n_traj_restored</span><span class="si">}</span><span class="s2"> active trajectories loaded"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">inf_msg</span><span class="p">)</span>
+            <span class="n">inf_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n_traj_initialized</span><span class="si">}</span><span class="s2"> active trajectories initialized"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">inf_msg</span><span class="p">)</span>
+
+        <span class="c1"># Load the archived trajectories if requested.</span>
+        <span class="c1"># Those are loaded as 'frozen', i.e. the internal model</span>
+        <span class="c1"># is not available and advance function disabled.</span>
+        <span class="k">if</span> <span class="n">load_archived_trajectories</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_archived_trajectories</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.load_archived_trajectories">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.load_archived_trajectories">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_archived_trajectories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load the archived trajectories data."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="n">n_traj_restored</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">traj_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">TrajectoryConfig</span><span class="p">)</span>
+        <span class="n">traj_cfg</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+        <span class="n">archived_ntraj_in_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_archived_trajectory_count</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">archived_ntraj_in_db</span><span class="p">):</span>
+            <span class="n">checkpath</span><span class="p">,</span> <span class="n">metadata_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">fetch_archived_trajectory</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">traj_checkfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">checkpath</span>
+            <span class="n">workdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"trajectories/</span><span class="si">{</span><span class="n">traj_checkfile</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">traj_checkfile</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">n_traj_restored</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append_archived_traj</span><span class="p">(</span>
+                    <span class="n">Trajectory</span><span class="o">.</span><span class="n">restore_from_checkfile</span><span class="p">(</span>
+                        <span class="n">traj_checkfile</span><span class="p">,</span>
+                        <span class="n">metadata_str</span><span class="p">,</span>
+                        <span class="n">fmodel_t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="p">,</span>
+                        <span class="n">traj_cfg</span><span class="o">=</span><span class="n">traj_cfg</span><span class="p">,</span>
+                        <span class="n">diag_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span><span class="p">,</span>
+                        <span class="n">model_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_params</span><span class="p">,</span>
+                        <span class="n">workdir</span><span class="o">=</span><span class="n">workdir</span><span class="p">,</span>
+                        <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">inf_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n_traj_restored</span><span class="si">}</span><span class="s2"> archived trajectories loaded"</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">inf_msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.name">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Accessor to DB name.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            DB name</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
+
+<div class="viewcode-block" id="Database.strategy">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.strategy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Accessor to DB strategy.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            DB strategy</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span></div>
+
+
+<div class="viewcode-block" id="Database.to_disk">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.to_disk">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_disk</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check if the database is stored on disk."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Database.append_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.append_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">],</span> <span class="n">update_db</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Append a Trajectory to the internal list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            a_traj: the trajectory</span>
+<span class="sd">            update_db: True to update the SQL DB content</span>
+<span class="sd">        """</span>
+        <span class="c1"># Also adds it to the SQL pool file.</span>
+        <span class="c1"># and set the checkfile</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="n">checkfile_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"./trajectories/</span><span class="si">{</span><span class="n">a_traj</span><span class="o">.</span><span class="n">idstr</span><span class="p">()</span><span class="si">}</span><span class="s2">.xml"</span>
+            <span class="n">checkfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">checkfile_str</span>
+            <span class="n">a_traj</span><span class="o">.</span><span class="n">set_checkfile</span><span class="p">(</span><span class="n">checkfile</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkfile_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a_traj</span><span class="o">.</span><span class="n">idstr</span><span class="p">()</span><span class="si">}</span><span class="s2">.xml"</span>
+        <span class="k">if</span> <span class="n">update_db</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">add_trajectory</span><span class="p">(</span><span class="n">checkfile_str</span><span class="p">,</span> <span class="n">a_traj</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_traj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.append_archived_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.append_archived_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_archived_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">],</span> <span class="n">update_db</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Append an archived Trajectory to the internal list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            a_traj: the trajectory</span>
+<span class="sd">            update_db: True to update the SQL DB content</span>
+<span class="sd">        """</span>
+        <span class="n">checkfile_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"./trajectories/</span><span class="si">{</span><span class="n">a_traj</span><span class="o">.</span><span class="n">idstr</span><span class="p">()</span><span class="si">}</span><span class="s2">.xml"</span>
+        <span class="n">checkfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">checkfile_str</span>
+        <span class="n">a_traj</span><span class="o">.</span><span class="n">set_checkfile</span><span class="p">(</span><span class="n">checkfile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">update_db</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">archive_trajectory</span><span class="p">(</span><span class="n">checkfile_str</span><span class="p">,</span> <span class="n">a_traj</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_traj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.traj_list">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.traj_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">traj_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Access to the trajectory list.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Trajectory list</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span></div>
+
+
+<div class="viewcode-block" id="Database.get_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.get_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Access to a given trajectory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            idx: the index</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Trajectory</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError if idx is out of range</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">):</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Trying to access a non existing trajectory </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Database.overwrite_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.overwrite_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">overwrite_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Deep copy a trajectory into internal list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            idx: the index of the trajectory to override</span>
+<span class="sd">            traj: the new trajectory</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError if idx is out of range</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">):</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Trying to override a non existing trajectory </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.ping_diag_database">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.ping_diag_database">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ping_diag_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the diagDB from the main process.</span>
+
+<span class="sd">        To avoid race condition in creating the DB from workers,</span>
+<span class="sd">        let it be initialized from the main process here.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ddb_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="n">DiagDB</span><span class="o">.</span><span class="n">default_name</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">()</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">DiagDB</span><span class="o">.</span><span class="n">default_name</span><span class="p">())</span>
+            <span class="n">ddb</span> <span class="o">=</span> <span class="n">DiagDB</span><span class="p">(</span><span class="n">ddb_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+            <span class="n">ddb</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.update_diagnostic_weights">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.update_diagnostic_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_diagnostic_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the weights of all the active trajectories."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diag_configs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ddb_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span> <span class="o">/</span> <span class="n">DiagDB</span><span class="o">.</span><span class="n">default_name</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">()</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">DiagDB</span><span class="o">.</span><span class="n">default_name</span><span class="p">())</span>
+            <span class="n">ddb</span> <span class="o">=</span> <span class="n">DiagDB</span><span class="p">(</span><span class="n">ddb_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+            <span class="n">ddb</span><span class="o">.</span><span class="n">update_all_active_weights</span><span class="p">(</span><span class="n">tweight</span><span class="p">)</span>
+            <span class="n">ddb</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.header_file">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.header_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">header_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Helper returning the DB header file.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Header file</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">/header.xml"</span></div>
+
+
+<div class="viewcode-block" id="Database.pool_file">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.pool_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pool_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Helper returning the DB trajectory pool file.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Pool file</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql_name</span></div>
+
+
+<div class="viewcode-block" id="Database.get_pool_db">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.get_pool_db">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pool_db</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreDB</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get the pool SQL database handle."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_require_pool_db</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreDB</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Internal accessor to the SQL database handle.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError if the SQL database has not been initialized</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">"The SQL database has not been initialized !"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span>
+
+<div class="viewcode-block" id="Database.is_empty">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.is_empty">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check if list of trajectories is empty.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            True if the list of trajectories is empty</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_trajectory_count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Database.traj_list_len">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.traj_list_len">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">traj_list_len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Length of the trajectory list.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Trajectory list length</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.archived_traj_list">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.archived_traj_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">archived_traj_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Access to the archived trajectory list.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Archived trajectory list</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span></div>
+
+
+<div class="viewcode-block" id="Database.archived_traj_list_len">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.archived_traj_list_len">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">archived_traj_list_len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Length of the archived trajectory list.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Trajectory list length</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.archive_discarded">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.archive_discarded">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">archive_discarded</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return True if discarded trajectories should be archived."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database_cfg</span><span class="o">.</span><span class="n">archive_discarded</span></div>
+
+
+<div class="viewcode-block" id="Database.update_traj_list">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.update_traj_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_traj_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_traj_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Overwrite the trajectory list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            a_traj_list: the new trajectory list</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span> <span class="o">=</span> <span class="n">a_traj_list</span></div>
+
+
+<div class="viewcode-block" id="Database.archive_trajectory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.archive_trajectory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">archive_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Archive a trajectory about to be discarded.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            traj: the trajectory to archive</span>
+<span class="sd">        """</span>
+        <span class="c1"># A branched trajectory will be overwritten by the</span>
+        <span class="c1"># newly generated one in-place in the _trajs_db list.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span>
+
+        <span class="c1"># Update the list of archived trajectories in the SQL DB</span>
+        <span class="n">checkfile_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">traj</span><span class="o">.</span><span class="n">get_checkfile</span><span class="p">()</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">()</span>
+            <span class="k">else</span> <span class="n">traj</span><span class="o">.</span><span class="n">get_checkfile</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">archive_trajectory</span><span class="p">(</span><span class="n">checkfile_str</span><span class="p">,</span> <span class="n">traj</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Database.lock_trajectory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.lock_trajectory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lock_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">allow_completed_lock</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Lock a trajectory in the SQL DB.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tid: the trajectory id</span>
+<span class="sd">            allow_completed_lock: True if the trajectory can be locked even if it is completed</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            True if no disk DB and the trajectory was locked</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SQLAlchemyError if the DB could not be accessed</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">lock_trajectory</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">allow_completed_lock</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.unlock_trajectory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.unlock_trajectory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unlock_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">has_terminated</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Unlock a trajectory in the SQL DB.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tid: the trajectory id</span>
+<span class="sd">            has_terminated: True if the trajectory has terminated</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SQLAlchemyError if the DB could not be accessed</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">has_terminated</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">mark_trajectory_as_completed</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">release_trajectory</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.update_trajectory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.update_trajectory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traj_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">[</span><span class="n">T_Noise</span><span class="p">,</span> <span class="n">T_State</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update a trajectory file in the DB.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            traj_id : The trajectory id</span>
+<span class="sd">            traj : the trajectory to get the data from</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SQLAlchemyError if the DB could not be accessed</span>
+<span class="sd">        """</span>
+        <span class="n">checkfile_str</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">get_checkfile</span><span class="p">()</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">update_trajectory</span><span class="p">(</span><span class="n">traj_id</span><span class="p">,</span> <span class="n">checkfile_str</span><span class="p">,</span> <span class="n">traj</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Database.n_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.n_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the number of trajectory used for sampling run.</span>
+
+<span class="sd">        Note that this is the requested number of trajectory, not</span>
+<span class="sd">        the current length of the trajectory pool.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            number of trajectory</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ntraj</span></div>
+
+
+<div class="viewcode-block" id="Database.path">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the path to the database."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abs_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Database.count_terminated_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.count_terminated_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_terminated_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the number of trajectories that terminated."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_terminated_trajectory_count</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.count_converged_traj">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.count_converged_traj">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_converged_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the number of trajectories that converged."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_converged_trajectory_count</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.all_converged">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.all_converged">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">all_converged</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check if all the trajectory converged."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_converged_traj</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.count_computed_steps">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.count_computed_steps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_computed_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the total number of steps taken.</span>
+
+<span class="sd">        This total count includes both the active and</span>
+<span class="sd">        discarded trajectories.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_pool_db</span><span class="p">()</span><span class="o">.</span><span class="n">get_total_computed_steps</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.get_event_probability">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.get_event_probability">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_event_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the event probability.</span>
+
+<span class="sd">        Default to a Monte-Carlo event probability if</span>
+<span class="sd">        no strategy extension is attached to the database.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            the event probability</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span><span class="o">.</span><span class="n">get_event_probability</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_converged_traj</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Database.info">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Print database info to logger."""</span>
+        <span class="n">db_date_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_creation_date</span><span class="p">)</span>
+        <span class="n">pretty_line</span> <span class="o">=</span> <span class="s2">"####################################################"</span>
+        <span class="n">inf_tbl</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">            # pyREVS v</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Creation Date: </span><span class="si">{</span><span class="n">db_date_str</span><span class="si">:</span><span class="s2">33s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">:</span><span class="s2">41s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Sampling strategy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span><span class="si">:</span><span class="s2">29s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">            # Requested # of traj: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">27</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Number of 'Terminated' trajectories: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_terminated_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">11</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Number of 'Converged' trajectories: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_converged_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">12</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Current total number of steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_computed_steps</span><span class="p">()</span><span class="si">:</span><span class="s2">17</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">        """</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">inf_tbl</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.print_info">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.print_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Print database info to screen."""</span>
+        <span class="n">db_date_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_creation_date</span><span class="p">)</span>
+        <span class="n">pretty_line</span> <span class="o">=</span> <span class="s2">"####################################################"</span>
+        <span class="n">inf_tbl</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">            # pyREVS v</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="si">:</span><span class="s2">40s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Creation Date: </span><span class="si">{</span><span class="n">db_date_str</span><span class="si">:</span><span class="s2">33s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmodel_t</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">:</span><span class="s2">41s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Sampling strategy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_strategy</span><span class="si">:</span><span class="s2">29s</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">            # Requested # of traj: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">27</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Number of 'Terminated' trajectories: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_terminated_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">11</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Number of 'Converged' trajectories: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_converged_traj</span><span class="p">()</span><span class="si">:</span><span class="s2">12</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            # Current total number of steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count_computed_steps</span><span class="p">()</span><span class="si">:</span><span class="s2">17</span><span class="si">}</span><span class="s2"> #</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">pretty_line</span><span class="si">}</span>
+<span class="s2">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">inf_tbl</span><span class="p">)</span>  <span class="c1"># noqa: T201</span></div>
+
+
+<div class="viewcode-block" id="Database.plot_score_functions">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/database/index.html#pyrevs.database.database.Database.plot_score_functions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_score_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">plot_archived</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Plot the score as function of time for all trajectories."""</span>
+        <span class="n">pltfile</span> <span class="o">=</span> <span class="n">fname</span> <span class="k">if</span> <span class="n">fname</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">"_scores.png"</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajs_db</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_time_array</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">get_score_array</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">plot_archived</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_archived_trajs_db</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_time_array</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">get_score_array</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$Time$"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$Score \; [-]$"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">"dotted"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>  <span class="c1"># to fit everything in the prescribed area</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pltfile</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Destructor of the db.</span>
+
+<span class="sd">        Delete the hidden SQL database if we do not intend to keep</span>
+<span class="sd">        the database around.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Even if we plan to keep the SQL database around, force</span>
+        <span class="c1"># deleting the SQL connection</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_sql_db"</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql_db</span>
+            <span class="c1"># Remove the hidden db file</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_disk</span><span class="p">():</span>
+                <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_file</span><span class="p">())</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_strategy_extension"</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strategy_extension</span></div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Netherlands eScience Center
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=fc837d61"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

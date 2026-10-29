@@ -1,0 +1,87 @@
+pyrevs.sampler.system_config
+============================
+
+.. py:module:: pyrevs.sampler.system_config
+
+.. autoapi-nested-parse::
+
+   A configuration class to expose limited configuration.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.sampler.system_config.SystemConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: SystemConfig
+
+   Overarching system configuration.
+
+   This is a helper metadata class for the system configuration
+   used to IO full configuration (i.e. including defaults)
+   and performing configuration merging.
+
+
+   .. py:attribute:: sampler
+      :type:  pyrevs.sampler.config.SamplerConfig
+
+
+   .. py:attribute:: runtime
+      :type:  pyrevs.core.RuntimeConfig
+
+
+   .. py:attribute:: strategy
+      :type:  pyrevs.strategies.ams.AMSConfig | pyrevs.strategies.montecarlo.MCConfig | pyrevs.strategies.gktl.GKTLConfig
+
+
+   .. py:attribute:: database
+      :type:  pyrevs.database.DatabaseConfig
+
+
+   .. py:attribute:: runner
+      :type:  pyrevs.runner.RunnerConfig
+
+
+   .. py:attribute:: trajectory
+      :type:  pyrevs.trajectory.TrajectoryConfig
+
+
+   .. py:method:: write_toml(path: pathlib.Path, other_data: dict[str, Any]) -> None
+
+      Write the system configuration to a TOML file.
+
+
+
+   .. py:method:: merge(old: SystemConfig, new: SystemConfig) -> SystemConfig
+      :classmethod:
+
+
+      Merge two SystemConfig objects.
+
+      Immutable sections must match exactly.
+      Replaceable sections are overwritten by `new`.
+
+      :param old: Existing configuration (e.g. from database).
+      :param new: Incoming configuration (e.g. from CLI/TOML).
+
+      :returns: A merged SystemConfig instance.
+
+      :raises ValueError: If immutable sections differ.
+
+
+
+   .. py:method:: print_config_help() -> None
+      :classmethod:
+
+
+      Print a help message for the system configuration.
+
+
+

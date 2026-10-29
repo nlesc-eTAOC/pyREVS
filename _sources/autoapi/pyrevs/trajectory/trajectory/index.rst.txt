@@ -1,0 +1,520 @@
+pyrevs.trajectory.trajectory
+============================
+
+.. py:module:: pyrevs.trajectory.trajectory
+
+.. autoapi-nested-parse::
+
+   A trajectory class for individual MCMC runs.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.trajectory.trajectory.T_Noise
+   pyrevs.trajectory.trajectory.T_State
+
+
+Exceptions
+----------
+
+.. autoapisummary::
+
+   pyrevs.trajectory.trajectory.WallTimeLimitError
+   pyrevs.trajectory.trajectory.UserInterruptError
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.trajectory.trajectory.TrajectoryStateType
+   pyrevs.trajectory.trajectory.Trajectory
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.trajectory.trajectory.form_trajectory_id
+   pyrevs.trajectory.trajectory.get_index_from_id
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: TrajectoryStateType(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Enumeration of trajectory state types.
+
+   :ivar UNINIT: trajectory has not been initialized
+   :ivar ONGOING: trajectory is running
+   :ivar INTERRUPTED: trajectory has been interrupted (expected to continue later)
+   :ivar TERMINATED: trajectory has been terminated
+   :ivar CONVERGED: trajectory has converged
+
+
+
+   .. py:attribute:: UNINIT
+      :value: 0
+
+
+
+   .. py:attribute:: ONGOING
+      :value: 1
+
+
+
+   .. py:attribute:: INTERRUPTED
+      :value: 2
+
+
+
+   .. py:attribute:: TERMINATED
+      :value: 3
+
+
+
+   .. py:attribute:: CONVERGED
+      :value: 4
+
+
+
+.. py:exception:: WallTimeLimitError
+
+   Bases: :py:obj:`Exception`
+
+
+   Exception for running into wall time limit.
+
+
+.. py:exception:: UserInterruptError
+
+   Bases: :py:obj:`Exception`
+
+
+   Exception for handling user-triggered interruption.
+
+
+.. py:function:: form_trajectory_id(n: int, nb: int = 0) -> str
+
+   Helper to assemble a trajectory ID string.
+
+   :param n: trajectory index
+   :param nb: number of branching
+
+   :returns: trajectory ID
+
+
+.. py:function:: get_index_from_id(identity: str) -> tuple[int, int]
+
+   Helper to get trajectory index from ID string.
+
+   :param identity: trajectory ID
+
+   :returns: trajectory index and number of branching
+
+
+.. py:class:: Trajectory(traj_id: int, weight: float, fmodel_t: type[pyrevs.core.ForwardModelBaseClass[T_Noise, T_State]] | None, traj_cfg: pyrevs.trajectory.config.TrajectoryConfig, diag_configs: dict[str, pyrevs.core.Config] | None = None, model_params: dict[str, Any] | None = None, workdir: pathlib.Path | None = None, deterministic: bool = False, frozen: bool = False)
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`T_Noise`\ , :py:obj:`T_State`\ ]
+
+
+   A class defining a stochastic trajectory.
+
+   Each trajectory is a MCMC simulation of the forward model.
+
+   The trajectory class is a container for time-ordered snapshots.
+   It contains an instance of the forward model, current and end times, and
+   a list of the model snapshots. Note that the class uses a plain list of snapshots
+   and not a more computationally efficient data structure such as a numpy array
+   for convenience. It is assumed that the computational cost of running the sampling algorithm
+   resides in the forward model and the overhead of the trajectory class is negligible.
+
+   It also provide the forward model with the necessary context to advance in time,
+   method to move forward in time, methods to save/load the trajectory to/from disk
+   as well as accessor to the trajectory history (time, state, score, ...).
+
+   The _computed_steps variable store the number of steps actually taken by the
+   trajectory. It differs from the _step variable when a trajectory is branched
+   from an ancestor.
+
+   :ivar _tid: the trajectory index
+   :ivar _checkFile: the trajectory checkpoint file
+   :ivar _workdir: the model working directory
+   :ivar _score_max: the maximum score
+   :ivar _snaps: a list of snapshots
+   :ivar _step: the current step counter
+   :ivar _computed_steps: the number of steps explicitly advanced by the trajectory
+   :ivar _t_cur: the current time
+   :ivar _t_end: the end time
+   :ivar _dt: the stochastic time step size
+
+
+
+   .. py:attribute:: max_ntraj
+      :value: 10000
+
+
+
+   .. py:attribute:: max_nbranch
+      :value: 9999
+
+
+
+   .. py:attribute:: noise_backlog
+      :type:  list[T_Noise]
+      :value: []
+
+
+
+   .. py:method:: set_checkfile(path: pathlib.Path) -> None
+
+      Setter of the trajectory checkFile.
+
+      :param path: the new checkFile
+
+
+
+   .. py:method:: set_workdir(path: pathlib.Path) -> None
+
+      Setter of the trajectory working directory.
+
+      And propagate the workdir to the forward model.
+
+      :param path: the new working directory
+
+
+
+   .. py:method:: get_workdir() -> pathlib.Path
+
+      Get the trajectory working directory.
+
+      :returns: the working directory
+
+
+
+   .. py:method:: id() -> int
+
+      Return trajectory index.
+
+      This is the index of the trajectory in the ensemble.
+
+      :returns: the trajectory id
+
+
+
+   .. py:method:: unique_id() -> int
+
+      Return trajectory unique Id.
+
+      Combining the index and the number of branching events.
+      This makes a unique ID.
+
+      :returns: the trajectory unique id
+
+
+
+   .. py:method:: idstr() -> str
+
+      Return trajectory Id as a padded string.
+
+      :returns: the trajectory id as a string
+
+
+
+   .. py:method:: advance(termination_criteria: list[pyrevs.strategies.base.TerminationCriterion] | None = None, nstep_end: int = -1, t_end: float = -1.0, walltime: float = 1000000000000.0) -> None
+
+      Advance the trajectory to a prescribed end time.
+
+      This is the main time loop of the trajectory object.
+      Unless specified otherwise, the trajectory will advance until
+      the end time is reached or the model has converged.
+
+      If the walltime limit is reached, a WallTimeLimitError exception is raised.
+      If a 'pyrevs_stop' file is found, a UserInterruptError exception is raised.
+      Note that this exception is treated as a warning not an error by the
+      pyREVS workers.
+
+      :param nstep_end: the number of steps to advance
+      :param t_end: the end time of the advance
+      :param walltime: a walltime limit to advance the model to t_end
+      :param termination_criteria: a list of termination criterion
+
+      :returns: None
+
+      :raises WallTimeLimitError: if the walltime limit is reached
+      :raises UserInterruptError: if a 'pyrevs_stop' file is found
+      :raises RuntimeError: if the model advance run into a problem
+
+
+
+   .. py:method:: interrupt_trigger() -> bool
+
+      Check for user interrupt trigger.
+
+      pyREVS can be interrupted cleanly by creating a
+      pyrevs_stop file in the run folder.
+
+
+
+   .. py:method:: setup_noise() -> None
+
+      Prepare the noise for the next step.
+
+
+
+   .. py:method:: init_from_metadata(metadata: dict[str, Any], fmodel_t: type[pyrevs.core.ForwardModelBaseClass[T_Noise, T_State]], traj_cfg: pyrevs.trajectory.config.TrajectoryConfig, diag_configs: dict[str, pyrevs.core.Config] | None = None, model_params: dict[str, Any] | None = None, workdir: pathlib.Path | None = None, frozen: bool = False) -> Trajectory[T_Noise, T_State]
+      :classmethod:
+
+
+      Initialize a trajectory from serialized metadata.
+
+
+
+   .. py:method:: restore_from_checkfile(checkfile: pathlib.Path, metadata: dict[str, Any], fmodel_t: type[pyrevs.core.ForwardModelBaseClass[T_Noise, T_State]], traj_cfg: pyrevs.trajectory.config.TrajectoryConfig, diag_configs: dict[str, pyrevs.core.Config] | None = None, model_params: dict[str, Any] | None = None, workdir: pathlib.Path | None = None, frozen: bool = False) -> Trajectory[T_Noise, T_State]
+      :classmethod:
+
+
+      Return a trajectory restored from an XML chkfile.
+
+
+
+   .. py:method:: branch_from_trajectory(from_traj: Trajectory[T_Noise, T_State], rst_traj: Trajectory[T_Noise, T_State], score: float, new_weight: float) -> Trajectory
+      :classmethod:
+
+
+      Create a new trajectory.
+
+      Loading the beginning of a provided trajectory
+      for all entries with score below a given score.
+      This effectively branches the trajectory.
+
+      Although the rst_traj is provided as an argument, it is
+      only used to set metadata of the branched trajectory.
+
+      :param from_traj: an already existing trajectory to restart from
+      :param rst_traj: the trajectory being restarted
+      :param score: a threshold score
+      :param new_weight: the weight of the child trajectory
+
+
+
+   .. py:method:: clone_from_trajectory(from_traj: Trajectory[T_Noise, T_State], rst_traj: Trajectory[T_Noise, T_State], new_weight: float) -> Trajectory
+      :classmethod:
+
+
+      Create a new trajectory as a clone of an ancestor at its current time.
+
+      Unlike :meth:`branch_from_trajectory`, the entire history of the ancestor
+      is copied. If the last snapshot of the ancestor does not hold a model
+      state (sparse state), the noise needed to reconstruct the history from
+      the last available state is put in the backlog and replayed upon the
+      next call to advance.
+
+      The noise the ancestor has already drawn for its upcoming step is *not*
+      transferred: the clone draws fresh noise beyond the ancestor current time,
+      such that clones diverge from their ancestor.
+
+      Although the rst_traj is provided as an argument, it is
+      only used to set metadata of the cloned trajectory.
+
+      :param from_traj: an already existing trajectory to clone
+      :param rst_traj: the trajectory being replaced
+      :param new_weight: the weight of the clone trajectory
+
+
+
+   .. py:method:: store(traj_file: pathlib.Path | None = None, write_metadata_json: bool = False) -> None
+
+      Store the trajectory data to an XML chkfile.
+
+      The default behavior is to store the trajectory into the
+      file specified by the attribute self._checkFile unless a
+      different path is provided.
+      The metadata are not writen to file by default, as the pyREVS database
+      handle metadata in an SQL file. It can be triggered when using trajectories
+      in stand-alone.
+
+      :param traj_file: an optional path file to store the trajectory to
+      :param write_metadata_json: an optional boolean to also write the metadata json dict
+
+
+
+   .. py:method:: set_weight(weight: float) -> None
+
+      Set the trajectory weight.
+
+      :param weight: the (new) trajectory weight in the ensemble
+
+
+
+   .. py:method:: weight() -> float
+
+      Return the trajectory weight in the ensemble.
+
+
+
+   .. py:method:: update_metadata() -> None
+
+      Update trajectory score/ending metadata.
+
+      Update the maximum of the score function over the trajectory
+      as well as the bool values for has_converged and has_terminated
+
+
+
+   .. py:method:: set_current_time_and_step(time: float, step: int) -> None
+
+      Set the current time and step.
+
+
+
+   .. py:method:: current_time() -> float
+
+      Return the current trajectory time.
+
+
+
+   .. py:method:: current_step() -> int
+
+      Return the current trajectory step.
+
+
+
+   .. py:method:: step_size() -> float
+
+      Return the time step size.
+
+
+
+   .. py:method:: score_max() -> float
+
+      Return the maximum of the score function.
+
+
+
+   .. py:method:: is_converged() -> bool
+
+      Return True for converged trajectory.
+
+
+
+   .. py:method:: is_terminated() -> bool
+
+      Return True for terminated trajectory.
+
+
+
+   .. py:method:: has_started() -> bool
+
+      Return True if computation has started.
+
+
+
+   .. py:method:: get_checkfile() -> pathlib.Path
+
+      Return the trajectory check file name.
+
+
+
+   .. py:method:: get_time_array() -> numpy.typing.NDArray[numpy.number]
+
+      Return the trajectory time instants.
+
+
+
+   .. py:method:: get_score_array() -> numpy.typing.NDArray[numpy.number]
+
+      Return the trajectory scores.
+
+
+
+   .. py:method:: get_noise_array() -> numpy.typing.NDArray[Any]
+
+      Return the trajectory noises.
+
+
+
+   .. py:method:: get_state_list() -> list[tuple[int, T_State | None]]
+
+      Return a list of states and associated indices.
+
+      :returns: A list of tuples with index and states
+
+
+
+   .. py:method:: get_length() -> int
+
+      Return the trajectory length.
+
+
+
+   .. py:method:: get_nbranching() -> int
+
+      Return the number of branching events.
+
+
+
+   .. py:method:: get_computed_steps_count() -> int
+
+      Return the number of compute steps taken.
+
+
+
+   .. py:method:: get_last_state() -> T_State | None
+
+      Return the last state in the trajectory.
+
+
+
+   .. py:method:: get_last_state_id() -> int | None
+
+      Return the id of the last state in the trajectory.
+
+
+
+   .. py:method:: get_metadata() -> dict
+
+      Return a dict with traj metadata.
+
+      :returns: The trajectory metadata in a dict.
+
+
+
+   .. py:method:: serialize_metadata_json() -> str
+
+      Return a json string with metadata.
+
+      :returns: A json string with the trajectory metadata
+
+
+
+   .. py:method:: deserialize_metadata(json_str: str) -> dict[str, Any]
+      :classmethod:
+
+
+      Load a json string into a properly typed metadata dict.
+
+      :returns: A dictionary with the metadata
+
+
+
+   .. py:method:: delete() -> None
+
+      Clear the trajectory on-disk data.
+
+
+

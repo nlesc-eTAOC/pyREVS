@@ -1,0 +1,127 @@
+pyrevs.runner
+=============
+
+.. py:module:: pyrevs.runner
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/runner/config/index
+   /autoapi/pyrevs/runner/taskrunner/index
+   /autoapi/pyrevs/runner/worker/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.runner.RunnerConfig
+   pyrevs.runner.BaseRunner
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.runner.make_runner
+   pyrevs.runner.ms_worker
+   pyrevs.runner.pool_worker
+
+
+Package Contents
+----------------
+
+.. py:class:: RunnerConfig
+
+   Runner configuration.
+
+
+   .. py:attribute:: type
+      :type:  str
+      :value: 'asyncio'
+
+
+
+   .. py:attribute:: nworkers
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: dask_config
+      :type:  DaskConfig
+
+
+.. py:class:: BaseRunner(runner_cfg: pyrevs.runner.config.RunnerConfig, worker_fn: collections.abc.Callable, n_workers: int = 1, loglevel: str = 'INFO', logfile: str | None = None)
+
+   An ABC for the task runners.
+
+
+   .. py:method:: make_promise(task: list[Any]) -> None
+      :abstractmethod:
+
+
+      Log a new task to the list of task to tackle.
+
+
+
+   .. py:method:: execute_promises() -> Any
+      :abstractmethod:
+
+
+      Execute the list of promises.
+
+
+
+   .. py:method:: n_workers() -> int
+      :abstractmethod:
+
+
+      Return the number of workers in the runner.
+
+
+
+.. py:function:: make_runner(runner_cfg: pyrevs.runner.config.RunnerConfig, worker_fn: collections.abc.Callable, loglevel: str = 'INFO', logfile: str | None = None, max_workers: int = -1) -> BaseRunner
+
+   Factory that instantiates a configured runner.
+
+   :param runner_cfg: a config mapping for the runner
+   :param worker_fn: a worker function
+   :param loglevel: logging level
+   :param logfile: logging file
+   :param max_workers: maximum number of workers
+
+
+.. py:function:: ms_worker(from_traj: pyrevs.trajectory.Trajectory, rst_traj: pyrevs.trajectory.Trajectory, min_val: float, new_weight: float, termination_criteria: list[pyrevs.strategies.base.TerminationCriterion], end_date: datetime.date, trajdb_path: str | None = None, db_path: str | None = None) -> pyrevs.trajectory.Trajectory
+
+   A worker to restart trajectories.
+
+   :param from_traj: a trajectory to restart from
+   :param rst_traj: the trajectory being restarted
+   :param min_val: the value of the score function to restart from
+   :param new_weight: the weight of the new child trajectory
+   :param termination_criteria: a list of termination criterion for the advance call
+   :param end_date: the time limit to advance the trajectory
+   :param trajdb_path: a path to the SQL database
+   :param db_path: an optional path to the run database
+
+
+.. py:function:: pool_worker(traj: pyrevs.trajectory.Trajectory, termination_criteria: list[pyrevs.strategies.base.TerminationCriterion], end_date: datetime.date, trajdb_path: str | None = None, db_path: str | None = None) -> pyrevs.trajectory.Trajectory
+
+   A worker to generate each initial trajectory.
+
+   :param traj: a trajectory
+   :param termination_criteria: a list of termination criterion for the advance call
+   :param end_date: the time limit to advance the trajectory
+   :param trajdb_path: an optional path to the SQL database
+   :param db_path: an optional path to the run database
+
+   :returns: The updated trajectory
+
+

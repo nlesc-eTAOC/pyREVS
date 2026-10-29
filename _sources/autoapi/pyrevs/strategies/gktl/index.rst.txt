@@ -1,0 +1,279 @@
+pyrevs.strategies.gktl
+======================
+
+.. py:module:: pyrevs.strategies.gktl
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/strategies/gktl/config/index
+   /autoapi/pyrevs/strategies/gktl/extension/index
+   /autoapi/pyrevs/strategies/gktl/gktl/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.GKTLConfig
+   pyrevs.strategies.gktl.GKTLDatabaseExtension
+   pyrevs.strategies.gktl.GKTL
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.load_database_extension
+
+
+Package Contents
+----------------
+
+.. py:class:: GKTLConfig
+
+   GKTL strategy configuration.
+
+
+   .. py:attribute:: ntrajectories
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: end_time
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: resampling_interval
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: k
+      :type:  float
+      :value: 0.01
+
+
+
+   .. py:attribute:: bias_observable
+      :type:  str
+      :value: 'integral'
+
+
+
+   .. py:attribute:: use_custom_termination
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate GKTL configuration.
+
+
+
+.. py:class:: GKTLDatabaseExtension
+
+   Bases: :py:obj:`pyrevs.database.StrategyDatabaseExtension`
+
+
+   An extension class for the GKTL strategy.
+
+   An extension of the database to store GKTL-specific
+   data. To be able to checkpoint a sampling run with GKTL,
+   and to compute unbiased estimates from the biased ensemble,
+   one need to store/read the following attributes.
+
+   At each resampling step n, the clone weights are W_i = exp(k * dA_i)
+   and the normalization factor is R_n = mean(W_i). The (unbiased) estimate
+   of the expectation of an observable O of the trajectories is then:
+
+       E[O] = 1/N sum_i O_i exp(-log_tilt_i) prod_n R_n
+
+   where log_tilt_i = k * sum_n dA_i,n along the ancestry of clone i.
+
+   :ivar _iteration_count: number of completed resampling steps
+   :ivar _cur_time: time of the last resampling step
+   :ivar _k: the bias amplitude
+   :ivar _log_norm: log of the normalization factor R_n of each resampling step
+   :ivar _log_tilt: accumulated log-tilt of each clone along its ancestry
+   :ivar _window_start: start time of the current resampling interval for each clone
+   :ivar _ancestors: parent index of each clone, for each resampling step
+   :ivar _times: time of each resampling step
+
+
+
+   .. py:method:: initialize(tdb: pyrevs.database.Database, k: float) -> None
+
+      Initialize the GKTL database extension.
+
+      If an on-disk database with GKTL metadata already exists,
+      the extension state is read from disk to enable restarts.
+
+      :param tdb: the core trajectory database
+      :param k: the bias amplitude
+
+
+
+   .. py:method:: initialize_from_database(tdb: pyrevs.database.Database) -> None
+
+      Initialize the GKTL database extension from an existing database.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: serialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: deserialize() -> None
+
+      Deserialize the extension.
+
+
+
+   .. py:method:: iteration_count() -> int
+
+      Return the number of completed resampling steps.
+
+
+
+   .. py:method:: current_time() -> float
+
+      Return the time of the last resampling step.
+
+
+
+   .. py:method:: window_start() -> list[float]
+
+      Return the start time of the current resampling interval for each clone.
+
+
+
+   .. py:method:: ancestors() -> list[list[int]]
+
+      Return the parent index of each clone, for each resampling step.
+
+
+
+   .. py:method:: log_normalization() -> list[float]
+
+      Return the log of the normalization factor of each resampling step.
+
+
+
+   .. py:method:: record_resampling(delta_a: numpy.typing.NDArray[numpy.number], parents: list[int], window_start: list[float], time: float) -> None
+
+      Record a resampling step and update the clones tilt.
+
+      :param delta_a: the observable increment of each clone over the interval (before resampling)
+      :param parents: the parent index of each clone after resampling
+      :param window_start: the start time of the next interval for each clone
+      :param time: the time of the resampling step
+
+
+
+   .. py:method:: clone_weights() -> numpy.typing.NDArray[numpy.number]
+
+      Return the estimator weight of each clone in the current ensemble.
+
+      The weights sum to one in expectation (exactly for k = 0).
+
+
+
+   .. py:method:: get_exceedance_probability(threshold: float) -> float
+
+      Return the probability that the score maximum exceeds a threshold.
+
+      :param threshold: the score threshold
+
+      :returns: the unbiased estimate of P(max score >= threshold)
+
+
+
+   .. py:method:: get_event_probability() -> float
+
+      Return the event probability.
+
+      The event is the convergence of the trajectory (i.e. reaching the
+      target score) within the sampling end time.
+
+
+
+.. py:class:: GKTL(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, runner_cfg: pyrevs.runner.RunnerConfig, strategy_cfg: pyrevs.strategies.gktl.config.GKTLConfig, deterministic: bool)
+
+   Bases: :py:obj:`pyrevs.strategies.base.BaseSamplingStrategy`
+
+
+   A strategy class implementing GKTL.
+
+   The Giardina-Kurchan-Lecomte-Tailleur algorithm evolves an ensemble of
+   trajectories and, at fixed resampling intervals, kills or clones each of them
+   according to a weight exp(k * dA), where dA is an observable increment
+   over the interval. This biases the ensemble toward large values of the
+   observable. The bias is accounted for when computing estimates (see
+   :class:`GKTLDatabaseExtension`).
+
+   Trajectories that converge (reach the target score) before the end time
+   are frozen: their observable increment is zero over later intervals.
+
+   .. rubric:: Notes
+
+   This strategy relies on time management provided by
+   BaseSamplingStrategy (e.g. ``self._end_date``, ``elapsed_time()``).
+
+
+   .. py:method:: run_gktl(database: pyrevs.database.Database, plot_diags: bool) -> bool
+
+      Run the GKTL resampling loop.
+
+      Advance the ensemble of trajectories interval by interval, resampling
+      the ensemble at the end of each interval (except the last one).
+      The loop resumes from the last completed resampling step when
+      restarting from an existing database.
+
+      :param database: the sampling database
+      :param plot_diags: whether to plot diagnostics
+
+      :returns: True if the end time was reached (or all trajectories terminated)
+
+      :raises RuntimeError if the runner fails:
+
+
+
+   .. py:method:: compute_probability(database: pyrevs.database.Database, plot_diags: bool) -> float
+
+      Compute the rare-event probability using GKTL.
+
+      :param database: the trajectory database
+      :param plot_diags: whether to plot diagnostics
+
+      :returns: the rare-event probability, or -1.0 if the run did not complete
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+
+      Initialize database core state.
+
+
+
+.. py:function:: load_database_extension(tdb: pyrevs.database.Database) -> extension.GKTLDatabaseExtension
+
+   A factory function to instanciate the extension from the database.
+
+

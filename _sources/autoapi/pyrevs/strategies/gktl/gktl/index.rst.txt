@@ -1,0 +1,127 @@
+pyrevs.strategies.gktl.gktl
+===========================
+
+.. py:module:: pyrevs.strategies.gktl.gktl
+
+.. autoapi-nested-parse::
+
+   The GiardinaKurchanLecomteTailleur sampling strategy.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.gktl.TIME_TOL
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.gktl.GKTL
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.gktl.select_clones
+   pyrevs.strategies.gktl.gktl.observable_increment
+
+
+Module Contents
+---------------
+
+.. py:data:: TIME_TOL
+   :value: 1e-09
+
+
+.. py:function:: select_clones(log_w: numpy.typing.NDArray[numpy.number], rng: numpy.random.Generator) -> list[int]
+
+   Select the clones of the next generation.
+
+   Each clone i gets floor(W_i / R + U_i) copies, with W_i = exp(log_w_i),
+   R = mean(W) and U_i uniform in [0, 1). Copies are then randomly removed
+   or added to maintain the ensemble size. Surviving clones keep their own
+   slot, while the extra copies take the slots of the killed clones.
+
+   :param log_w: the log-weight of each clone
+   :param rng: a random number generator
+
+   :returns: the parent index of each slot of the new generation
+
+
+.. py:function:: observable_increment(traj: pyrevs.trajectory.Trajectory, t_start: float, observable: str) -> float
+
+   Compute the observable increment of a trajectory since a given time.
+
+   :param traj: the trajectory
+   :param t_start: the start time of the interval
+   :param observable: either 'integral' (time integral of the score) or 'increment'
+
+   :returns: the observable increment over [t_start, current time]
+
+
+.. py:class:: GKTL(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, runner_cfg: pyrevs.runner.RunnerConfig, strategy_cfg: pyrevs.strategies.gktl.config.GKTLConfig, deterministic: bool)
+
+   Bases: :py:obj:`pyrevs.strategies.base.BaseSamplingStrategy`
+
+
+   A strategy class implementing GKTL.
+
+   The Giardina-Kurchan-Lecomte-Tailleur algorithm evolves an ensemble of
+   trajectories and, at fixed resampling intervals, kills or clones each of them
+   according to a weight exp(k * dA), where dA is an observable increment
+   over the interval. This biases the ensemble toward large values of the
+   observable. The bias is accounted for when computing estimates (see
+   :class:`GKTLDatabaseExtension`).
+
+   Trajectories that converge (reach the target score) before the end time
+   are frozen: their observable increment is zero over later intervals.
+
+   .. rubric:: Notes
+
+   This strategy relies on time management provided by
+   BaseSamplingStrategy (e.g. ``self._end_date``, ``elapsed_time()``).
+
+
+   .. py:method:: run_gktl(database: pyrevs.database.Database, plot_diags: bool) -> bool
+
+      Run the GKTL resampling loop.
+
+      Advance the ensemble of trajectories interval by interval, resampling
+      the ensemble at the end of each interval (except the last one).
+      The loop resumes from the last completed resampling step when
+      restarting from an existing database.
+
+      :param database: the sampling database
+      :param plot_diags: whether to plot diagnostics
+
+      :returns: True if the end time was reached (or all trajectories terminated)
+
+      :raises RuntimeError if the runner fails:
+
+
+
+   .. py:method:: compute_probability(database: pyrevs.database.Database, plot_diags: bool) -> float
+
+      Compute the rare-event probability using GKTL.
+
+      :param database: the trajectory database
+      :param plot_diags: whether to plot diagnostics
+
+      :returns: the rare-event probability, or -1.0 if the run did not complete
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+
+      Initialize database core state.
+
+
+

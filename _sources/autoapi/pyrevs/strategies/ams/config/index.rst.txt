@@ -1,0 +1,76 @@
+pyrevs.strategies.ams.config
+============================
+
+.. py:module:: pyrevs.strategies.ams.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.config.AMSConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: AMSConfig
+
+   AMS strategy configuration.
+
+
+   .. py:attribute:: ntrajectories
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: nsplititer
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: variant
+      :type:  str
+      :value: 'tams'
+
+
+
+   .. py:attribute:: l_j
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: init_ensemble_only
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: end_time
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: min_score
+      :type:  float | None
+      :value: None
+
+
+
+   .. py:attribute:: use_custom_termination
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate AMS configuration.
+
+
+

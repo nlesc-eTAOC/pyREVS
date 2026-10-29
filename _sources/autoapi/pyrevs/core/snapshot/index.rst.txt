@@ -1,0 +1,79 @@
+pyrevs.core.snapshot
+====================
+
+.. py:module:: pyrevs.core.snapshot
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.core.snapshot.T_Noise
+   pyrevs.core.snapshot.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.snapshot.Snapshot
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: Snapshot
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`T_Noise`\ , :py:obj:`T_State`\ ]
+
+
+   A dataclass defining a snapshot.
+
+   Gathering what defines a snapshot into an object.
+   The time and score are of float type, but the
+   actual type of the noise and state are completely
+   determined by the forward model.
+   A snapshot is allowed to have a state or not to
+   accommodate memory savings.
+
+   :ivar time: snapshot time
+   :ivar score: score function value
+   :ivar noise: noise used to reach this snapshot
+   :ivar state: model state
+
+
+
+   .. py:attribute:: time
+      :type:  float
+
+
+   .. py:attribute:: score
+      :type:  float
+
+
+   .. py:attribute:: noise
+      :type:  T_Noise
+
+
+   .. py:attribute:: state
+      :type:  T_State | None
+      :value: None
+
+
+
+   .. py:property:: has_state
+      :type: bool
+
+
+      Check if snapshot has state.
+
+      :returns: True if state is not None
+      :rtype: bool
+
+

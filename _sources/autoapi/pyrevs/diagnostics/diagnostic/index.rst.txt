@@ -1,0 +1,216 @@
+pyrevs.diagnostics.diagnostic
+=============================
+
+.. py:module:: pyrevs.diagnostics.diagnostic
+
+.. autoapi-nested-parse::
+
+   Diagnostic class for pyREVS.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.diagnostics.diagnostic.DiagnosticPlugin
+   pyrevs.diagnostics.diagnostic.EveryTimeCrossing
+   pyrevs.diagnostics.diagnostic.FirstTimeCrossingDiagnostic
+   pyrevs.diagnostics.diagnostic.FirstAndLastEveryCrossingDiagnostic
+   pyrevs.diagnostics.diagnostic.DiagnosticAnalyst
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.diagnostics.diagnostic.diagnosticfactory
+
+
+Module Contents
+---------------
+
+.. py:class:: DiagnosticPlugin(dlabel: str, params: dict[Any, Any], tid: int, weight: float, workdir: pathlib.Path, fprocess: collections.abc.Callable[..., Any], ddb: pyrevs.diagnostics.diagdb.DiagDB)
+
+   A base class for diagnostic plugins.
+
+   Plugins are attached to the trajectory objects.
+
+   :ivar _label: the diagnostic label
+   :ivar _tid: the ID of the trajectory the plugin is attached to
+   :ivar _weight: the weight of the trajectory
+
+
+
+   .. py:method:: get_crossed_levels(new_snapshot: pyrevs.core.Snapshot) -> list[float]
+      :abstractmethod:
+
+
+      Test to know if diagnostic is needed.
+
+
+
+   .. py:method:: update(old_snapshot: pyrevs.core.Snapshot, new_snapshot: pyrevs.core.Snapshot) -> None
+
+      Standard entry point called after every MCMC step.
+
+      This base method works for vanilla diagnostics, for which
+      the trigger logic is not too complex, but it can be overridden
+      for more complex diagnostics.
+
+
+
+.. py:class:: EveryTimeCrossing(dlabel: str, params: dict[Any, Any], tid: int, tweight: float, workdir: pathlib.Path, fprocess: collections.abc.Callable[..., Any], ddb: pyrevs.diagnostics.diagdb.DiagDB)
+
+   Bases: :py:obj:`DiagnosticPlugin`
+
+
+   Triggers at fixed time intervals.
+
+   Check if the time interval between the old and
+   new snapshot crossed fixed time 'level' defined
+   evenly from a start time and a time interval:
+   t_0 + N * delta_t.
+
+   :ivar _time_interval: the time interval between two recording events
+   :ivar _time_start: the start time
+
+
+
+   .. py:method:: update(old_snapshot: pyrevs.core.Snapshot, new_snapshot: pyrevs.core.Snapshot) -> None
+
+      Entry point called after every MCMC step.
+
+      This plugin does not depends on the score function so bypass
+      some of the logic of the base class.
+
+
+
+.. py:class:: FirstTimeCrossingDiagnostic(dlabel: str, params: dict[Any, Any], tid: int, tweight: float, workdir: pathlib.Path, fprocess: collections.abc.Callable[..., Any], ddb: pyrevs.diagnostics.diagdb.DiagDB)
+
+   Bases: :py:obj:`DiagnosticPlugin`
+
+
+   Triggers when the score function crosses pre-defined levels.
+
+   This is a central diagnostic plugin to pyREVS, triggered when
+   the score function crosses pre-defined levels, only for
+   the first time.
+
+   This allows to evaluate the probability of crossing any
+   intermediate score levels from a pyREVS run, as well as
+   estimating mean first passage time.
+
+   # Note: might want to always add this diagnostic
+
+   :ivar _levels: the threshold levels
+   :ivar _highest_recorded_score: the high water mark of the plugin
+   :ivar _checked_db: True if the DB has been checked
+
+
+
+   .. py:method:: get_crossed_levels(new_snapshot: pyrevs.core.Snapshot) -> list[float]
+
+      Get the list of level crossed during last step.
+
+      :param new_snapshot: the new (end of the time step) snapshot
+
+      :returns: the list of score levels crossed
+
+
+
+.. py:class:: FirstAndLastEveryCrossingDiagnostic(dlabel: str, params: dict[Any, Any], tid: int, tweight: float, workdir: pathlib.Path, fprocess: collections.abc.Callable[..., Any], ddb: pyrevs.diagnostics.diagdb.DiagDB)
+
+   Bases: :py:obj:`DiagnosticPlugin`
+
+
+   Record compressed crossing events across score levels.
+
+   This diagnostic:
+   - allows multiple visits to the same level,
+   - suppresses oscillatory recrossings,
+   - records:
+       * FIRST crossing when entering a level,
+       * LAST crossing before leaving it,
+   - supports multiple crossed levels per timestep,
+   - supports restart from DB state.
+
+   .. rubric:: Notes
+
+   During one timestep, several levels may be crossed.
+   For now, all generated events use `new_snapshot.time`.
+
+
+   .. py:method:: update(old_snapshot: pyrevs.core.Snapshot, new_snapshot: pyrevs.core.Snapshot) -> None
+
+      Update diagnostic state after one model step.
+
+
+
+.. py:function:: diagnosticfactory(configs: dict[str, pyrevs.core.Config], tid: int, tweight: float, workdir: pathlib.Path, fprocess: collections.abc.Callable[..., Any], ddb: pyrevs.diagnostics.diagdb.DiagDB) -> list[DiagnosticPlugin]
+
+   Parse input parameters to generate a list of DiagnosticPlugin.
+
+   :param configs: a dict with a Config object for each diagnostic
+   :param tid: the ID of the traj the diagnostic is attached to
+   :param tweight: the weight of the traj
+   :param workdir: the workdir associated with a trajectory
+   :param fprocess: the forward model diagnostic function
+   :param ddb: the diagnostic database to add the data to
+
+
+.. py:class:: DiagnosticAnalyst(db_path: str)
+
+   A class to handle analysing diagnostic statistics.
+
+   Let's keep the analysis logic separated from the gathering logic.
+   This class retrieves data from the diagnostic database and perform
+   some computation (mostly conditional statistics on score iso-levels).
+
+
+   .. py:attribute:: db
+
+
+   .. py:method:: get_all_diagnostic_data(label: str) -> dict[float, list[tuple[Any, float, float, int]]]
+
+      A user-facing access to the diag DB.
+
+      An alias to the DB access for the analyst.
+
+      :returns: A dictionary mapping each score iso-level (float) to a list of tuples.
+                Each tuple contains (unpickled_data, trajectory_weight, time, tid).
+
+
+
+   .. py:method:: get_traj_diagnostic_data(label: str, tid: int, time_ordered: bool = False) -> dict[float, list[tuple[Any, float, float]]]
+
+      A user-facing access to the diag DB.
+
+      Access to the diagnostic data for a specific trajectory.
+
+      :param label: the label of the diagnostic of interest
+      :param tid: the ID of the trajectory
+      :param time_ordered: whether to order the results by time (default: False, by level)
+
+      :returns: A dictionary mapping each score iso-level (float) to a (list of) tuple.
+                Each tuple contains (unpickled_data, trajectory_weight, time).
+
+
+
+   .. py:method:: compute_weighted_stats(label: str) -> dict[float, dict[str, Any]]
+
+      Aggregate data and compute mean/variance per level.
+
+
+
+   .. py:method:: get_conditional_means(label: str) -> dict[float, dict[str, Any]]
+
+      Compute means at level L_i conditioned on reaching or not reaching L_{i+1}.
+
+      :returns: {"reached_next": mean_val, "failed_next": mean_val} }
+      :rtype: { level
+
+
+

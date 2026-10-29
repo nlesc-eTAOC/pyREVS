@@ -1,0 +1,40 @@
+pyrevs.strategies.montecarlo.config
+===================================
+
+.. py:module:: pyrevs.strategies.montecarlo.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.config.MCConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: MCConfig
+
+   MC strategy configuration.
+
+
+   .. py:attribute:: ntrajectories
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: end_time
+      :type:  float | None
+      :value: None
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate MC configuration.
+
+
+

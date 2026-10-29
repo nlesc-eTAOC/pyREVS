@@ -1,0 +1,128 @@
+pyrevs.strategies.base.termination
+==================================
+
+.. py:module:: pyrevs.strategies.base.termination
+
+.. autoapi-nested-parse::
+
+   Defines the interface and simple implementations of termination criteria.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.base.termination.T_Noise
+   pyrevs.strategies.base.termination.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.base.termination.TerminationCriterion
+   pyrevs.strategies.base.termination.TimeTerminationCriterion
+   pyrevs.strategies.base.termination.TimeInterruptionCriterion
+   pyrevs.strategies.base.termination.LowScoreTerminationCriterion
+   pyrevs.strategies.base.termination.ModelTerminationCriterion
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: TerminationCriterion
+
+   Bases: :py:obj:`Protocol`
+
+
+   Termination criterion interface.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+      :abstractmethod:
+
+
+      Check if the trajectory should terminate.
+
+      :param model: the forward model
+      :param trajectory: the trajectory
+
+      :returns: One of the TrajectoryStateType
+
+
+
+.. py:class:: TimeTerminationCriterion(end_time: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on time.
+
+   Will trigger termination if the current time is greater than or equal
+   to the end time.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: TimeInterruptionCriterion(end_time: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Interruption criterion based on time.
+
+   Will trigger interruption if the current time is greater than or equal
+   to the end time.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: LowScoreTerminationCriterion(score_threshold: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on score.
+
+   Will trigger termination if the current score is less than or equal
+   to a threshold.
+
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: ModelTerminationCriterion
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on model.
+
+   Will trigger termination if the forward model has decides to.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+

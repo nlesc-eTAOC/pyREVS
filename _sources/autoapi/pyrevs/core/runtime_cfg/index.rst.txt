@@ -1,0 +1,52 @@
+pyrevs.core.runtime_cfg
+=======================
+
+.. py:module:: pyrevs.core.runtime_cfg
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.runtime_cfg.RuntimeConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: RuntimeConfig
+
+   Runtime configuration.
+
+
+   .. py:attribute:: loglevel
+      :type:  str
+      :value: 'INFO'
+
+
+
+   .. py:attribute:: logfile
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: walltime
+      :type:  float
+      :value: 86400
+
+
+
+   .. py:attribute:: plot_diagnostics
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: diagnostics
+      :type:  list[str]
+      :value: []
+
+
+

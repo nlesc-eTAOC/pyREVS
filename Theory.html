@@ -1,0 +1,702 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Validation" href="Validation.html"><link rel="prev" title="Welcome to pyREVS’s documentation!" href="index.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>Theory - pyREVS 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyREVS 1.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">pyREVS 1.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extension.html">Extension</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/pyrevs/index.html">pyrevs</a><input aria-label="Toggle navigation of pyrevs" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/bin/index.html">pyrevs.bin</a><input aria-label="Toggle navigation of pyrevs.bin" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/bin/bin/index.html">pyrevs.bin.bin</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/core/index.html">pyrevs.core</a><input aria-label="Toggle navigation of pyrevs.core" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/config/index.html">pyrevs.core.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/fmodel/index.html">pyrevs.core.fmodel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/runtime_cfg/index.html">pyrevs.core.runtime_cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/snapshot/index.html">pyrevs.core.snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/sqlcore/index.html">pyrevs.core.sqlcore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/sqlmanager/index.html">pyrevs.core.sqlmanager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/database/index.html">pyrevs.database</a><input aria-label="Toggle navigation of pyrevs.database" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/bootstrap/index.html">pyrevs.database.bootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/config/index.html">pyrevs.database.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/database/index.html">pyrevs.database.database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/extension/index.html">pyrevs.database.extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/diagnostics/index.html">pyrevs.diagnostics</a><input aria-label="Toggle navigation of pyrevs.diagnostics" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/diagnostics/diagdb/index.html">pyrevs.diagnostics.diagdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/diagnostics/diagnostic/index.html">pyrevs.diagnostics.diagnostic</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/runner/index.html">pyrevs.runner</a><input aria-label="Toggle navigation of pyrevs.runner" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/config/index.html">pyrevs.runner.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/taskrunner/index.html">pyrevs.runner.taskrunner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/worker/index.html">pyrevs.runner.worker</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/sampler/index.html">pyrevs.sampler</a><input aria-label="Toggle navigation of pyrevs.sampler" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/config/index.html">pyrevs.sampler.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/sampler/index.html">pyrevs.sampler.sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/system_config/index.html">pyrevs.sampler.system_config</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/index.html">pyrevs.strategies</a><input aria-label="Toggle navigation of pyrevs.strategies" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/index.html">pyrevs.strategies.ams</a><input aria-label="Toggle navigation of pyrevs.strategies.ams" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/ams/index.html">pyrevs.strategies.ams.ams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/config/index.html">pyrevs.strategies.ams.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/extension/index.html">pyrevs.strategies.ams.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/sql/index.html">pyrevs.strategies.ams.sql</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/base/index.html">pyrevs.strategies.base</a><input aria-label="Toggle navigation of pyrevs.strategies.base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/base/strategy/index.html">pyrevs.strategies.base.strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/base/termination/index.html">pyrevs.strategies.base.termination</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/index.html">pyrevs.strategies.gktl</a><input aria-label="Toggle navigation of pyrevs.strategies.gktl" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/config/index.html">pyrevs.strategies.gktl.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/extension/index.html">pyrevs.strategies.gktl.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/gktl/index.html">pyrevs.strategies.gktl.gktl</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/index.html">pyrevs.strategies.montecarlo</a><input aria-label="Toggle navigation of pyrevs.strategies.montecarlo" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/config/index.html">pyrevs.strategies.montecarlo.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/extension/index.html">pyrevs.strategies.montecarlo.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/montecarlo/index.html">pyrevs.strategies.montecarlo.montecarlo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/trajectory/index.html">pyrevs.trajectory</a><input aria-label="Toggle navigation of pyrevs.trajectory" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/trajectory/config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/trajectory/trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/utils/index.html">pyrevs.utils</a><input aria-label="Toggle navigation of pyrevs.utils" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/dbutils/index.html">pyrevs.utils.dbutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/utils/index.html">pyrevs.utils.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/xmlutils/index.html">pyrevs.utils.xmlutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/yamlutils/index.html">pyrevs.utils.yamlutils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/Theory.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="theory">
+<span id="sec-theory"></span><h1>Theory<a class="headerlink" href="#theory" title="Link to this heading">¶</a></h1>
+<section id="stochastic-dynamical-systems">
+<h2>Stochastic dynamical systems<a class="headerlink" href="#stochastic-dynamical-systems" title="Link to this heading">¶</a></h2>
+<p>Stochastic dynamical systems describe the evolution of a random process <span class="math notranslate nohighlight">\((X_t)_{t \ge 0}\)</span>,
+where the state <span class="math notranslate nohighlight">\(X_t \in \mathbb{R}^{d}\)</span> evolves according to probabilistic rules
+rather than deterministic dynamics only. If the system is Markovian, i.e.
+<span class="math notranslate nohighlight">\(X_{t+\Delta t}\)</span> depends only on the current state <span class="math notranslate nohighlight">\(X_t\)</span>, its behavior can be
+characterized by a stochastic differential equation (SDE) of the form:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[dX_t = f(X_t)\,dt + g(X_t)\,dW_t.\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f : \mathbb{R}^{d} \to \mathbb{R}^{d}\)</span> denotes the <em>drift</em> term,
+governing the deterministic component of the dynamics, while
+<span class="math notranslate nohighlight">\(g : \mathbb{R}^{d} \to \mathbb{R}^{d \times m}\)</span> represents the
+<em>diffusion</em> matrix, which scales the stochastic forcing introduced by the
+<span class="math notranslate nohighlight">\(m\)</span>-dimensional Wiener process <span class="math notranslate nohighlight">\(W_t \in \mathbb{R}^{m}\)</span>.</p>
+<p>Solving analytically the above SDE to obtain the system probability distributions is
+rarely feasible, especially in nonlinear or high-dimensional settings. Markov
+chain Monte Carlo (MCMC) methods address this challenge by constructing a
+discrete-time Markov chain whose stationary distribution approximates the
+target distribution of the stochastic dynamical system. In this
+context, MCMC produces an ensemble of sample trajectories
+<span class="math notranslate nohighlight">\(\{X_t^{(k)}\}_{k=1}^K\)</span>, where each <span class="math notranslate nohighlight">\(X_t^{(k)}\)</span> represents the
+<span class="math notranslate nohighlight">\(k\)</span>-th simulated path of the underlying Markov process. These sampled
+trajectories make it possible to approximate expectations <span class="math notranslate nohighlight">\(\mathbb{E}[h(X_t)]\)</span>,
+estimate uncertainty, and analyze long-term behavior even when closed-form expressions
+for the dynamics are inaccessible.</p>
+</section>
+<section id="rare-events">
+<h2>Rare events<a class="headerlink" href="#rare-events" title="Link to this heading">¶</a></h2>
+<p>Rare events of the above stochastic dynamical system correspond to outcomes of the
+process <span class="math notranslate nohighlight">\(X_t\)</span> that occur with very low probability but often carry
+significant impact, such as extreme fluctuations in financial markets, system
+failures, climate extremes or transitions between metastable states in physical systems.
+Let us denote such a rare event by</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathcal{E} = \{ X_t \in \mathcal{C} \},\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> is a subset of the state space <span class="math notranslate nohighlight">\(\mathbb{R}^{d}\)</span> with
+small probability under the distribution of <span class="math notranslate nohighlight">\(X_t\)</span>. Quantities of interest often
+involve the expectation of an indicator function</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbb{P}(\mathcal{E}) = \mathbb{E}[\mathbf{1}_{\mathcal{E}}(X_t)].\]</div>
+</div>
+<p>Estimating <span class="math notranslate nohighlight">\(\mathbb{P}(\mathcal{E})\)</span> using plain Monte Carlo involves
+drawing <span class="math notranslate nohighlight">\(K\)</span> independent trajectories <span class="math notranslate nohighlight">\(\{X_t^{(k)}\}_{k=1}^K\)</span> and
+computing the empirical average, resulting in an estimator:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\hat{P}_K = \frac{1}{K} \sum_{k=1}^K \mathbf{1}_{\mathcal{E}}(X_t^{(k)}).\]</div>
+</div>
+<p>While unbiased, this estimator suffers from a severe relative error issue when the occurrence of
+the event <span class="math notranslate nohighlight">\(\mathcal{E}\)</span> is rare. Specifically, the relative error can be written as:
+(<a class="reference external" href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470745403">Rubino and Tuffin</a>):</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathrm{RE}(\hat{P}_K)
+  = \frac{\sqrt{\mathrm{Var}(\hat{P}_K)}}{\mathbb{P}(\mathcal{E})} ~
+ \sim \mathcal{O}\!\left(
+     \frac{1}{\sqrt{K\,\mathbb{P}(\mathcal{E})}}
+   \right),\]</div>
+</div>
+<p>which implies that achieving a fixed relative accuracy requires
+<span class="math notranslate nohighlight">\(K = \mathcal{O}(1 / \mathbb{P}(\mathcal{E}))\)</span> samples. For rare events
+where <span class="math notranslate nohighlight">\(\mathbb{P}(\mathcal{E})\)</span> is extremely small, this makes plain
+Monte Carlo computationally infeasible, motivating the use of variance
+reduction and specialized rare-event sampling techniques such as importance
+sampling, splitting, or rare-event-focused Markov chain Monte Carlo methods.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the following, we will focus on the rare event techniques
+originally implemented in <cite>pyREVS</cite>, other sampling methods
+might have been implemented afterward but it is up to developers to update the documentation.</p>
+</div>
+</section>
+<section id="adaptive-multilevel-splitting">
+<h2>Adaptive multilevel splitting<a class="headerlink" href="#adaptive-multilevel-splitting" title="Link to this heading">¶</a></h2>
+<p>Adaptive Multilevel Splitting (AMS), introduced by <a class="reference external" href="https://www.tandfonline.com/doi/abs/10.1080/07362990601139628">Cerou and Guyader</a>,
+is a modern rare-events sampling technique of the Importance Splitting (IS) family. The idea of splitting methods
+is to divide the occurrence of a rare event into a chain of not-as-rare events, the probability of which is easier
+to estimate. In contrast with earlier versions of the method, which required defining this sequence of not-as-rare
+events a-priori, AMS allows to define it dynamically as the algorithm proceeds. For a historical perspective on AMS
+see for instance <a class="reference external" href="https://doi.org/10.1063/1.5082247">Cerou et al.</a>.</p>
+<p>Using the previously introduced notations, let’s define a state <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>,
+a subset of <span class="math notranslate nohighlight">\(\mathbb{R}^{d}\)</span>, and the associated return time to <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\tau_{\mathcal{A}} = \inf \{t \in \mathbb{N} : X_t \in \mathcal{A}\}\]</div>
+</div>
+<p>for a Markov chain initiated at <span class="math notranslate nohighlight">\(X_t(t=0) = X_0 = x_0 \notin \mathcal{A}\)</span>. Let’s define similarly
+<span class="math notranslate nohighlight">\(\tau_{\mathcal{B}}\)</span> for a state <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>. When studying rare transitions, both <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>
+are metastable regions of the system phase space if a Markov chain started in the vicinity of <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>
+(resp. <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>) remains close to <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> (resp. <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>) for
+a long time before exiting. In such cases, a rare transition from <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> to <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> can be defined as:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbb{P}(E_{\mathcal{A}\mathcal{B}}) = \mathbb{P}(\tau_{\mathcal{B}} &lt; \tau_{\mathcal{A}})\]</div>
+</div>
+<p>for initial conditions <span class="math notranslate nohighlight">\(x_0\)</span> close to <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>. AMS was developed with rare transitions in mind,
+but is not limited to transitions as rare occurrences of a model can also be sampled, i.e. <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> might
+not be a metastable region.</p>
+<p>The idea of multilevel splitting is to decompose this rare event into a series of <cite>less rare</cite> events by
+defining successive regions <span class="math notranslate nohighlight">\(\mathcal{C}_i\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathcal{C}_I = \mathcal{B} \in \mathcal{C}_{I-1} \in ... \in \mathcal{C}_{1} \in \mathcal{C}_{0} = \mathcal{A}\]</div>
+</div>
+<p>and <span class="math notranslate nohighlight">\(E_{\mathcal{A}\mathcal{C}_i}\)</span> the event <span class="math notranslate nohighlight">\(\tau_{\mathcal{C}_i} &lt; \tau_{\mathcal{A}}\)</span>.
+Using the conditional probabilities <span class="math notranslate nohighlight">\(p_i = \mathbb{P}(E_{\mathcal{A}\mathcal{C}_i} | E_{\mathcal{A}\mathcal{C}_{i-1}})\)</span>
+for <span class="math notranslate nohighlight">\(i &gt; 1\)</span>, we have:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbb{P}(E_{\mathcal{A}\mathcal{C}_I}) = \prod_{i=1}^I p_i\]</div>
+</div>
+<p>In practice, the definition of the regions in the state phase space <span class="math notranslate nohighlight">\(\mathbb{R}^{d}\)</span> relies on
+system observables, <span class="math notranslate nohighlight">\(\mathcal{O}(X_t)\)</span>. These observables can be combined into a score function
+<span class="math notranslate nohighlight">\(\xi(X_t) : \mathbb{R}^{d} \to \mathbb{R}\)</span> mapping your high-dimensional state space to a more manageable
+one dimensional space. The <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> states can then be defined using
+<span class="math notranslate nohighlight">\(\xi(X_t)\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{A} = \{X_t \in \mathbb{R}^{d} : \xi(X_t) &lt; \xi_a \} \\
+\mathcal{B} = \{X_t \in \mathbb{R}^{d} : \xi(X_t) &gt; \xi_b \}\end{split}\]</div>
+</div>
+<p>The successive regions <span class="math notranslate nohighlight">\(\mathcal{C}_i\)</span> can similarly be defined using levels of <span class="math notranslate nohighlight">\(\xi\)</span> between
+<span class="math notranslate nohighlight">\(\xi_a\)</span> and <span class="math notranslate nohighlight">\(\xi_b\)</span>. In AMS, these levels are automatically selected by the algorithm which alleviates
+a strong convergence issue arising with older multilevel splitting methods which required selecting these levels
+a-priori, using the practitioner intuition.</p>
+</section>
+<section id="trajectory-adaptive-multilevel-splitting">
+<h2>Trajectory-adaptive multilevel splitting<a class="headerlink" href="#trajectory-adaptive-multilevel-splitting" title="Link to this heading">¶</a></h2>
+<p>Trajectory-Adaptive Multilevel Splitting (TAMS) (<a class="reference external" href="https://doi.org/10.1088/1742-5468/aab856">Lestang et al.</a>) is
+a variant of AMS specifically designed to estimate rare events return time. In practice, it differs from AMS
+in that the system is allowed to come back to its initial state <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>, but a finite time horizon
+for the rare event is set at <span class="math notranslate nohighlight">\(T_a\)</span>. The sampled rare event is thus defined as:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbb{P}(E_{\mathcal{B}}) = \mathbb{P}(\tau_{\mathcal{B}} &lt; T_a)\]</div>
+</div>
+</section>
+<section id="tams-algorithm">
+<h2>TAMS algorithm<a class="headerlink" href="#tams-algorithm" title="Link to this heading">¶</a></h2>
+<p>The idea behind AMS and TAMS is to iterate over a small ensemble of size <span class="math notranslate nohighlight">\(N\)</span> of Markov chain trajectories (i.e. much
+smaller than the number of trajectories needed for a reliable sampling of the rare transition event
+with Monte Carlo), discarding trajectories that drift away from <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>, while
+cloning/branching trajectories that are going towards <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>. This effectively biases the ensemble
+toward the rare transition event.</p>
+<p>The selection process uses the score function <span class="math notranslate nohighlight">\(\xi(X_t,t)\)</span>. At each iteration <span class="math notranslate nohighlight">\(j\)</span> of the algorithm,
+the trajectories are ranked based on the maximum of <span class="math notranslate nohighlight">\(\xi(X_t,t)\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathcal{Q}_{tr} = \sup \; \; \xi(X_t,t)\]</div>
+</div>
+<p>for <span class="math notranslate nohighlight">\(tr \in [1, N]\)</span> (for TAMS, <span class="math notranslate nohighlight">\(t \in [0, T_a]\)</span>). At each iteration, the
+<span class="math notranslate nohighlight">\(l_j\)</span> trajectories with the smallest value of <span class="math notranslate nohighlight">\(\mathcal{Q}\)</span>, <span class="math notranslate nohighlight">\(min (\mathcal{Q}_{tr}) = \mathcal{Q}^*\)</span>,
+are discarded and new trajectories are branched from the remaining trajectories and
+advanced in time until they reach <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>, return to <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> (AMS)
+or until the maximum time <span class="math notranslate nohighlight">\(T_a\)</span> is reached (TAMS).
+The process is illustrated on a small ensemble in the following figure:</p>
+<figure class="align-center" id="tams-branching">
+<a class="reference internal image-reference" href="_images/TAMS_Illustration.png"><img alt="_images/TAMS_Illustration.png" src="_images/TAMS_Illustration.png" style="width: 90%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 1 </span><span class="caption-text">Branching trajectory <span class="math notranslate nohighlight">\(1\)</span> from <span class="math notranslate nohighlight">\(3\)</span>, starting after <span class="math notranslate nohighlight">\(\xi(X_3(t),t) &gt; \mathcal{Q}^*\)</span>.</span><a class="headerlink" href="#tams-branching" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Note that at each iteration, selecting <span class="math notranslate nohighlight">\(\mathcal{Q}^*\)</span> and discarding the <span class="math notranslate nohighlight">\(l_j\)</span> lowest trajectories amounts
+to defining a new <span class="math notranslate nohighlight">\(\mathcal{C}_i\)</span> and defining <span class="math notranslate nohighlight">\(p_i = 1 - l_j/N\)</span>.</p>
+<p>For each cloning/branching event, a trajectory <span class="math notranslate nohighlight">\(\mathcal{T}_{rep}\)</span> to branch from is selected
+randomly (uniformly) in the <span class="math notranslate nohighlight">\(N-l_j\)</span> remaining trajectories in the ensemble.
+The branching time <span class="math notranslate nohighlight">\(t_b\)</span> along <span class="math notranslate nohighlight">\(\mathcal{T}_{rep}\)</span> is selected to ensure that the branched
+trajectory has a score function strictly higher than the discarded one:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[t_b = \inf \left\{t : \xi(X_{rep}(t), t) &gt; \mathcal{Q}^* \right\}\]</div>
+</div>
+<p>This iterative process is repeated until all trajectories reached the measurable set <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> or
+until a maximum number of iterations <span class="math notranslate nohighlight">\(J\)</span> is reached. (T)AMS associates to the trajectories forming
+the ensemble at step <span class="math notranslate nohighlight">\(j\)</span> a weight <span class="math notranslate nohighlight">\(w_j\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[w_j = \prod_{i=1}^{j} \left(1 - \frac{l_i}{N} \right) = \left(1 - \frac{l_j}{N} \right)w_{j-1}\]</div>
+</div>
+<p>Note that <span class="math notranslate nohighlight">\(w_0 = 1\)</span>. The final estimate of <span class="math notranslate nohighlight">\(p\)</span> is given by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\hat{P} = \frac{N_{\in \mathcal{B}}^J}{N} \prod_{i=0}^J \left(1 - \frac{l_i}{N} \right)\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(N_{\in \mathcal{B}}^J\)</span> is the number of trajectories that reached <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> at step <span class="math notranslate nohighlight">\(J\)</span>.</p>
+<p>(T)AMS only provides an estimate of <span class="math notranslate nohighlight">\(p\)</span> and the algorithm is repeated several times in order to
+get a more accurate estimate, as well as a confidence interval. The choice of <span class="math notranslate nohighlight">\(\xi\)</span> is critical
+for the performance of the algorithm as well as the quality of the estimator. Repeating the algorithm
+<span class="math notranslate nohighlight">\(K\)</span> times (i.e. performing <span class="math notranslate nohighlight">\(K\)</span> TAMS runs) yields:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\overline{P}_K = \frac{1}{K}\sum_{k=1}^K \hat{P}_k\]</div>
+</div>
+<p>Theoretical analysis of the AMS method (which also extends to TAMS) have shown that the relative error
+of <span class="math notranslate nohighlight">\(\overline{P}_K\)</span> scales in the best case scenario:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathrm{RE}(\overline{P}_K)
+ \sim \mathcal{O}\!\left(
+     \sqrt{
+         \frac{-\mathrm{log}(\mathbb{P}(E_{\mathcal{A}\mathcal{B}}))}
+              {K}
+          }
+   \right),\]</div>
+</div>
+<p>while the worst case scenario is similar to plain Monte Carlo:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathrm{RE}(\overline{P}_K)
+ \sim \mathcal{O}\!\left(
+     \frac{1}{\sqrt{K\,\mathbb{P}(E_{\mathcal{A}\mathcal{B}})}}
+   \right),\]</div>
+</div>
+<p>The best case scenario corresponds to the ideal case where the intermediate
+conditional probabilities <span class="math notranslate nohighlight">\(p_i\)</span> are perfectly computed, which corresponds to
+using the optimal score function <span class="math notranslate nohighlight">\(\overline{\xi}(y) = \mathbb{P}_y(\tau_{\mathcal{B}} &lt; \tau_{\mathcal{A}})\)</span>,
+also known as the <cite>committor function</cite>. One will note that the committor function is
+precisely what the TAMS algorithm is after for <span class="math notranslate nohighlight">\(y = X_0 = x_0\)</span>.</p>
+<p>An overview of the algorithm is provided hereafter:</p>
+<blockquote><ol class="arabic simple">
+<li><p>Simulate <span class="math notranslate nohighlight">\(N\)</span> independent trajectories of the dynamical system (between [0, <span class="math notranslate nohighlight">\(T_a\)</span>] for TAMS)</p></li>
+<li><p>Set <span class="math notranslate nohighlight">\(j = 0\)</span> and <span class="math notranslate nohighlight">\(w[0] = 1\)</span></p></li>
+<li><p>while <span class="math notranslate nohighlight">\(j &lt; J\)</span>:</p></li>
+<li><p>       compute <span class="math notranslate nohighlight">\(\mathcal{Q}_{tr}\)</span> for all <span class="math notranslate nohighlight">\(tr \in [1, N]\)</span> and sort</p></li>
+<li><p>       select the <span class="math notranslate nohighlight">\(l_j\)</span> smallest trajectories</p></li>
+<li><p>       for <span class="math notranslate nohighlight">\(i \ in [1, l_j]\)</span>:</p></li>
+<li><p>             select a trajectory <span class="math notranslate nohighlight">\(\mathcal{T}_{rep}\)</span> at random in the <span class="math notranslate nohighlight">\(N-l_j\)</span> remaining trajectories</p></li>
+<li><p>             branch from <span class="math notranslate nohighlight">\(\mathcal{T}_{rep}\)</span> at time <span class="math notranslate nohighlight">\(t_b\)</span> and advance <span class="math notranslate nohighlight">\(\mathcal{T}_{i}\)</span> until it reaches <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>, <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> or <span class="math notranslate nohighlight">\(T_a\)</span></p></li>
+<li><p>       set <span class="math notranslate nohighlight">\(w[j] = (1 - l_j/N) \times w[j-1]\)</span></p></li>
+<li><p>       set <span class="math notranslate nohighlight">\(j = j+1\)</span></p></li>
+<li><p>       if <span class="math notranslate nohighlight">\(\mathcal{Q}_{tr} &gt; \xi_{b}\)</span> for all <span class="math notranslate nohighlight">\(tr \in [1, N]\)</span>:</p></li>
+<li><p>             break</p></li>
+</ol>
+</blockquote></section>
+<section id="simple-1d-double-well">
+<h2>Simple 1D double well<a class="headerlink" href="#simple-1d-double-well" title="Link to this heading">¶</a></h2>
+<p id="ssec-theory-1ddw">To illustrate the above theory on a simple example, we now consider the concrete case
+of a 1D double well stochastic dynamical system described by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[dX_t = f(X_t)\,dt + \sqrt{2\epsilon}\,dW_t.\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(X_t) = - \nabla V(X_t)\)</span> is derived from a symmetric potential:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[V(x) = \frac{1}{4}x^4 - \frac{1}{2}x^2,\]</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\epsilon\)</span> is a noise scaling parameter, and <span class="math notranslate nohighlight">\(W_t\)</span> a 1D Wiener process.</p>
+<figure class="align-center" id="doublewell1d">
+<a class="reference internal image-reference" href="_images/DoubleWell1D_intro.png"><img alt="_images/DoubleWell1D_intro.png" src="_images/DoubleWell1D_intro.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 2 </span><span class="caption-text">1D double well, showing the potential <span class="math notranslate nohighlight">\(V\)</span> and distribution function of long Markov chains
+starting in each well, at two noise levels.</span><a class="headerlink" href="#doublewell1d" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The figure above shows the two metastable states of the model: for long Markov chains
+(<span class="math notranslate nohighlight">\(T_f = N_t \delta_t\)</span> with <span class="math notranslate nohighlight">\(N_t = 1e^6\)</span> and <span class="math notranslate nohighlight">\(\delta_t = 0.01\)</span>) initiated
+in either of the two wells (clearly marked by local minima of the potential <span class="math notranslate nohighlight">\(V(x)\)</span>),
+the model state distributions <span class="math notranslate nohighlight">\(P(X_t)\)</span> remains in the well,
+with the distribution widening as the noise level is increased.</p>
+<p>Using TAMS, we want to evaluate the transition probability from <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>, the well
+centered at <span class="math notranslate nohighlight">\(x_{\mathcal{A}} = -1.0\)</span>, to <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> the well centered at
+<span class="math notranslate nohighlight">\(x_{\mathcal{B}} = 1.0\)</span>, with a time horizon <span class="math notranslate nohighlight">\(T_a = 10.0\)</span> and setting <span class="math notranslate nohighlight">\(\epsilon = 0.025\)</span>.</p>
+<p>Even for a simple system like this one, there are multiple possible choices for the score function.
+We will use a normalized distance to <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\xi(X_t) = 1.0 - \frac{\Vert X_t - x_{\mathcal{B}}\Vert_2}{\Vert x_{\mathcal{A}} - x_{\mathcal{B}} \Vert_2}\]</div>
+</div>
+<p>and select <span class="math notranslate nohighlight">\(\xi_b = 0.95\)</span>. Note that in this case, choosing a fixed value of <span class="math notranslate nohighlight">\(\xi_a\)</span> is possible
+but for simplicity, all the trajectories are initialized exactly at <span class="math notranslate nohighlight">\(X_0 = x_{\mathcal{A}}\)</span>. Additionally,
+no dependence on time is included in the score function (it is referred to as a <cite>static</cite> score function).
+The animation below shows the evolution of the TAMS trajectories ensemble (each trajectory
+<span class="math notranslate nohighlight">\(\xi(X_t)\)</span> as function of time is plotted), during the course of the algorithm. As iterations progress,
+the ensemble deviates from the system metastable state near <span class="math notranslate nohighlight">\(\xi(X_t) = 0\)</span> towards higher values of <span class="math notranslate nohighlight">\(\xi(X_t)\)</span>.</p>
+<figure class="align-center" id="tams-doublewell1d">
+<a class="reference internal image-reference" href="_images/tams_doublewell1D.gif"><img alt="_images/tams_doublewell1D.gif" src="_images/tams_doublewell1D.gif" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 3 </span><span class="caption-text">Evolution of the TAMS trajectories ensemble (<span class="math notranslate nohighlight">\(N = 100\)</span>, <span class="math notranslate nohighlight">\(l_j = 1\)</span>)
+over the course the algorithm iterations.</span><a class="headerlink" href="#tams-doublewell1d" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Eventually, all the trajectories transition to <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> and the algorithm stops.
+The algorithm then provides <span class="math notranslate nohighlight">\(\hat{P} = 4.2e^{-5}\)</span>. As mentioned above, the algorithm will need to be
+performed multiple times in order to provide the expectation of the estimator <span class="math notranslate nohighlight">\(\hat{P}\)</span>, and
+comparing the relative error to the lower and upper bound mentioned above can be used to
+evaluate the quality of the employed score function.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="Validation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Validation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Netherlands eScience Center
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Theory</a><ul>
+<li><a class="reference internal" href="#stochastic-dynamical-systems">Stochastic dynamical systems</a></li>
+<li><a class="reference internal" href="#rare-events">Rare events</a></li>
+<li><a class="reference internal" href="#adaptive-multilevel-splitting">Adaptive multilevel splitting</a></li>
+<li><a class="reference internal" href="#trajectory-adaptive-multilevel-splitting">Trajectory-adaptive multilevel splitting</a></li>
+<li><a class="reference internal" href="#tams-algorithm">TAMS algorithm</a></li>
+<li><a class="reference internal" href="#simple-1d-double-well">Simple 1D double well</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=fc837d61"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
+</html>

@@ -1,0 +1,129 @@
+pyrevs.core.config
+==================
+
+.. py:module:: pyrevs.core.config
+
+.. autoapi-nested-parse::
+
+   A configuration class to expose limited configuration.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.core.config.T
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.config.MergePolicy
+   pyrevs.core.config.Config
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.core.config.collect_sections
+   pyrevs.core.config.merge_config
+   pyrevs.core.config.print_config_help
+
+
+Module Contents
+---------------
+
+.. py:data:: T
+
+.. py:class:: MergePolicy
+
+   A merge policy for configuration dataclasses.
+
+
+   .. py:attribute:: IMMUTABLE
+      :value: 'immutable'
+
+
+
+   .. py:attribute:: REPLACE
+      :value: 'replace'
+
+
+
+.. py:class:: Config(data: collections.abc.Mapping[str, Any])
+
+   Lightweight structured access to configuration.
+
+   pyREVS input parameters are mostly handled through dataclasses
+   to ensure default values are available and types are enforced:
+   TOML file -> Config -> Typed dataclass.
+
+   The typed dataclass are the final object used to instanciate
+   pyREVS objects (Sampler, Database, Trajectories, ...)
+
+   The Config class provides a simple interface to access configuration
+   parameters in a more structured way. To add a new section to
+   the TOML input file, create a new dataclass with a `__section__`
+   class attribute set to the name of the section.
+
+
+
+   .. py:method:: section(name: str) -> Config
+
+      Return a configuration section.
+
+
+
+   .. py:method:: section_dict(name: str) -> dict[str, Any]
+
+      Return a section as dict.
+
+
+
+   .. py:method:: require(section: str, key: str) -> Any
+
+      Get a required parameter.
+
+
+
+   .. py:method:: get(section: str, key: str, default: Any = None) -> Any
+
+      Get an optional parameter.
+
+
+
+   .. py:method:: as_dict() -> dict[str, Any]
+
+      Return the config Mapping as a dict.
+
+
+
+   .. py:method:: load(cls: type[T]) -> T
+
+      Load a dataclass of the provided type from this config section.
+
+
+
+.. py:function:: collect_sections(*configs: Any) -> dict[str, Any]
+
+   Build a TOML-ready dict from config dataclasses.
+
+   Each dataclass must define __section__.
+
+
+.. py:function:: merge_config(old: T, new: T) -> T
+
+   Merge two configuration dataclass objects.
+
+
+.. py:function:: print_config_help(cls: type) -> None
+
+   Print a help for a pyREVS config dataclass.
+
+

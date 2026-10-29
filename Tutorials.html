@@ -1,0 +1,1583 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Implementation" href="Implementation.html"><link rel="prev" title="Usage" href="Usage.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>Tutorials - pyREVS 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyREVS 1.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">pyREVS 1.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage.html">Usage</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extension.html">Extension</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/pyrevs/index.html">pyrevs</a><input aria-label="Toggle navigation of pyrevs" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/bin/index.html">pyrevs.bin</a><input aria-label="Toggle navigation of pyrevs.bin" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/bin/bin/index.html">pyrevs.bin.bin</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/core/index.html">pyrevs.core</a><input aria-label="Toggle navigation of pyrevs.core" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/config/index.html">pyrevs.core.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/fmodel/index.html">pyrevs.core.fmodel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/runtime_cfg/index.html">pyrevs.core.runtime_cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/snapshot/index.html">pyrevs.core.snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/sqlcore/index.html">pyrevs.core.sqlcore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/core/sqlmanager/index.html">pyrevs.core.sqlmanager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/database/index.html">pyrevs.database</a><input aria-label="Toggle navigation of pyrevs.database" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/bootstrap/index.html">pyrevs.database.bootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/config/index.html">pyrevs.database.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/database/index.html">pyrevs.database.database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/database/extension/index.html">pyrevs.database.extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/diagnostics/index.html">pyrevs.diagnostics</a><input aria-label="Toggle navigation of pyrevs.diagnostics" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/diagnostics/diagdb/index.html">pyrevs.diagnostics.diagdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/diagnostics/diagnostic/index.html">pyrevs.diagnostics.diagnostic</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/runner/index.html">pyrevs.runner</a><input aria-label="Toggle navigation of pyrevs.runner" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/config/index.html">pyrevs.runner.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/taskrunner/index.html">pyrevs.runner.taskrunner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/runner/worker/index.html">pyrevs.runner.worker</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/sampler/index.html">pyrevs.sampler</a><input aria-label="Toggle navigation of pyrevs.sampler" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/config/index.html">pyrevs.sampler.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/sampler/index.html">pyrevs.sampler.sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/sampler/system_config/index.html">pyrevs.sampler.system_config</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/index.html">pyrevs.strategies</a><input aria-label="Toggle navigation of pyrevs.strategies" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/index.html">pyrevs.strategies.ams</a><input aria-label="Toggle navigation of pyrevs.strategies.ams" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/ams/index.html">pyrevs.strategies.ams.ams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/config/index.html">pyrevs.strategies.ams.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/extension/index.html">pyrevs.strategies.ams.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/ams/sql/index.html">pyrevs.strategies.ams.sql</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/base/index.html">pyrevs.strategies.base</a><input aria-label="Toggle navigation of pyrevs.strategies.base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/base/strategy/index.html">pyrevs.strategies.base.strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/base/termination/index.html">pyrevs.strategies.base.termination</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/index.html">pyrevs.strategies.gktl</a><input aria-label="Toggle navigation of pyrevs.strategies.gktl" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/config/index.html">pyrevs.strategies.gktl.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/extension/index.html">pyrevs.strategies.gktl.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/gktl/gktl/index.html">pyrevs.strategies.gktl.gktl</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/index.html">pyrevs.strategies.montecarlo</a><input aria-label="Toggle navigation of pyrevs.strategies.montecarlo" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/config/index.html">pyrevs.strategies.montecarlo.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/extension/index.html">pyrevs.strategies.montecarlo.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/pyrevs/strategies/montecarlo/montecarlo/index.html">pyrevs.strategies.montecarlo.montecarlo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/trajectory/index.html">pyrevs.trajectory</a><input aria-label="Toggle navigation of pyrevs.trajectory" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/trajectory/config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/trajectory/trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/pyrevs/utils/index.html">pyrevs.utils</a><input aria-label="Toggle navigation of pyrevs.utils" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/dbutils/index.html">pyrevs.utils.dbutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/utils/index.html">pyrevs.utils.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/xmlutils/index.html">pyrevs.utils.xmlutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/pyrevs/utils/yamlutils/index.html">pyrevs.utils.yamlutils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/Tutorials.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="tutorials">
+<span id="sec-tutorials"></span><h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h1>
+<p>This set of tutorials is designed to guide the users through the process
+of encapsulating their stochastic dynamical system into the framework
+of <cite>pyREVS</cite> in order to smoothly leverage the capabilities of rare
+event techniques.</p>
+<p>With the exception of a few example cases shipped with the code,
+<cite>pyREVS</cite> will always require the user to formulate her/his problem in
+as little as a few dozens of lines of code, to hundreds if the complexity
+of the model warrants it.</p>
+<section id="d-double-well">
+<h2>1D double well<a class="headerlink" href="#d-double-well" title="Link to this heading">¶</a></h2>
+<p>In this first tutorial, our aim is to implement the 1D double well model
+already presented at the end of the <a class="reference internal" href="Theory.html#ssec-theory-1ddw"><span class="std std-ref">Theory Section</span></a>. This model
+is not provided out-of-the-box in <cite>pyREVS</cite> and will be written from scratch.</p>
+<section id="background">
+<h3>Background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h3>
+<p>As a reminder, the 1D double well stochastic dynamical system can be described with
+the following stochastic differential equation:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[dX_t = f(X_t)\,dt + \sqrt{2\epsilon}\,dW_t.\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f(X_t) = - \nabla V(X_t)\)</span> is derived from a symmetric potential:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[V(x) = \frac{1}{4}x^4 - \frac{1}{2}x^2,\]</div>
+</div>
+<p><span class="math notranslate nohighlight">\(X_t \in \mathbb{R}\)</span> is our Markov process, <span class="math notranslate nohighlight">\(\epsilon\)</span> is the noise scaling parameter and
+<span class="math notranslate nohighlight">\(dW_t\)</span> a 1D Wiener process. A simple Euler-Maruyama method to advance the system
+in time. In this tutorial, we will try Monte-Carlo, TAMS as well as AMS sampling strategies.</p>
+</section>
+<section id="getting-set-up">
+<h3>Getting set up<a class="headerlink" href="#getting-set-up" title="Link to this heading">¶</a></h3>
+<p>If you haven’t done so yet, let’s get the latest version of <cite>pyREVS</cite> installed on your system.
+In your favorite environment manager, simply use:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyrevs
+tams_check
+</pre></div>
+</div>
+<p>The second line check that <cite>pyREVS</cite> is effectively installed and should return (with proper version numbers):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">==</span><span class="w"> </span>pyREVS<span class="w"> </span>vX.Y.Z<span class="w"> </span>::<span class="w"> </span>a<span class="w"> </span>rare-event<span class="w"> </span>finder<span class="w"> </span><span class="nv">tool</span><span class="w"> </span><span class="o">==</span>
+</pre></div>
+</div>
+<p>Now create a new folder for us to work in:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>pyrevs_1d_doublewell
+<span class="nb">cd</span><span class="w"> </span>pyrevs_1d_doublewell
+</pre></div>
+</div>
+</section>
+<section id="writing-the-forward-model">
+<h3>Writing the forward model<a class="headerlink" href="#writing-the-forward-model" title="Link to this heading">¶</a></h3>
+<p>Our first task is to implement the SDE provided above in a class that can interact
+with <cite>pyREVS</cite>. As mentioned in the <a class="reference internal" href="Implementation.html#sec-implementation"><span class="std std-ref">Implementation Section</span></a>,
+one needs to wrap all the physics of the stochastic model into an Abstract Base Class (ABC).</p>
+<p>To make it easier to start this process from scratch, <cite>pyREVS</cite> provides a helper function:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pyrevs_init_model<span class="w"> </span>-n<span class="w"> </span>doublewell1D
+</pre></div>
+</div>
+<p>A local <code class="docutils literal notranslate"><span class="pre">doublewell1D.py</span></code> file is created, with a skeleton of your new <code class="docutils literal notranslate"><span class="pre">doublewell1D</span></code>
+class, inheriting from the <cite>pyREVS</cite> required ABC and providing the minimal set of methods (functions)
+that are required to run sampling and transition probability estimation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_init_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="n">T_Noise</span><span class="p">,</span> <span class="n">need_end_state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_State</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">T_State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_Noise</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>We will now have to properly fill these six functions. Let’s start with <code class="docutils literal notranslate"><span class="pre">_init_model</span></code> function,
+which is called by the superclass initializer and allow to initialize model-specific parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_init_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" ... """</span>
+    <span class="c1"># Initialize the model state (a single float here)</span>
+    <span class="c1"># We always start at near -1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.97</span>
+
+    <span class="c1"># Parse an amplitude factor from the input file</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"epsilon"</span><span class="p">,</span><span class="mf">0.02</span><span class="p">)</span>
+
+    <span class="c1"># Let's initialize the Random Number Generator (RNG) to use around</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In this simple model, the model state is a simple float. Note that the state type is
+completely up to the user and/or requirements of the model. For instance, if you run an
+external program, it might be a path to the program checkpoint file. The above code also
+shows how to read-in parameters specified in the input file (see below). Finally, we
+initialize a random number generator for subsequent use in the noise generation. This
+is not specifically necessary, but it is good practice to control the RNG and we could
+pass the model instance ID number <code class="docutils literal notranslate"><span class="pre">m_id</span></code>, to fix the seed of the RNG and make the runs
+reproductible.</p>
+<p>Let’s look at the getter and setter of the model state:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_State</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" ... """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">T_State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" ... """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+</pre></div>
+</div>
+<p>These two are pretty straightforward for this simple model. Similarly, the <code class="docutils literal notranslate"><span class="pre">make_noise</span></code>
+function writes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">make_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_Noise</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" ... """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Let’s now dive into the <code class="docutils literal notranslate"><span class="pre">_advance</span></code> function. We will use a Euler-Maruyama scheme to
+update the model state, defining the drift function as another method of the class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Drift function.</span>
+
+<span class="sd">    The drift function f = - nabla(V) = x - x^3</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: the model state</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The double well drift at the provided state</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">noise</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">need_end_state</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="sd">""" ... """</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drift</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span><span class="p">)</span> <span class="o">*</span> <span class="n">noise</span>
+<span class="p">)</span>
+<span class="k">return</span> <span class="n">dt</span>
+</pre></div>
+</div>
+<p>Note that it is important to use the incoming noise <code class="docutils literal notranslate"><span class="pre">noise</span></code> and not generate another
+noise within the advance function. This is because <cite>pyREVS</cite> internally keeps track of the
+noises provided to the advance function, caching them when the model state is sub-sampled for instance.
+Additionally, the advance function must return <code class="docutils literal notranslate"><span class="pre">dt</span></code> the actual time step size used by the model.
+For the current model, this is simply the same as the input parameter <code class="docutils literal notranslate"><span class="pre">dt</span></code>, but some external
+program might have other constraint not allowing the model to run for exactly the provided <code class="docutils literal notranslate"><span class="pre">dt</span></code>.</p>
+<p>Finally, for the score function, we will use the <span class="math notranslate nohighlight">\(\xi\)</span> function mentioned in the
+<a class="reference internal" href="Theory.html#ssec-theory-1ddw"><span class="std std-ref">Theory Section</span></a>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\xi(X_t) = 1.0 - \frac{\Vert X_t - x_{\mathcal{B}}\Vert_2}{\Vert x_{\mathcal{A}} - x_{\mathcal{B}} \Vert_2}\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> is at <span class="math notranslate nohighlight">\(X_t = x_b = 1.0\)</span> and <span class="math notranslate nohighlight">\(\mathcal{A}\)</span> is at <span class="math notranslate nohighlight">\(X_t = x_a = -1.0\)</span>,
+with the later being our initial condition. Implementing this in the <code class="docutils literal notranslate"><span class="pre">score</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" ... """</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+    <span class="n">x_b</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">-</span> <span class="n">x_b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_a</span><span class="o">-</span><span class="n">x_b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>One last thing we need, is to import the <cite>numpy</cite> package since we have used it
+in several places. At the top of your file, with the other imports, add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+<p>And that is pretty much all you need to have a functioning model class !</p>
+</section>
+<section id="testing-the-model">
+<h3>Testing the model<a class="headerlink" href="#testing-the-model" title="Link to this heading">¶</a></h3>
+<p>Before running the sampler, let’s test the model integration within <cite>pyREVS</cite> framework by running
+a single trajectory. In a separate python file (e.g. <code class="docutils literal notranslate"><span class="pre">test_dw1D.py</span></code>), copy the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">toml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trajectory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrajectoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doublewell1D</span><span class="w"> </span><span class="kn">import</span> <span class="n">doublewell1D</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># For convenience</span>
+    <span class="n">fmodel</span> <span class="o">=</span> <span class="n">doublewell1D</span>
+
+    <span class="c1"># Load the input file</span>
+    <span class="k">with</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"input.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">input_params</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Setup parameters</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">input_params</span><span class="p">)</span>
+    <span class="n">tcfg</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">TrajectoryConfig</span><span class="p">)</span>
+    <span class="n">model_params</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">section_dict</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+
+    <span class="c1"># Initialize a trajectory object</span>
+    <span class="n">traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">fmodel</span><span class="p">,</span> <span class="n">traj_cfg</span><span class="o">=</span><span class="n">tcfg</span><span class="p">,</span> <span class="n">model_params</span><span class="o">=</span><span class="n">model_params</span><span class="p">)</span>
+
+    <span class="c1"># Advance the model up to 10 time units</span>
+    <span class="n">traj</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">t_end</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+    <span class="c1"># Plain plot the trajectory score history</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">traj</span><span class="o">.</span><span class="n">get_time_array</span><span class="p">(),</span> <span class="n">traj</span><span class="o">.</span><span class="n">get_score_array</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that when running the sampler directly, the user does not have to load the input file
+manually and use Config. We also need to initialize an input TOML file <code class="docutils literal notranslate"><span class="pre">input.toml</span></code> containing the trajectory
+and model parameters (see <a class="reference internal" href="Usage.html#sec-usage"><span class="std std-ref">Usage Section</span></a> for a complete list
+of input keys).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">trajectory</span><span class="p">]</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="p">[</span><span class="n">model</span><span class="p">]</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.05</span>
+</pre></div>
+</div>
+<p>We will simulate the random process for 10 time units, with a time step size of 0.01.</p>
+<p>Let’s now run the script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test_dw1D.py
+</pre></div>
+</div>
+<p>Hopefully, this should produce a graph of the same type as the one below (but with
+a different trajectory due to randomness).</p>
+<figure class="align-center" id="test-doublewell1d">
+<a class="reference internal image-reference" href="_images/test_doublewell1D.png"><img alt="_images/test_doublewell1D.png" src="_images/test_doublewell1D.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 7 </span><span class="caption-text">Score history for a single trajectory of the 1D double well model</span><a class="headerlink" href="#test-doublewell1d" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Feel free to tweak the input parameters to see if you can trigger a transition ! We are
+all set to perform our first sampling run.</p>
+</section>
+<section id="sampling-transitions">
+<h3>Sampling transitions<a class="headerlink" href="#sampling-transitions" title="Link to this heading">¶</a></h3>
+<p>Let’s now use <cite>pyREVS</cite> to sample transition between the two wells. In particular, we are
+asking: what is the probability of a transition from well A (left) to well B (right) before
+a given time horizon <span class="math notranslate nohighlight">\(T_a = 10\)</span> ?</p>
+<p>Similarly to the short script we wrote above to run a single trajectory, let
+assemble a small script to run the sampler (e.g. in <code class="docutils literal notranslate"><span class="pre">sample_dw1D.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doublewell1D</span><span class="w"> </span><span class="kn">import</span> <span class="n">doublewell1D</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># For convenience</span>
+    <span class="n">fmodel</span> <span class="o">=</span> <span class="n">doublewell1D</span>
+
+    <span class="c1"># Initialize the algorithm object</span>
+    <span class="n">sampler</span> <span class="o">=</span> <span class="n">build_sampler</span><span class="p">(</span><span class="n">fmodel_t</span><span class="o">=</span><span class="n">fmodel</span><span class="p">)</span>
+
+    <span class="c1"># Sample and report</span>
+    <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">probability</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">get_event_probability</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pyREVS transition probability: </span><span class="si">{</span><span class="n">probability</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We also need to update the input file with additional parameters relative
+to the algorithm parameters. We will start with a Monte-Carlo sampling approach.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">sampler</span><span class="p">]</span>
+<span class="n">strategy</span> <span class="o">=</span> <span class="s2">"montecarlo"</span>
+
+<span class="p">[</span><span class="n">montecarlo</span><span class="p">]</span>
+<span class="n">ntrajectories</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="mf">10.0</span>
+
+<span class="p">[</span><span class="n">trajectory</span><span class="p">]</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">targetscore</span> <span class="o">=</span> <span class="mf">0.95</span>
+
+<span class="p">[</span><span class="n">model</span><span class="p">]</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.04</span>
+
+<span class="p">[</span><span class="n">runner</span><span class="p">]</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="s2">"asyncio"</span>
+<span class="n">nworkers</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>With above input parameters, the Monte-Carlo ensemble will contain 200 members.
+The model is assumed to have
+transitioned if the score function exceeds <span class="math notranslate nohighlight">\(\xi_b = 0.95\)</span>. We will run using the
+asyncio runner, with a single worker during the initial ensemble generation.
+We have reduced the noise level to <span class="math notranslate nohighlight">\(\epsilon = 0.04\)</span>.</p>
+<p>Let’s now run the script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_dw1D.py
+</pre></div>
+</div>
+<p>The algorithm should run for a few seconds, depending on your platform and how fast the
+model transitions. The default log level will report on the algorithm progress during the
+entire process, and reports a final summary of the form:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">####################################################</span>
+<span class="c1"># pyREVS v1.0.0                                    #</span>
+<span class="c1"># Date: 2025-11-26 14:58:21.980592+00:00           #</span>
+<span class="c1"># Model: doublewell1D                              #</span>
+<span class="c1"># Sampling strategy: montecarlo                    #</span>
+<span class="c1">####################################################</span>
+<span class="c1"># Requested # of traj:                         200 #</span>
+<span class="c1"># Number of 'Terminated' trajectories:         200 #</span>
+<span class="c1"># Number of 'Converged' trajectories:            1 #</span>
+<span class="c1"># Current total number of steps:            199792 #</span>
+<span class="c1">####################################################</span>
+</pre></div>
+</div>
+<p>If you are lucky, maybe you will have one or two trajectories that transitioned and most
+likely none. Monte-Carlo sampling is included in <cite>pyREVS</cite> for testing purposes and can
+serve as a baseline for comparison with other sampling strategies, but it is very inefficient.</p>
+<p>Let’s now switch to the TAMS algorithm. In the input file, update the <cite>strategy</cite> in the
+<cite>sampler</cite> section to <code class="docutils literal notranslate"><span class="pre">ams</span></code> (TAMS is a variant of AMS):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">sampler</span><span class="p">]</span>
+<span class="n">strategy</span> <span class="o">=</span> <span class="s2">"ams"</span>
+</pre></div>
+</div>
+<p>and replace the <cite>montecarlo</cite> section with an <cite>ams</cite> section:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ams</span><span class="p">]</span>
+<span class="n">ntrajectories</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nsplititer</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="s2">"tams"</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="mf">10.0</span>
+</pre></div>
+</div>
+<p>With above input parameters, the TAMS ensemble will contain 50 members and the algorithm
+will proceed up to a total 500 selection/mutation events.</p>
+<p>Let’s now run the script again:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_dw1D.py
+</pre></div>
+</div>
+<p>This time, the final summary should look something like:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">####################################################</span>
+<span class="c1"># pyREVS v1.0.0                                    #</span>
+<span class="c1"># Date: 2025-11-26 14:58:21.980592+00:00           #</span>
+<span class="c1"># Model: doublewell1D                              #</span>
+<span class="c1"># Sampling strategy: ams                           #</span>
+<span class="c1">####################################################</span>
+<span class="c1"># Requested # of traj:                          50 #</span>
+<span class="c1"># Number of 'Terminated' trajectories:          50 #</span>
+<span class="c1"># Number of 'Converged' trajectories:           50 #</span>
+<span class="c1"># Current total number of steps:            159868 #</span>
+<span class="c1">####################################################</span>
+</pre></div>
+</div>
+<p>TAMS converged after 296 selection/mutation steps, time at which all 50 trajectories
+exceeded <span class="math notranslate nohighlight">\(\xi_b\)</span> within the 10 time units window. A total of 159868 model steps
+were taken and the transition probability estimate is <span class="math notranslate nohighlight">\(\hat{P} = 2.46e^{-3}\)</span>.
+From a sampling perspective, it took 159868 model steps to obtain 50 trajectories that
+transitioned, where Monte-Carlo sampling required 199792 model steps for a single
+trajectory to transition. In order to compare the accuracy of the transition probability,
+we would need to run the TAMS algorithm several times.</p>
+<p>Let’s update the sample script to extract more information from the sampling
+run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_sampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doublewell1D</span><span class="w"> </span><span class="kn">import</span> <span class="n">doublewell1D</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># For convenience</span>
+    <span class="n">fmodel</span> <span class="o">=</span> <span class="n">doublewell1D</span>
+
+    <span class="c1"># Initialize the algorithm object</span>
+    <span class="n">sampler</span> <span class="o">=</span> <span class="n">build_sampler</span><span class="p">(</span><span class="n">fmodel_t</span><span class="o">=</span><span class="n">fmodel</span><span class="p">)</span>
+
+    <span class="c1"># Sample and report</span>
+    <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">probability</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">get_event_probability</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pyREVS transition probability: </span><span class="si">{</span><span class="n">probability</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Extract the envelope of the ensemble score function</span>
+    <span class="n">sampler</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">extension</span><span class="p">()</span><span class="o">.</span><span class="n">plot_min_max_span</span><span class="p">(</span><span class="s2">"./doublewell1D_minmax.png"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and run the script again:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_dw1D.py
+</pre></div>
+</div>
+<p>The updated script above access the <cite>pyREVS</cite> database to show the history of the
+ensemble score functions span (the span of <span class="math notranslate nohighlight">\(\mathcal{Q}_{tr}\)</span>).</p>
+<figure class="align-center" id="minmax-doublewell1d">
+<a class="reference internal image-reference" href="_images/minmax_doublewell1D.png"><img alt="_images/minmax_doublewell1D.png" src="_images/minmax_doublewell1D.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 8 </span><span class="caption-text">Span of <span class="math notranslate nohighlight">\(\mathcal{Q}_{tr}\)</span> over the course of the TAMS iterations.</span><a class="headerlink" href="#minmax-doublewell1d" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>We can this that in this high noise setting, one trajectory rapidly reaches <span class="math notranslate nohighlight">\(\mathcal{B}\)</span>,
+but many more iterations are needed for the entire ensemble to transition.</p>
+<p>Our final task will now focus on using AMS. With AMS, we are no longer interested in transition before
+a given time horizon, but rather: what is the probability that a model path exiting well A transitions
+to well B before returning to well A ?</p>
+<p>To switch to sampling this particular probability, we do not need to update the forward model.
+You might have noticed that in the model initializer (<code class="docutils literal notranslate"><span class="pre">__init__</span></code> function), we have set the initial
+condition close to well A, but not exactly at well A: i.e. <code class="docutils literal notranslate"><span class="pre">x0</span> <span class="pre">=</span> <span class="pre">-0.97</span></code> and not <code class="docutils literal notranslate"><span class="pre">x0</span> <span class="pre">=</span> <span class="pre">-1.0</span></code>.
+As such our initial condition corresponds to a trajectory that is close to A, or exiting well A.</p>
+<p>Let’s update the input file to enable AMS:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ams</span><span class="p">]</span>
+<span class="n">ntrajectories</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nsplititer</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="s2">"ams"</span>
+<span class="n">min_score</span> <span class="o">=</span> <span class="mf">0.01</span>
+</pre></div>
+</div>
+<p>With the above input parameters, the termination criterion is set such that return to well A corresponds
+to a score function value below 0.01. We can keep the ensemble envelope diagnostic in our sample script, but
+let’s also add another diagnostics allowing to monitor the ensemble during the AMS iterations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">runtime</span><span class="p">]</span>
+<span class="n">plot_diagnostics</span> <span class="o">=</span> <span class="n">true</span>
+</pre></div>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">plot_diagnostics</span></code> parameter set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, <cite>pyREVS</cite> will plot the ensemble score functions
+at every AMS iteration. Let’s run the script again:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_dw1D.py
+</pre></div>
+</div>
+<p>The resulting transition probability is much lower than the one obtained with TAMS, which highlights
+the fact that the two methods are tracking very different quantities. Using the numerous images generated
+by <cite>pyREVS</cite> over the course of the algorithm enable to create an animation of the ensemble evolution:</p>
+<figure class="align-center" id="ams-doublewell1d">
+<a class="reference internal image-reference" href="_images/ams_doublewell1D.gif"><img alt="_images/ams_doublewell1D.gif" src="_images/ams_doublewell1D.gif" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 9 </span><span class="caption-text">Evolution of the AMS trajectories ensemble (<span class="math notranslate nohighlight">\(N = 50\)</span>, <span class="math notranslate nohighlight">\(l_j = 1\)</span>)
+over the course the algorithm iterations.</span><a class="headerlink" href="#ams-doublewell1d" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>You can compare the ensemble behavior with the one depicted in the Theory section.</p>
+<p>This is all for this tutorial. We have covered the following points:</p>
+<ul class="simple">
+<li><p>Getting <cite>pyREVS</cite></p></li>
+<li><p>Going from a pen-and-paper SDE to a practical implementation ready for <cite>pyREVS</cite></p></li>
+<li><p>Testing the model on a single, isolated trajectory</p></li>
+<li><p>Running several sampling strategies, depending on the probability of interest.</p></li>
+</ul>
+<p>To go further, modify the <code class="docutils literal notranslate"><span class="pre">sample_dw1D.py</span></code> script to run TAMS <span class="math notranslate nohighlight">\(K\)</span> times and
+provide a better estimate of the transition probability <span class="math notranslate nohighlight">\(\overline{P}_K\)</span>, as well as
+its relative error. What happens when <span class="math notranslate nohighlight">\(\epsilon\)</span> is reduced? Can you trigger saving
+the <cite>pyREVS</cite> database to disk?</p>
+</section>
+</section>
+<section id="bi-channel-problem">
+<h2>Bi-channel problem<a class="headerlink" href="#bi-channel-problem" title="Link to this heading">¶</a></h2>
+<p>In this tutorial, you will explore transitions in the bi-channel/triple wells, two-dimensional
+dynamical system. This system is regularly used for testing rare event algorithms, see for instance
+<a class="reference external" href="https://www.jstor.org/stable/44249972">Brehier et al.</a>. In contrast with the 1D double well tutorial,
+we will use the implementation already available in <cite>pyREVS</cite> examples and focus on using the algorithm
+to explore the system behavior.</p>
+<section id="id1">
+<h3>Background<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>The bi-channel/triple well is a 2D overdamped diffusion process in which the potential landscape
+features two global minimum (at <span class="math notranslate nohighlight">\((\pm 1.0, 0.0)\)</span>) as well as a local minimum near
+<span class="math notranslate nohighlight">\((0.0, 1.5)\)</span>. The global minima are connected by two channels: the <cite>upper</cite> channel
+through the local minima while the <cite>lower</cite> channel goes through the saddle point near <span class="math notranslate nohighlight">\((0.0, -0.4)\)</span>.
+To take the <cite>upper</cite> channel, a trajectory will need to overcome two energy barriers to enter and exit
+the local minima, while the <cite>lower</cite> channel one feature a single barrier albeit of higher depth.</p>
+<p>The potential as well as a system trajectory initiated near the left global minima
+<span class="math notranslate nohighlight">\(\mathcal{A} = (x_A,y_A) = (-1,0)\)</span> is presented in Fig. <a class="reference internal" href="#fig-pot-bichannel"><span class="std std-numref">Figure 10</span></a>.</p>
+<figure class="align-center" id="pot-bichannel">
+<span id="fig-pot-bichannel"></span><a class="reference internal image-reference" href="_images/Potential_BiChannel.png"><img alt="_images/Potential_BiChannel.png" src="_images/Potential_BiChannel.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 10 </span><span class="caption-text">: Potential landscape of the bi-channel/triple well 2D case.</span><a class="headerlink" href="#pot-bichannel" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The noise level in this model is set by the inverse temperature parameter <span class="math notranslate nohighlight">\(\beta\)</span>, with low
+values of <span class="math notranslate nohighlight">\(\beta\)</span> corresponding to a high noise level. At low noise levels, the <cite>upper</cite> channel
+is more likely as the two smaller energy barriers are easier to cross. In contrast, at high noise levels
+the shorter <cite>lower</cite> path becomes more likely as strong noise is able to push the system across the saddle
+point.</p>
+</section>
+<section id="id2">
+<h3>Getting set up<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>If you haven’t done so yet, let’s get <cite>pyREVS</cite> installed on your system.
+In order to have access to the example suite, you will need to install the package from sources.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:nlesc-eTAOC/pyREVS.git
+<span class="nb">cd</span><span class="w"> </span>pyREVS
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+tams_check
+</pre></div>
+</div>
+<p>The last line check that <cite>pyREVS</cite> is effectively installed and should return (with proper version numbers):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">==</span><span class="w"> </span>pyREVS<span class="w"> </span>vX.Y.Z<span class="w"> </span>::<span class="w"> </span>a<span class="w"> </span>rare-event<span class="w"> </span>finder<span class="w"> </span><span class="nv">tool</span><span class="w"> </span><span class="o">==</span>
+</pre></div>
+</div>
+<p>Move into the example folder</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>pyREVS/examples/BiChannel2D
+</pre></div>
+</div>
+</section>
+<section id="the-forward-model">
+<h3>The Forward Model<a class="headerlink" href="#the-forward-model" title="Link to this heading">¶</a></h3>
+<p>We will not have to modify the forward model in this tutorial, but it is still interesting
+to have a look at the content of the <code class="docutils literal notranslate"><span class="pre">bichannel2d.py</span></code> file. A quick check of the methods
+defined for this model reveals that all the required <cite>&#64;abstractmethod</cite> from the <cite>pyREVS</cite> ABC are
+provided with a concrete implementations (see Tutorial on 1D double well for more details
+on this point).</p>
+<p>In addition, a <code class="docutils literal notranslate"><span class="pre">potential</span></code> and <code class="docutils literal notranslate"><span class="pre">drift</span></code> are available to readily access the process
+parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_init_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="n">T_Noise</span><span class="p">,</span> <span class="n">need_end_state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drift</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_State</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">T_State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_Noise</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>The state is a Numpy array with two elements and the noise dimension is also <span class="math notranslate nohighlight">\(m=2\)</span>.
+The model also uses an Euler-Murayama scheme to advance in time and the score function is the
+normalized distance to <span class="math notranslate nohighlight">\(\mathcal{A}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\xi(X_t) = \frac{\Vert X_t - X_A \Vert_2}{\Vert X_B - X_A \Vert_2}\]</div>
+</div>
+<p>To test that the model is effectively available, you can reproduce Fig. <a class="reference internal" href="#fig-pot-bichannel"><span class="std std-numref">Figure 10</span></a>
+by running the provided test script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test_bichannel.py
+</pre></div>
+</div>
+<p>The script uses the Forward Model <code class="docutils literal notranslate"><span class="pre">potential</span></code> function to draw contours of <span class="math notranslate nohighlight">\(V(x,y)\)</span>.</p>
+</section>
+<section id="running-tams">
+<h3>Running TAMS<a class="headerlink" href="#running-tams" title="Link to this heading">¶</a></h3>
+<p>Let’s now focus on running TAMS. As mentioned above, this case features two paths for transitioning
+from <span class="math notranslate nohighlight">\(\mathcal{A} = X_A = (x_A,y_A) = (-1,0)\)</span> to <span class="math notranslate nohighlight">\(\mathcal{B} = X_B = (x_B,y_B) = (1,0)\)</span>. We will start
+with running TAMS using <span class="math notranslate nohighlight">\(N=32\)</span> and up to <span class="math notranslate nohighlight">\(J=1000\)</span> iteration. The time horizon is
+set to <span class="math notranslate nohighlight">\(T_a = 20\)</span> and the stopping criterion delimiting <span class="math notranslate nohighlight">\(\mathcal{B}\)</span> is <span class="math notranslate nohighlight">\(\xi_b = 1.05\)</span>.
+All of these parameter can be set in the <code class="docutils literal notranslate"><span class="pre">input.toml</span></code> file (differs from default in the repository !):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ams</span><span class="p">]</span>
+<span class="n">ntrajectories</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">nsplititer</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="s2">"tams"</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="mf">20.0</span>
+
+<span class="p">[</span><span class="n">sampler</span><span class="p">]</span>
+<span class="n">strategy</span> <span class="o">=</span> <span class="s2">"ams"</span>
+
+<span class="p">[</span><span class="n">runtime</span><span class="p">]</span>
+<span class="n">loglevel</span> <span class="o">=</span> <span class="s2">"WARNING"</span>
+
+<span class="p">[</span><span class="n">trajectory</span><span class="p">]</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">targetscore</span> <span class="o">=</span> <span class="mf">1.05</span>
+
+<span class="p">[</span><span class="n">model</span><span class="p">]</span>
+<span class="n">inv_temperature</span> <span class="o">=</span> <span class="mf">5.67</span>
+
+<span class="p">[</span><span class="n">runner</span><span class="p">]</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="s2">"asyncio"</span>
+<span class="n">nworkers</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>Note that the log level here was decreased to <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> in order to minimize standard output clutering
+when running TAMS multiple times. Let’s now look at the short script provided for running TAMS with the
+bi-channel model <code class="docutils literal notranslate"><span class="pre">sample_bichannel.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bichannel2d</span><span class="w"> </span><span class="kn">import</span> <span class="n">BiChannel2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bichannel2d</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_in_landscape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.sampler</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_sampler</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># For convenience</span>
+    <span class="n">fmodel</span> <span class="o">=</span> <span class="n">BiChannel2D</span>
+
+    <span class="c1"># Enable TAMS trajectory plots</span>
+    <span class="n">plot_ensemble</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Number of consecutive sampling runs</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># Run the model several times</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+        <span class="c1"># Initialize the sampler</span>
+        <span class="n">sampler</span> <span class="o">=</span> <span class="n">build_sampler</span><span class="p">(</span><span class="n">fmodel_t</span><span class="o">=</span><span class="n">fmodel</span><span class="p">)</span>
+
+        <span class="c1"># Sample and report</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+            <span class="n">probability</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">get_event_probability</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="c1"># noqa: T201</span>
+            <span class="k">continue</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] : </span><span class="si">{</span><span class="n">probability</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="c1"># noqa: T201</span>
+
+        <span class="k">if</span> <span class="n">plot_ensemble</span><span class="p">:</span>
+            <span class="n">plot_in_landscape</span><span class="p">(</span><span class="n">fmodel</span><span class="p">,</span> <span class="n">sampler</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Averaged transition P_K: </span><span class="si">{</span><span class="n">probabilities</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">, RE: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">probabilities</span><span class="o">.</span><span class="n">var</span><span class="p">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">probabilities</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># noqa : T201</span>
+</pre></div>
+</div>
+<p>As listed above, the script will perform <span class="math notranslate nohighlight">\(K = 10\)</span> consecutive sampling runs and report on the averaged
+transition probability <span class="math notranslate nohighlight">\(P_K\)</span> as well as the relative error. In addition, if the <code class="docutils literal notranslate"><span class="pre">plot_ensemble</span></code> is activated,
+a figure showing the TAMS trajectory ensemble in the potential landscape will be generated for each run.
+Let’s run the script:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_bichannel.py
+</pre></div>
+</div>
+<p>Depending on the platform you are using, it will take a few minutes to run.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some of the individual TAMS run might have terminated with:
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">Splitting</span> <span class="pre">is</span> <span class="pre">stalling</span> <span class="pre">with</span> <span class="pre">all</span> <span class="pre">trajectories</span> <span class="pre">stuck</span> <span class="pre">at</span> <span class="pre">a</span> <span class="pre">score_max:</span> <span class="pre">0.7399799334097721</span>
+<span class="pre">`</span></code>
+This is an occurrence of <cite>extinction</cite>, a known issue of (T)AMS algorithms in which the
+ensemble collapse on a single ancestor trajectory and no significant progress is made
+through iterations until all trajectories have the same <span class="math notranslate nohighlight">\(Q_{tr}\)</span>. This problem
+is more likely when using small ensemble or using a static score function in TAMS, as
+we do here.</p>
+</div>
+<p>At the value of the inverse temperature
+set in the input file <span class="math notranslate nohighlight">\(\beta = 5.67\)</span>, transition through both channel can occurs with a significant probability
+such that out of the 10 runs, you should observe both <cite>upper</cite> and <cite>lower</cite> channel transition as depicted in
+the figure below.</p>
+<figure class="align-center" id="upper-bichannel">
+<span id="fig-tams-bichannel"></span><a class="reference internal image-reference" href="_images/TAMS_Upper_BiChannel.png"><img alt="_images/TAMS_Upper_BiChannel.png" src="_images/TAMS_Upper_BiChannel.png" style="width: 70%;" />
+</a>
+</figure>
+<figure class="align-center" id="lower-bichannel">
+<a class="reference internal image-reference" href="_images/TAMS_Lower_BiChannel.png"><img alt="_images/TAMS_Lower_BiChannel.png" src="_images/TAMS_Lower_BiChannel.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 11 </span><span class="caption-text">: Example of TAMS run with transition in the <cite>upper</cite> or <cite>lower</cite> channel</span><a class="headerlink" href="#lower-bichannel" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Let’s have a look at the behavior of the transition estimator <span class="math notranslate nohighlight">\(P_K\)</span> as
+<span class="math notranslate nohighlight">\(K\)</span> increases. This is similar to the experiment reported in <a class="reference external" href="https://www.jstor.org/stable/44249972">Brehier et al.</a>,
+but we will limit the exercise to <span class="math notranslate nohighlight">\(K = 200\)</span>. Running such an experiment would
+take significant time, beyond the scope of this tutorial. Instead, the probability of 200
+TAMS runs are already available in the example folder and can be readily analyzed. Note that
+the data were generated using <span class="math notranslate nohighlight">\(\beta = 6.67\)</span> for which the transition probability is
+lower than in the earlier runs we performed here.</p>
+<p>The data are stored in a Numpy file <code class="docutils literal notranslate"><span class="pre">Pk_beta_6p67_K200.npy</span></code>. We will write a small script
+to load the data and plot the evolution of <span class="math notranslate nohighlight">\(P_K\)</span> as <span class="math notranslate nohighlight">\(K\)</span> goes from 1 to 200.
+In a new Python file ((e.g. <code class="docutils literal notranslate"><span class="pre">Pk_estimator.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># Load the numpy data</span>
+    <span class="n">proba</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"./Pk_beta_6p67_K200.npy"</span><span class="p">)</span>
+
+    <span class="c1"># Initialize data containers for P_K</span>
+    <span class="c1"># and the confidence interval</span>
+    <span class="n">pbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pbar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pbar_ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Compute pbar and pbar_ci</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">pbar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">pbar_ci</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">proba</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">())</span>
+
+    <span class="c1"># Plot the results</span>
+    <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"text.usetex"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"font.family"</span><span class="p">:</span> <span class="s2">"serif"</span><span class="p">})</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"$K$"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"$P_K$"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-large"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pbar</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">proba</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">pbar</span> <span class="o">-</span> <span class="n">pbar_ci</span><span class="p">,</span>
+        <span class="n">pbar</span> <span class="o">+</span> <span class="n">pbar_ci</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"silver"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Running the script above in the bi-channel folder should produce the graph shown in Fig. <a class="reference internal" href="#fig-pk-bichannel"><span class="std std-numref">Figure 12</span></a>.
+Over the course of 200 runs, the estimator varies significantly and even with <span class="math notranslate nohighlight">\(K = 200\)</span> the value of <span class="math notranslate nohighlight">\(P_K\)</span>
+continues to change. Of interest is the shaded area, showing the 90% confidence interval, which gives an indication of
+the transition probability estimator quality.</p>
+<figure class="align-center" id="pk-bichannel">
+<span id="fig-pk-bichannel"></span><a class="reference internal image-reference" href="_images/TAMS_PK_BiChannel.png"><img alt="_images/TAMS_PK_BiChannel.png" src="_images/TAMS_PK_BiChannel.png" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 12 </span><span class="caption-text">: Evolution of <span class="math notranslate nohighlight">\(P_K\)</span> with <span class="math notranslate nohighlight">\(K\)</span> repetitions of the TAMS algorithm.</span><a class="headerlink" href="#pk-bichannel" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="accessing-the-database">
+<h3>Accessing the database<a class="headerlink" href="#accessing-the-database" title="Link to this heading">¶</a></h3>
+<p>So far, we have performed multiple runs of pyREVS but have had limited access to the welth of data
+generated during the course of the algorithm. Looking back into the previous section, we have
+used the data to visualize the trajectory ensemble on the potential landscape.
+The <cite>pyREVS</cite> database object can be accessed during or after a sampling run using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tdb</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">database</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">sampler</span></code> is an instance of the Sampler object. In the example script used above, the database
+object is send to the function constructing the plot: the <code class="docutils literal notranslate"><span class="pre">plot_in_landscape</span></code> function
+in <code class="docutils literal notranslate"><span class="pre">bichannel2d.py</span></code>. The few lines of code used to access the data in the database are reported
+below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tdb</span><span class="o">.</span><span class="n">traj_list</span><span class="p">():</span>
+    <span class="n">state_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">get_state_list</span><span class="p">()])</span>
+    <span class="n">state_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">get_state_list</span><span class="p">()])</span>
+</pre></div>
+</div>
+<p>Here we loop on the list of <cite>active</cite> trajectories <code class="docutils literal notranslate"><span class="pre">tdb.traj_list()</span></code>, i.e. the ensemble
+of <span class="math notranslate nohighlight">\(N\)</span> trajectories active at the current iteration of the algorithm. Note that when
+using a Monte-Carlo sampling strategy, only active trajectory are available. We then used Python
+list comprehension to go through the trajectory and extract a Numpy array of the system state
+components <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<p>In our previous sampling runs, we could no longer access the database after exiting the script
+since the data was not saved to disk. Let’s now run one more time the algorithm, allowing to
+create a database on disk. To do so, let’s add the appropriate keyword to the input file
+<code class="docutils literal notranslate"><span class="pre">input.toml</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">database</span><span class="p">]</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">"./db_tams_bichannel.tdb"</span>
+</pre></div>
+</div>
+<p>, update the <code class="docutils literal notranslate"><span class="pre">sample_bichannel.py</span></code> script to only run once by changing the value of <span class="math notranslate nohighlight">\(K\)</span>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of consecutive sampling runs</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>and run the script again:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_bichannel.py
+</pre></div>
+</div>
+<p>Note that saving the database to disk incurs an overhead, which is not negligeable for
+such a small model. Looking into your run folder should now show that a <cite>pyREVS</cite> database
+was saved:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>-d<span class="w"> </span>db*
+db_tams_bichannel.tdb
+</pre></div>
+</div>
+<p>Let’s now put together a small script to load the database and access some of its data.
+In a new Python file (e.g. <code class="docutils literal notranslate"><span class="pre">load_database.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_database</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># Load the database from disk</span>
+    <span class="n">tdb</span> <span class="o">=</span> <span class="n">load_database</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"./db_tams_bichannel.tdb"</span><span class="p">))</span>
+    <span class="n">tdb</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">load_archived_trajectories</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Show the ensemble scores at the last iteration</span>
+    <span class="n">tdb</span><span class="o">.</span><span class="n">plot_score_functions</span><span class="p">(</span><span class="s2">"./ScoreEnsemble.png"</span><span class="p">)</span>
+
+    <span class="c1"># Show the evolution of the ensemble span over</span>
+    <span class="c1"># the course of TAMS iterations</span>
+    <span class="n">tdb</span><span class="o">.</span><span class="n">extension</span><span class="p">()</span><span class="o">.</span><span class="n">plot_min_max_span</span><span class="p">(</span><span class="s2">"./ScoreMinMax.png"</span><span class="p">)</span>
+
+    <span class="c1"># Go through the active trajectories</span>
+    <span class="c1"># and display the max score</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tdb</span><span class="o">.</span><span class="n">traj_list</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trajectory </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">id</span><span class="p">()</span><span class="si">}</span><span class="s2"> final max score: </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">score_max</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Get the active trajectory list at initial iteration</span>
+    <span class="c1"># and display the max score</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tdb</span><span class="o">.</span><span class="n">extension</span><span class="p">()</span><span class="o">.</span><span class="n">get_trajectory_active_at_k</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trajectory </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">id</span><span class="p">()</span><span class="si">}</span><span class="s2"> initial max score: </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">score_max</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first line above instantiates the <code class="docutils literal notranslate"><span class="pre">Database</span></code> object, but only load metadata from disk. Only data such
+as the number of trajectories, the current index of the TAMS iteration and some trajectories metadata
+(did it converged, what is the maximum of the score function, …) are available.
+The <code class="docutils literal notranslate"><span class="pre">load_data</span></code> function effectively load the entire content of the trajectories in memory. By default
+only the <cite>active</cite> trajectory data are loaded, i.e. the trajectory at the end of the TAMS algorithm. By
+activating the <code class="docutils literal notranslate"><span class="pre">load_archived_trajectories</span></code> flag, we trigger loading the full list of trajectories
+including the ones discarded during the TAMS iterations.
+A couple of helper functions allow to asses the state of the ensemble by plotting the score functions
+as well as the evolution of the ensemble over the course of the iterations.
+One important point to note is the <cite>pyREVS</cite> database has a core component that contains the active and
+possibly archived trajectories. To access data from the ensemble, you can call <cite>tdb.&lt;function&gt;</cite>. For
+data associated with a specific sampling strategy (e.g. TAMS), you need to access the database extension
+with <cite>tdb.extensio().&lt;function&gt;</cite>. In the example above, we plot the trajectory ensemble score function through the
+core database function call <cite>tdb.plot_score_functions</cite>, but to plot the evolution of the ensemble over
+the course of the TAMS iterations, we need to use the extension <cite>tdb.extension().plot_min_max_span</cite>.</p>
+<p>This is all for this tutorial. We have covered the following points:</p>
+<ul class="simple">
+<li><p>Exploring one of <cite>pyREVS</cite> built-in example</p></li>
+<li><p>Running TAMS multiple times in order to get a better transition probability estimator and uncertainty</p></li>
+<li><p>Accessing, saving and loading the <cite>pyREVS</cite> database</p></li>
+</ul>
+<p>To go further, modify the change the value of the inverse temperature <span class="math notranslate nohighlight">\(\beta\)</span> parameter
+and see how that affect the probability of transitioning through the <cite>upper</cite> and <cite>lower</cite> channels,
+look at the <code class="docutils literal notranslate"><span class="pre">Database</span></code> and <code class="docutils literal notranslate"><span class="pre">Trajectory</span></code> APIs (<a class="reference external" href="./autoapi/pyrevs/database/index.html">database API</a>)
+to extract more data from the database and get the most out of your sampling runs !</p>
+</section>
+</section>
+<section id="d-boussinesq-model">
+<h2>2D Boussinesq model<a class="headerlink" href="#d-boussinesq-model" title="Link to this heading">¶</a></h2>
+<p>So far, the tutorials have been focused on fairly simple models for which <cite>pyREVS</cite> is practical,
+but also incurs a computational overhead that might not be justified compared to more simple
+implementation of sampling algorithms.</p>
+<p>We will now turn our attention to a more complex model, with <span class="math notranslate nohighlight">\(10^4\)</span> degrees-of-freedom
+for which <cite>pyREVS</cite> is specifically designed for. The model is a stochastic partial
+differential equation (SPDE) described in <a class="reference external" href="https://doi.org/10.1017/jfm.2025.248">Soons et al.</a>.
+Two versions of this model are available in <cite>pyREVS</cite> examples and the present tutorial will
+focus on the C++ implementation <code class="docutils literal notranslate"><span class="pre">examples/BoussinesqCpp</span></code> in order to demonstrate how
+to couple <cite>pyREVS</cite> with an external software (as might be the case for many user of existing
+physics models). The interested reader can dig into the <code class="docutils literal notranslate"><span class="pre">examples/Boussinesq</span></code> to study the
+implementation of a Python-only version.</p>
+<p>One final note to motivate the use of <cite>pyREVS</cite>: a <span class="math notranslate nohighlight">\(10^4\)</span> state requires about 80 kB
+of memory and considering a model trajectory consists of 4000 individual states, an <cite>active</cite> set of
+<span class="math notranslate nohighlight">\(N=20\)</span> trajectories requires about 6 GB of memory. This turns out to be only a fraction
+of the full memory requirements of TAMS as the total number of trajectories increases with
+the number of iterations, making it impossible to run TAMS on such a model without
+partially storing data to disk and sub-sampling the states (both native features of <cite>pyREVS</cite>).</p>
+<section id="id4">
+<h3>Getting set up<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>If you haven’t done so yet, let’s get <cite>pyREVS</cite> installed on your system.
+In order to have access to the example suite, you will need to install the package from sources.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:nlesc-eTAOC/pyREVS.git
+<span class="nb">cd</span><span class="w"> </span>pyREVS
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+tams_check
+</pre></div>
+</div>
+<p>The last line check that <cite>pyREVS</cite> is effectively installed and should return (with proper version numbers):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">==</span><span class="w"> </span>pyREVS<span class="w"> </span>vX.Y.Z<span class="w"> </span>::<span class="w"> </span>a<span class="w"> </span>rare-event<span class="w"> </span>finder<span class="w"> </span><span class="nv">tool</span><span class="w"> </span><span class="o">==</span>
+</pre></div>
+</div>
+<p>Move into the example folder</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>pyREVS/examples/BoussinesqCpp
+</pre></div>
+</div>
+</section>
+<section id="boussinesqcpp-folder-content">
+<h3>BoussinesqCpp Folder content<a class="headerlink" href="#boussinesqcpp-folder-content" title="Link to this heading">¶</a></h3>
+<p>Before diving into the code, let’s first have a look at the content of the folder
+as many more files are involved compared to previous tutorials:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Boussinesq.cpp<span class="w">             </span><span class="c1"># Implementation of physics model in C++</span>
+Boussinesq.h<span class="w">               </span><span class="c1"># C++ model headers</span>
+Makefile<span class="w">                   </span><span class="c1"># GNUmake file</span>
+Messaging.h<span class="w">                </span><span class="c1"># Messaging library header, C++ side</span>
+OFFState.bin<span class="w">               </span><span class="c1"># Model OFF state data, in binary format</span>
+OFFState.xmf<span class="w">               </span><span class="c1"># Model OFF state data visualization (use Paraview)</span>
+ONState.bin<span class="w">                </span><span class="c1"># Model ON state data, in binary format</span>
+ONState.xmf<span class="w">                </span><span class="c1"># Model ON state data visualization (use Paraview)</span>
+README.md
+__init__.py
+boussinesq2d.py<span class="w">            </span><span class="c1"># The forward model implementation</span>
+eigen_lapack_interf.h<span class="w">      </span><span class="c1"># Eigen to LAPACK interface C++ header</span>
+input.toml<span class="w">                 </span><span class="c1"># pyREVS input file</span>
+messaging.py<span class="w">               </span><span class="c1"># Messaging library, Python side</span>
+sample_boussinesq2d.py<span class="w">     </span><span class="c1"># Script for running sampler</span>
+</pre></div>
+</div>
+<p>There are three main components to this model:</p>
+<ul class="simple">
+<li><p>The model physics is encapsulated in a C++ program (<code class="docutils literal notranslate"><span class="pre">Boussinesq.h</span></code>, <code class="docutils literal notranslate"><span class="pre">Boussinesq.cpp</span></code>, <code class="docutils literal notranslate"><span class="pre">eigen_lapack_interf.h</span></code>)</p></li>
+<li><p>An inter-process communication (IPC) module with a C++ (<code class="docutils literal notranslate"><span class="pre">Messaging.h</span></code>) and a Python (<code class="docutils literal notranslate"><span class="pre">messaging.py</span></code>) side</p></li>
+<li><p>The <cite>pyREVS</cite> ABC concrete implementation for this model (<code class="docutils literal notranslate"><span class="pre">boussinesq2d.py</span></code>)</p></li>
+</ul>
+<p>When coupling an external model to <cite>pyREVS</cite>, one should consider the possibility of
+maintaining the physics program continuously running in the background to avoid having to start and
+terminate the program repeatedly. In the present case, we implemented a simple IPC that enables running the C++
+in the background all the time while controlling its flow from Python as <cite>pyREVS</cite> proceeds. This might not
+always be possible if you do not have access to the physics program source code.</p>
+<p>Our aim here is not to dive too much into the C++ side, as the physics implementation is not
+particularly transferable to other cases, but to explore how to set up the ABC forward model
+implementation for an external program.</p>
+<p>Let’s kick off this tutorial by compiling the physics program.
+Follow the instructions of the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> file to obtain the external dependencies for this
+case (Eigen and LAPACK) and make sure you are able to compile the C++ program:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make
+ls<span class="w"> </span>boussinesq.exe
+</pre></div>
+</div>
+</section>
+<section id="boussinesqcpp-forward-model">
+<h3>BoussinesqCpp forward model<a class="headerlink" href="#boussinesqcpp-forward-model" title="Link to this heading">¶</a></h3>
+<p>Let’s first look at the <code class="docutils literal notranslate"><span class="pre">_init_model</span></code> function in <code class="docutils literal notranslate"><span class="pre">boussinesq2d.py</span></code> to get a clear view of the
+model attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_m_id</span> <span class="o">=</span> <span class="n">m_id</span>                             <span class="c1"># The unique id of the model instance</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_M</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"size_M"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>            <span class="c1"># Number of grid point in latitude</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_N</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"size_N"</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>            <span class="c1"># Number of grid point in depth</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_K</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"K"</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>                  <span class="c1"># Number of Fourier modes for the stochastic forcing</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_eps</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"epsilon"</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>       <span class="c1"># Variance of the Wiener noise process</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_exec</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"exec"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>         <span class="c1"># The executable of the external physics program</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_exec_cmd</span> <span class="o">=</span> <span class="p">[</span>                            <span class="c1"># The command to start the external physics program</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">,</span>
+    <span class="s2">"-M"</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_M</span><span class="p">),</span>
+    <span class="s2">"-N"</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_N</span><span class="p">),</span>
+    <span class="s2">"-K"</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_K</span><span class="p">),</span>
+    <span class="s2">"--eps"</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eps</span><span class="p">),</span>
+    <span class="s2">"--pipe_id"</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">m_id</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="kc">None</span>                             <span class="c1"># The id of the process of the external program</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span> <span class="o">=</span> <span class="kc">None</span>                             <span class="c1"># The IPC (named here pipe as it uses two-way pipes)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"init_state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># The model state</span>
+</pre></div>
+</div>
+<p>The model physical parameters are read from the input file (<code class="docutils literal notranslate"><span class="pre">size_M</span></code>, <code class="docutils literal notranslate"><span class="pre">size_N</span></code>, <code class="docutils literal notranslate"><span class="pre">K</span></code>, <code class="docutils literal notranslate"><span class="pre">epsilon</span></code>) and used
+to start the external program along with a path to its executable. The C++ program does not start at this point,
+but will be launched upon calling the advance function for the first time.
+In this model, the state is not directly the model state as an array of data but rather a path to
+a file on disk, generated/read by the external model. This has direct implication for the setter and getter
+function of the ABC: the <code class="docutils literal notranslate"><span class="pre">set_current_state</span></code> function must not only set the <code class="docutils literal notranslate"><span class="pre">self._state</span></code> variable on the
+Python side, but also communicate that information with the C++ program:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">T_State</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Set the model state.</span>
+
+<span class="sd">    And transfer it to the C++ process if opened</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state: the new state</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">MessageType</span><span class="o">.</span><span class="n">SETSTATE</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)))</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">get_message</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ret</span><span class="o">.</span><span class="n">mtype</span> <span class="o">!=</span> <span class="n">MessageType</span><span class="o">.</span><span class="n">DONE</span><span class="p">:</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">"Unable to set the state of the C++ code"</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span>
+</pre></div>
+</div>
+<p>If we now take a closer look at the advance function, there are a few notable things to notice:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">noise</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">need_end_state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Advance the model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        step: the current step counter</span>
+<span class="sd">        time: the starting time of the advance call</span>
+<span class="sd">        dt: the time step size over which to advance</span>
+<span class="sd">        noise: the noise to be used in the model step</span>
+<span class="sd">        need_end_state: whether the step end state is needed</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Some model will not do exactly dt (e.g. sub-stepping) return the actual dt</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span>
+        <span class="c1"># Initialize the C++ process and the twoway pipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exec_cmd</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span> <span class="o">=</span> <span class="n">TwoWayPipe</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_m_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+        <span class="c1"># Send the workdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">MessageType</span><span class="o">.</span><span class="n">SETWORKDIR</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_workdir</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)))</span>
+
+        <span class="c1"># Set the initial state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">need_end_state</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">trigger_save_msg</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">MessageType</span><span class="o">.</span><span class="n">ONESTOCHSTEP</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">noise</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()))</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">get_message</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ret</span><span class="o">.</span><span class="n">mtype</span> <span class="o">!=</span> <span class="n">MessageType</span><span class="o">.</span><span class="n">DONE</span><span class="p">:</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">"Unable to access the score from the C++ code"</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_score</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"d"</span><span class="p">,</span> <span class="n">ret</span><span class="o">.</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">need_end_state</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_statefile</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">dt</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Upon the first call to the advance function, the C++ program is started using Python <cite>subprocess</cite>. At
+the same time, the IPC two-way pipe is initialized and the initial condition communicated to the
+external program.</p></li>
+<li><p><cite>pyREVS</cite>’s trajectory API allows to downsample the state stored in the trajectory and the advance function
+<code class="docutils literal notranslate"><span class="pre">need_end_state</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> when the algorithm expects a state. This is also transferred
+to the C++ program before effectively advancing the model. Depending on how your model handles IO, you can use
+this parameter to make sure a checkpoint file is generated (or possibly suppress a checkpoint file if your
+model always produces IO but it is not needed)</p></li>
+</ul>
+<p>The noise increment for the model’s stochastic forcing is still generated on the Python side and
+communicated to the external C++ program when performing a model time step. Additionally, the Python
+ABC does not have access to the C++ program state variables (i.e. the physical field of temperature, salinity, …)
+and must query the model to get the score function (transferring entire variable fields to Python would
+slow the model significantly).</p>
+<p>One last function worth noting is <code class="docutils literal notranslate"><span class="pre">_clear_model</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_clear_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">exit_msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>This function is part of <cite>pyREVS</cite> forward model ABC but does not <em>need</em> to be overwritten by a concrete
+implementation. It is always called upon completing a trajectory (i.e. reaching the score function target
+value or an other termination condition) and in the current model, it terminates the external C++ program.</p>
+</section>
+<section id="running-pyrevs-locally">
+<h3>Running pyREVS locally<a class="headerlink" href="#running-pyrevs-locally" title="Link to this heading">¶</a></h3>
+<p>We will now sample the Boussinesq model transition with TAMS. This model is significantly more computationally
+expensive that the other models used in previous tutorials, but it still only takes a few dozens
+minutes to perform a sampling run on a laptop.</p>
+<p>Let’s review the content of the input file <code class="docutils literal notranslate"><span class="pre">input.toml</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">sampler</span><span class="p">]</span>
+<span class="n">strategy</span> <span class="o">=</span> <span class="s2">"ams"</span>
+
+<span class="p">[</span><span class="n">ams</span><span class="p">]</span>
+<span class="n">ntrajectories</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">nsplititer</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="s2">"tams"</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="mf">20.0</span>
+
+<span class="p">[</span><span class="n">runtime</span><span class="p">]</span>
+<span class="n">loglevel</span> <span class="o">=</span> <span class="s2">"INFO"</span>
+<span class="n">plot_diagnostics</span> <span class="o">=</span> <span class="n">true</span>
+</pre></div>
+</div>
+<p>The number of ensemble members is set to <span class="math notranslate nohighlight">\(N=20\)</span> and the maximum of iteration set to <span class="math notranslate nohighlight">\(J = 200\)</span>.
+We enable plot diagnostic to <code class="docutils literal notranslate"><span class="pre">True</span></code> is order to visualize the evolution of the ensemble during the course
+of the iterations, as depicted in the last graph of the <a class="reference internal" href="Theory.html#sec-theory"><span class="std std-ref">Theory Section</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">trajectory</span><span class="p">]</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">targetscore</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">sparse_freq</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>The time horizon is set to <span class="math notranslate nohighlight">\(T_a = 20\)</span> time units and the step size 0.005. The target score function
+defining the model AMOC collapsed state is <span class="math notranslate nohighlight">\(\xi_b = 0.95\)</span>. Finally, only one state every 10 steps will
+be requested (i.e. the advance function argument <code class="docutils literal notranslate"><span class="pre">need_end_state</span></code> will be <code class="docutils literal notranslate"><span class="pre">False</span></code> 9 out of 10 calls. This
+reduce by an order of magnitude the disk space requirements. Note that this parameter is a disk space versus
+compute trade-off, as sparser trajectory will require to recompute some model steps during the cloning/branching
+step of the algorithm.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+<span class="n">exec</span> <span class="o">=</span> <span class="s2">"./boussinesq.exe"</span>
+<span class="n">init_state</span> <span class="o">=</span> <span class="s2">"./ONState.bin"</span>
+<span class="n">size_M</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">size_N</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">7</span>
+</pre></div>
+</div>
+<p>The model parameters are parsed in the model <code class="docutils literal notranslate"><span class="pre">_init_model</span></code> function and control the size of computational
+model as well as stochastic forcing shape and intensity. The initial condition is set to be the AMOC <cite>ON</cite> state.
+Note that the noise level here is fairly high <span class="math notranslate nohighlight">\(\epsilon = 0.05\)</span>, such that the transition is not so rare
+in order to limit the compute time.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">runner</span><span class="p">]</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="s2">"dask"</span>
+<span class="n">nworkers</span><span class="o">=</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>When running the model locally, both <cite>asyncio</cite> and <cite>dask</cite> runner are valid options. Here we use Dask by default,
+spawning two workers during the initial ensemble generation and two workers during the TAMS iterations. The
+later parameter effectively means that at least the two trajectories with the lowest values of the maximum score
+function will be discarded and new trajectory cloned/branched at each TAMS iterations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">database</span><span class="p">]</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">"2DBoussinesqCpp.tdb"</span>
+</pre></div>
+</div>
+<p>Running this model always requires creating a database on disk to store the external model data.</p>
+<p>As with previous Tutorials, there a short script in the example folder to launch the sampling run:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>sample_boussinesq2d.py
+</pre></div>
+</div>
+<p>For the sake of keeping this tutorial short, only a single sampling run is required.</p>
+<p>The standard output should look something like:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:02,769<span class="w"> </span>-
+<span class="w">            </span><span class="c1">####################################################</span>
+<span class="w">            </span><span class="c1"># pyREVS v1.0.0                                    #</span>
+<span class="w">            </span><span class="c1"># Date: 2025-12-04 21:46:02.752567+00:00           #</span>
+<span class="w">            </span><span class="c1"># Model: 2DBoussinesqModelCpp                      #</span>
+<span class="w">            </span><span class="c1"># Strategy: ams                                    #</span>
+<span class="w">            </span><span class="c1">####################################################</span>
+<span class="w">            </span><span class="c1"># Requested # of traj:                          20 #</span>
+<span class="w">            </span><span class="c1"># Number of 'Terminated' trajectories:           0 #</span>
+<span class="w">            </span><span class="c1"># Number of 'Converged' trajectories:            0 #</span>
+<span class="w">            </span><span class="c1"># Current total number of steps:                 0 #</span>
+<span class="w">            </span><span class="c1">####################################################</span>
+
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:02,785<span class="w"> </span>-<span class="w"> </span>Computing<span class="w"> </span>2DBoussinesqModelCpp<span class="w"> </span>rare<span class="w"> </span>event<span class="w"> </span>probability<span class="w"> </span>using<span class="w"> </span>TAMS
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:02,785<span class="w"> </span>-<span class="w"> </span>Creating<span class="w"> </span>the<span class="w"> </span>initial<span class="w"> </span>ensemble<span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>trajectories
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:03,292<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000002_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86399</span>.487147<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:03,293<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000003_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86399</span>.486938<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:28,092<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000018_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86374</span>.679952<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:46:28,120<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000006_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86374</span>.651914<span class="o">]</span>
+...
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:50:49,663<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000010_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86113</span>.108818<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:14,384<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000012_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86088</span>.387617<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:14,437<span class="w"> </span>-<span class="w"> </span>Advancing<span class="w"> </span>traj000000_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86088</span>.334118<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:39,418<span class="w"> </span>-<span class="w"> </span>Run<span class="w"> </span>time:<span class="w"> </span><span class="m">336</span>.648924<span class="w"> </span>s
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:39,418<span class="w"> </span>-<span class="w"> </span>Using<span class="w"> </span>multi-level<span class="w"> </span>splitting<span class="w"> </span>to<span class="w"> </span>get<span class="w"> </span>the<span class="w"> </span>probability
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:39,992<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>TAMS<span class="w"> </span>iter.<span class="w"> </span><span class="m">0</span><span class="w"> </span>with<span class="w"> </span><span class="m">2</span><span class="w"> </span>workers
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:40,595<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">19</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000003_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86062</span>.184477<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:51:40,597<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">4</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000001_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86062</span>.183612<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:52:02,934<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>TAMS<span class="w"> </span>iter.<span class="w"> </span><span class="m">2</span><span class="w"> </span>with<span class="w"> </span><span class="m">2</span><span class="w"> </span>workers
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:52:03,365<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">10</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000019_0001<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86039</span>.406361<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:52:03,383<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000017_0000<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">86039</span>.388611<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:52:23,398<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>TAMS<span class="w"> </span>iter.<span class="w"> </span><span class="m">4</span><span class="w"> </span>with<span class="w"> </span><span class="m">2</span><span class="w"> </span>workers
+...
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:55,533<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>TAMS<span class="w"> </span>iter.<span class="w"> </span><span class="m">102</span><span class="w"> </span>with<span class="w"> </span><span class="m">2</span><span class="w"> </span>workers
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:55,848<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000016_0008<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">85566</span>.924079<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:55,879<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span><span class="o">[</span><span class="m">7</span><span class="o">]</span><span class="w"> </span>from<span class="w"> </span>traj000000_0003<span class="w"> </span><span class="o">[</span><span class="nb">time</span><span class="w"> </span>left:<span class="w"> </span><span class="m">85566</span>.892251<span class="o">]</span>
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:57,955<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>TAMS<span class="w"> </span>iter.<span class="w"> </span><span class="m">104</span><span class="w"> </span>with<span class="w"> </span><span class="m">2</span><span class="w"> </span>workers
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:58,134<span class="w"> </span>-<span class="w"> </span>All<span class="w"> </span>trajectories<span class="w"> </span>converged<span class="w"> </span>after<span class="w"> </span><span class="m">104</span><span class="w"> </span>splitting<span class="w"> </span>iterations
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">22</span>:59:58,317<span class="w"> </span>-<span class="w"> </span>Run<span class="w"> </span>time:<span class="w"> </span><span class="m">835</span>.547348<span class="w"> </span>s
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">23</span>:00:02,499<span class="w"> </span>-<span class="w"> </span><span class="m">104</span><span class="w"> </span>archived<span class="w"> </span>trajectories<span class="w"> </span>loaded
+<span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="m">2025</span>-12-04<span class="w"> </span><span class="m">23</span>:00:02,521<span class="w"> </span>-
+<span class="w">            </span><span class="c1">####################################################</span>
+<span class="w">            </span><span class="c1"># TAMS v0.0.6             trajectory database      #</span>
+<span class="w">            </span><span class="c1"># Date: 2025-12-04 21:46:02.752567+00:00           #</span>
+<span class="w">            </span><span class="c1"># Model: 2DBoussinesqModelCpp                      #</span>
+<span class="w">            </span><span class="c1">####################################################</span>
+<span class="w">            </span><span class="c1"># Requested # of traj:                          20 #</span>
+<span class="w">            </span><span class="c1"># Requested # of splitting iter:               500 #</span>
+<span class="w">            </span><span class="c1"># Number of 'Ended' trajectories:               20 #</span>
+<span class="w">            </span><span class="c1"># Number of 'Converged' trajectories:           20 #</span>
+<span class="w">            </span><span class="c1"># Current splitting iter counter:              106 #</span>
+<span class="w">            </span><span class="c1"># Current total number of steps:            183619 #</span>
+<span class="w">            </span><span class="c1"># Transition probability:    0.0037570973859534823 #</span>
+<span class="w">            </span><span class="c1">####################################################</span>
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">diagnostic</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, a series of images <code class="docutils literal notranslate"><span class="pre">Score_k0****.png</span></code> showing the
+ensemble at each iterations (every two cloning/branching events) is generated.</p>
+</section>
+<section id="running-pyrevs-on-a-slurm-cluster">
+<h3>Running pyREVS on a Slurm cluster<a class="headerlink" href="#running-pyrevs-on-a-slurm-cluster" title="Link to this heading">¶</a></h3>
+<p>In the event you have access to an HPC cluster, we will now update the input file to run
+<cite>pyREVS</cite> on a Slurm cluster.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ams</span><span class="p">]</span>
+<span class="n">walltime</span> <span class="o">=</span> <span class="mi">7100</span>
+
+<span class="p">[</span><span class="n">runner</span><span class="o">.</span><span class="n">dask</span><span class="p">]</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="s2">"slurm"</span>
+<span class="n">worker_walltime</span> <span class="o">=</span> <span class="s2">"2:00:00"</span>
+<span class="n">queue</span> <span class="o">=</span> <span class="s2">"genoa"</span>
+<span class="n">ntasks_per_job</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">job_prologue</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'module load Python'</span><span class="p">,</span> <span class="s1">'conda activate pyREVS'</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The default backend of the <code class="docutils literal notranslate"><span class="pre">dask</span></code> runner is <code class="docutils literal notranslate"><span class="pre">local</span></code>, by setting it to <code class="docutils literal notranslate"><span class="pre">slurm</span></code> Dask will
+submit the workers as Slurm jobs. The job wall time will be set to 2 hours and be submitted to
+the <code class="docutils literal notranslate"><span class="pre">genoa</span></code> partition. The algorithm walltime must thus be updated to not exceed the job wall time.
+The strings listed in the <code class="docutils literal notranslate"><span class="pre">job_prologue</span></code> will be executed before starting the worker and can be
+used to setup your environment.</p>
+<p>If your cluster allows it, can launch the sampling script from the login node (very to no compute is done by the main
+process in <cite>pyREVS</cite>), otherwise you will have to launch the sampling script from a Slurm batch script.</p>
+<p>This is all for this tutorial. We have covered the following points:</p>
+<ul class="simple">
+<li><p>Interfacing an external program with <cite>pyREVS</cite></p></li>
+<li><p>Triggering diagnostics while running TAMS sampling</p></li>
+<li><p>Using multiple workers and running <cite>pyREVS</cite> on a Slurm cluster</p></li>
+</ul>
+<p>To go further, interested users can change the model noise parameters or repeat the experiment
+multiple times. Additionally, the Python version of the Boussinesq model has several custom
+features and comparing the two implementations could be a good source of information for developing
+your own model.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="Implementation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Implementation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="Usage.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Usage</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Netherlands eScience Center
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Tutorials</a><ul>
+<li><a class="reference internal" href="#d-double-well">1D double well</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#getting-set-up">Getting set up</a></li>
+<li><a class="reference internal" href="#writing-the-forward-model">Writing the forward model</a></li>
+<li><a class="reference internal" href="#testing-the-model">Testing the model</a></li>
+<li><a class="reference internal" href="#sampling-transitions">Sampling transitions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bi-channel-problem">Bi-channel problem</a><ul>
+<li><a class="reference internal" href="#id1">Background</a></li>
+<li><a class="reference internal" href="#id2">Getting set up</a></li>
+<li><a class="reference internal" href="#the-forward-model">The Forward Model</a></li>
+<li><a class="reference internal" href="#running-tams">Running TAMS</a></li>
+<li><a class="reference internal" href="#accessing-the-database">Accessing the database</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#d-boussinesq-model">2D Boussinesq model</a><ul>
+<li><a class="reference internal" href="#id4">Getting set up</a></li>
+<li><a class="reference internal" href="#boussinesqcpp-folder-content">BoussinesqCpp Folder content</a></li>
+<li><a class="reference internal" href="#boussinesqcpp-forward-model">BoussinesqCpp forward model</a></li>
+<li><a class="reference internal" href="#running-pyrevs-locally">Running pyREVS locally</a></li>
+<li><a class="reference internal" href="#running-pyrevs-on-a-slurm-cluster">Running pyREVS on a Slurm cluster</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=fc837d61"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
+</html>

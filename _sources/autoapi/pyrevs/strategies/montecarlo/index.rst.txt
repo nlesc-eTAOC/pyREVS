@@ -1,0 +1,171 @@
+pyrevs.strategies.montecarlo
+============================
+
+.. py:module:: pyrevs.strategies.montecarlo
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/strategies/montecarlo/config/index
+   /autoapi/pyrevs/strategies/montecarlo/extension/index
+   /autoapi/pyrevs/strategies/montecarlo/montecarlo/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.MCConfig
+   pyrevs.strategies.montecarlo.MCDatabaseExtension
+   pyrevs.strategies.montecarlo.MonteCarlo
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.load_database_extension
+
+
+Package Contents
+----------------
+
+.. py:class:: MCConfig
+
+   MC strategy configuration.
+
+
+   .. py:attribute:: ntrajectories
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: end_time
+      :type:  float | None
+      :value: None
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate MC configuration.
+
+
+
+.. py:class:: MCDatabaseExtension
+
+   Bases: :py:obj:`pyrevs.database.StrategyDatabaseExtension`
+
+
+   An extension class for the MonteCarlo strategy.
+
+   The Monte-Carlo strategy has minimal extension requirements.
+   It mostly provides a concrete implementation of the
+   event probability computation method.
+
+   It only holds a reference to the core trajectory database.
+
+   :ivar _tdb: the core trajectory database
+
+
+
+   .. py:method:: initialize(tdb: pyrevs.database.Database) -> None
+
+      Initialize the MC database extension.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: initialize_from_database(tdb: pyrevs.database.Database) -> None
+
+      Initialize the MC database extension.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: serialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: deserialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: get_event_probability() -> float
+
+      Return the event probability.
+
+
+
+.. py:class:: MonteCarlo(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, runner_cfg: pyrevs.runner.RunnerConfig, strategy_cfg: pyrevs.strategies.montecarlo.config.MCConfig, deterministic: bool)
+
+   Bases: :py:obj:`pyrevs.strategies.base.BaseSamplingStrategy`
+
+
+   A strategy class implementing MonteCarlo.
+
+   Monte-Carlo or Direct Numerical Simulation (DNS) is not per-se
+   a sampling strategy tailored for rare events but it provides
+   a baseline for comparison with other sampling strategies.
+
+   An ensemble of size n_traj is constructed and the rare-event probability
+   is simply computed as the ratio of the number of converged trajectories
+   to the total number of trajectories in the ensemble n_traj.
+
+   In practice, this is the first step of a TAMS or AMS run (depending
+   on the termination condition), such that this class is a lightweight
+   version of these other strategies.
+
+   .. rubric:: Notes
+
+   This strategy relies on time management provided by
+   BaseSamplingStrategy (e.g. ``self._end_date``, ``elapsed_time()``).
+
+
+   .. py:method:: generate_trajectory_ensemble(tdb: pyrevs.database.Database) -> None
+
+      Schedule the generation of an ensemble of stochastic trajectories.
+
+      Loop over all the trajectories in the database and schedule
+      advancing them to either end time or convergence with the
+      runner.
+
+      The runner will use the number of workers specified in the
+      input file under the runner section.
+
+      :raises Error if the runner fails:
+
+
+
+   .. py:method:: compute_probability(tdb: pyrevs.database.Database) -> float
+
+      Compute the rare-event probability using MonteCarlo.
+
+      :returns: the rare-event probability
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+
+      Initialize database core state.
+
+
+
+.. py:function:: load_database_extension(tdb: pyrevs.database.Database) -> extension.MCDatabaseExtension
+
+   A factory function to instanciate the extension from the database.
+
+

@@ -1,0 +1,58 @@
+pyrevs.bin
+==========
+
+.. py:module:: pyrevs.bin
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/bin/bin/index
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.bin.alive
+   pyrevs.bin.input_help
+   pyrevs.bin.sampling_run
+   pyrevs.bin.template_model
+
+
+Package Contents
+----------------
+
+.. py:function:: alive() -> None
+
+   Check pyREVS.
+
+
+.. py:function:: input_help() -> None
+
+   Print a help message for a dataclass.
+
+
+.. py:function:: sampling_run(a_args: list[str] | None = None) -> None
+
+   Start a pyREVS run from a file with a forward model.
+
+   :param a_args: optional list of options
+
+
+.. py:function:: template_model(a_args: list[str] | None = None) -> None
+
+   Copy a templated forward model file.
+
+   A helper function to help getting started from scratch
+   on a new model. The include_optional flag will add
+   all the non final methods to the subclass, usefull when
+   dealing with more complex models.
+
+   :param a_args: optional list of options
+
+

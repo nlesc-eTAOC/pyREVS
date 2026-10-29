@@ -1,0 +1,117 @@
+pyrevs.utils.utils
+==================
+
+.. py:module:: pyrevs.utils.utils
+
+.. autoapi-nested-parse::
+
+   A set of utility functions for pyREVS.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.utils.utils.is_windows_os
+   pyrevs.utils.utils.is_mac_os
+   pyrevs.utils.utils.setup_logger
+   pyrevs.utils.utils.get_min_scored
+   pyrevs.utils.utils.moving_avg
+   pyrevs.utils.utils.get_module_local_import
+   pyrevs.utils.utils.import_forward_model
+   pyrevs.utils.utils.clean_signature
+   pyrevs.utils.utils.generate_subclass
+
+
+Module Contents
+---------------
+
+.. py:function:: is_windows_os() -> bool
+
+   Indicates Windows platform.
+
+
+.. py:function:: is_mac_os() -> bool
+
+   Indicates MacOS platform.
+
+
+.. py:function:: setup_logger(loglevel: str, logfile: str | None = None) -> None
+
+   Setup the logger parameters.
+
+   :param loglevel: logging level
+   :param logfile: optional logging file
+
+
+.. py:function:: get_min_scored(maxes: numpy.typing.NDArray[Any], nworkers: int) -> tuple[list[int], numpy.typing.NDArray[Any]]
+
+   Get the nworker lower scored trajectories or more if equal score.
+
+   :param maxes: array of maximas across all trajectories
+   :param nworkers: number of workers
+
+   :returns: list of indices of the nworker lower scored trajectories
+             array of minimas
+
+
+.. py:function:: moving_avg(arr_in: numpy.typing.NDArray[Any], window_l: int) -> numpy.typing.NDArray[Any]
+
+   Return the moving average of a 1D numpy array.
+
+   :param arr_in: 1D numpy array
+   :param window_l: length of the moving average window
+
+   :returns: 1D numpy array
+
+
+.. py:function:: get_module_local_import(module_name: str) -> list[str]
+
+   Helper function getting local imported mods list.
+
+   When pickling the forward model code, the model itself can import from
+   several other local files. We also want to pickle those by value so let's get
+   the list.
+
+   :param module_name: a module name we want the locally imported modules
+
+   :returns: A list of local modules names imported within the provide module
+
+
+.. py:function:: import_forward_model(file: str, abc_cls: abc.ABCMeta) -> type[abc.ABCMeta]
+
+   Import forward model class from file and return it.
+
+   :param file: python module file to look into
+   :param abc_cls: parent class of which we are looking for a subclass
+
+   :returns: A subclass of abc_cls
+
+   :raises RuntimeError: if not subclass found or multiple ones
+
+
+.. py:function:: clean_signature(sig: inspect.Signature) -> str
+
+   Converts a signature to a string and removes TypeVar tildes.
+
+   :param sig: the method signature
+
+   :returns: str
+
+
+.. py:function:: generate_subclass(abc_cls: abc.ABCMeta, class_name: str, file_path: str, include_optional: bool = False) -> None
+
+   Generate a subclass skeleton.
+
+   Implementing all abstract methods from `abc_cls`, written to `file_path`.
+   The function is overall not tied to any particular ABC except in handling
+   types, where types specific to pyREVS are imported.
+
+   :param abc_cls: an ABC
+   :param class_name: the new subclass name
+   :param file_path: where to write the subclass
+   :param include_optional: whether to include optional (non final) functions
+
+

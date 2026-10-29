@@ -1,0 +1,76 @@
+pyrevs.strategies.montecarlo.montecarlo
+=======================================
+
+.. py:module:: pyrevs.strategies.montecarlo.montecarlo
+
+.. autoapi-nested-parse::
+
+   The MonteCarlo sampling strategy.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.montecarlo.MonteCarlo
+
+
+Module Contents
+---------------
+
+.. py:class:: MonteCarlo(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, runner_cfg: pyrevs.runner.RunnerConfig, strategy_cfg: pyrevs.strategies.montecarlo.config.MCConfig, deterministic: bool)
+
+   Bases: :py:obj:`pyrevs.strategies.base.BaseSamplingStrategy`
+
+
+   A strategy class implementing MonteCarlo.
+
+   Monte-Carlo or Direct Numerical Simulation (DNS) is not per-se
+   a sampling strategy tailored for rare events but it provides
+   a baseline for comparison with other sampling strategies.
+
+   An ensemble of size n_traj is constructed and the rare-event probability
+   is simply computed as the ratio of the number of converged trajectories
+   to the total number of trajectories in the ensemble n_traj.
+
+   In practice, this is the first step of a TAMS or AMS run (depending
+   on the termination condition), such that this class is a lightweight
+   version of these other strategies.
+
+   .. rubric:: Notes
+
+   This strategy relies on time management provided by
+   BaseSamplingStrategy (e.g. ``self._end_date``, ``elapsed_time()``).
+
+
+   .. py:method:: generate_trajectory_ensemble(tdb: pyrevs.database.Database) -> None
+
+      Schedule the generation of an ensemble of stochastic trajectories.
+
+      Loop over all the trajectories in the database and schedule
+      advancing them to either end time or convergence with the
+      runner.
+
+      The runner will use the number of workers specified in the
+      input file under the runner section.
+
+      :raises Error if the runner fails:
+
+
+
+   .. py:method:: compute_probability(tdb: pyrevs.database.Database) -> float
+
+      Compute the rare-event probability using MonteCarlo.
+
+      :returns: the rare-event probability
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+
+      Initialize database core state.
+
+
+

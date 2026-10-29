@@ -1,0 +1,128 @@
+pyrevs.sampler.sampler
+======================
+
+.. py:module:: pyrevs.sampler.sampler
+
+.. autoapi-nested-parse::
+
+   Top-level sampler object.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.sampler.sampler.RareEventSampler
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.sampler.sampler.parse_cl_args
+   pyrevs.sampler.sampler.load_config
+   pyrevs.sampler.sampler.build_system_config
+   pyrevs.sampler.sampler.build_database
+   pyrevs.sampler.sampler.build_sampler
+
+
+Module Contents
+---------------
+
+.. py:function:: parse_cl_args(a_args: list[str] | None = None) -> argparse.Namespace
+
+   Parse provided list or default CL argv.
+
+   :param a_args: optional list of options
+
+
+.. py:function:: load_config(path: pathlib.Path) -> pyrevs.core.Config
+
+   Load a TOML file into a Config object.
+
+   :param path: Path to TOML file
+
+   :returns: Config instance wrapping the TOML data
+
+   :raises FileNotFoundError: if file does not exist
+
+
+.. py:function:: build_system_config(cfg: pyrevs.core.Config) -> pyrevs.sampler.system_config.SystemConfig
+
+   Build the fully resolved SystemConfig.
+
+   This applies:
+   - defaults
+   - nested dataclass construction
+   - strategy selection logic
+
+   :param cfg: Raw Config object
+
+   :returns: Fully instantiated SystemConfig
+
+
+.. py:function:: build_database(fmodel_t: Any, cfg: pyrevs.core.Config, sys_cfg: pyrevs.sampler.system_config.SystemConfig, overwrite: bool) -> pyrevs.database.Database
+
+   Build the database.
+
+
+.. py:function:: build_sampler(fmodel_t: Any, a_args: list[str] | None = None) -> RareEventSampler
+
+   Instantiate the top-level sampler.
+
+   :param fmodel_t: Forward model type
+   :param a_args: optional list of options
+
+   :returns: Ready-to-run RareEventSampler
+
+
+.. py:class:: RareEventSampler(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, strategy: pyrevs.strategies.base.BaseSamplingStrategy, database: pyrevs.database.Database)
+
+   The top-level interface for rare event sampling.
+
+   This class provides a user-facing entry point to perform rare event
+   sampling using a specified :class:`BaseSamplingStrategy`.
+   It is responsible for:
+
+   - Parsing configuration from a TOML input file
+   - Initializing logging
+   - Instanciating the proper sampling strategy
+   - Managing global runtime parameters (e.g., walltime)
+   - Setting up the database
+   - Running the sampling strategy
+
+   :ivar _config: Configuration parameters parsed from the input file
+   :vartype _config: Config
+   :ivar _strategy: The sampling strategy
+
+   :vartype _strategy: BaseSamplingStrategy
+
+   The configuration file is also passed to the logging and strategy setup routine.
+
+
+   .. py:method:: run() -> None
+
+      Execute the rare event sampling procedure.
+
+      This method starts the sampling process by delegating execution to
+      the configured ``BaseSamplingStrategy``.
+
+      .. rubric:: Notes
+
+      This method is typically the main entry point after initialization.
+      At this point, it does not return a value; results are expected to be stored in the
+      database or written to disk by the strategy.
+      Future extensions will allow to perform several runs (possibly in parallel)
+
+
+
+   .. py:property:: database
+      :type: pyrevs.database.Database
+
+
+      Access the sampling database.
+
+

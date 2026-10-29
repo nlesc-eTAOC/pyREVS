@@ -1,0 +1,86 @@
+pyrevs.strategies.montecarlo.extension
+======================================
+
+.. py:module:: pyrevs.strategies.montecarlo.extension
+
+.. autoapi-nested-parse::
+
+   An extension class for the MonteCarlo strategy.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.extension.T_Noise
+   pyrevs.strategies.montecarlo.extension.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.montecarlo.extension.MCDatabaseExtension
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: MCDatabaseExtension
+
+   Bases: :py:obj:`pyrevs.database.StrategyDatabaseExtension`
+
+
+   An extension class for the MonteCarlo strategy.
+
+   The Monte-Carlo strategy has minimal extension requirements.
+   It mostly provides a concrete implementation of the
+   event probability computation method.
+
+   It only holds a reference to the core trajectory database.
+
+   :ivar _tdb: the core trajectory database
+
+
+
+   .. py:method:: initialize(tdb: pyrevs.database.Database) -> None
+
+      Initialize the MC database extension.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: initialize_from_database(tdb: pyrevs.database.Database) -> None
+
+      Initialize the MC database extension.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: serialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: deserialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: get_event_probability() -> float
+
+      Return the event probability.
+
+
+

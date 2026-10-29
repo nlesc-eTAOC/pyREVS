@@ -1,0 +1,22 @@
+pyrevs.database.bootstrap
+=========================
+
+.. py:module:: pyrevs.database.bootstrap
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.database.bootstrap.load_database
+
+
+Module Contents
+---------------
+
+.. py:function:: load_database(path: pathlib.Path, read_only: bool = True) -> pyrevs.database.database.Database
+
+   Load a database with its strategy extension.
+
+

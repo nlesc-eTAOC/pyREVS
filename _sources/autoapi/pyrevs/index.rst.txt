@@ -1,0 +1,28 @@
+pyrevs
+======
+
+.. py:module:: pyrevs
+
+.. autoapi-nested-parse::
+
+   Documentation about pyREVS.
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/bin/index
+   /autoapi/pyrevs/core/index
+   /autoapi/pyrevs/database/index
+   /autoapi/pyrevs/diagnostics/index
+   /autoapi/pyrevs/runner/index
+   /autoapi/pyrevs/sampler/index
+   /autoapi/pyrevs/strategies/index
+   /autoapi/pyrevs/trajectory/index
+   /autoapi/pyrevs/utils/index
+
+

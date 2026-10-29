@@ -1,0 +1,443 @@
+pyrevs.database.database
+========================
+
+.. py:module:: pyrevs.database.database
+
+.. autoapi-nested-parse::
+
+   A database class for the pyREVS sampler.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.database.database.T_Noise
+   pyrevs.database.database.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.database.database.DatabaseCoreSpec
+   pyrevs.database.database.Database
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: DatabaseCoreSpec
+
+   A dataclass for the database core specification.
+
+
+   .. py:attribute:: ntraj
+      :type:  int
+
+
+   .. py:attribute:: strategy
+      :type:  str
+
+
+   .. py:attribute:: deterministic
+      :type:  bool
+
+
+   .. py:attribute:: diag_configs
+      :type:  dict[str, pyrevs.core.Config] | None
+
+
+.. py:class:: Database(fmodel_t: type[pyrevs.core.ForwardModelBaseClass[T_Noise, T_State]], config: pyrevs.core.Config, read_only: bool = True)
+
+   Bases: :py:obj:`Generic`\ [\ :py:obj:`T_Noise`\ , :py:obj:`T_State`\ ]
+
+
+   A database class for the pyREVS sampler.
+
+   The database class is a container for
+   all the trajectory (and splitting data). When the
+   user provides a path to store the database, a local folder is
+   created holding a number of readable files, any output
+   from the model and SQL files used to lock/release
+   trajectories as the sampling algorithm proceeds.
+
+   The readable files are currently in an XML format.
+
+   A database can be loaded independently from the sampling
+   algorithm and used for post-processing.
+
+   :ivar _fmodel_t: the forward model type
+   :ivar _database_cfg: the database configuration dataclass
+   :ivar _parameters: the dictionary of parameters
+   :ivar _trajs_db: the list of trajectories
+
+
+
+   .. py:method:: create(fmodel_t: type[pyrevs.core.ForwardModelBaseClass[T_Noise, T_State]], config: pyrevs.core.Config) -> Database[T_Noise, T_State]
+      :classmethod:
+
+
+      Create a new pyREVS database.
+
+      If no path is provided in the TOML configuration,
+      the database is created in-memory and this is equivalent
+      to calling the constructor.
+
+      :param fmodel_t: the forward model type
+      :param config: a Config object with the full configuration
+
+      :returns: a pyREVS database object
+
+
+
+   .. py:method:: load(a_path: pathlib.Path, read_only: bool = True) -> Database[T_Noise, T_State]
+      :classmethod:
+
+
+      Instantiate a pyREVS database from disk.
+
+      :param a_path: the path to the database
+      :param read_only: the database access mode
+
+      :returns: a pyREVS database object
+
+
+
+   .. py:method:: initialize_core_state(spec: DatabaseCoreSpec) -> None
+
+      Initialize the core state of the database.
+
+      From a specification dataclass. It also updates the metadata
+      on disk if the database is on-disk.
+
+      :param spec: the database core specification
+
+
+
+   .. py:method:: init_traj_pool() -> None
+
+      Initialize the trajectory pool.
+
+
+
+   .. py:method:: attach_extension(ext: pyrevs.database.extension.StrategyDatabaseExtension) -> None
+
+      Attach an extension to the database.
+
+
+
+   .. py:method:: extension() -> pyrevs.database.extension.StrategyDatabaseExtension
+
+      Return the extension attached to the database.
+
+
+
+   .. py:method:: init_active_ensemble() -> None
+
+      Initialize the requested number of trajectories.
+
+
+
+   .. py:method:: save_trajectory(traj: pyrevs.trajectory.Trajectory[T_Noise, T_State]) -> None
+
+      Save a trajectory to disk in the database.
+
+      :param traj: the trajectory to save
+
+
+
+   .. py:method:: load_data(load_archived_trajectories: bool = False) -> None
+
+      Load data stored into the database.
+
+      The initialization of the database only populate the metadata
+      but not the full trajectories data.
+
+      :param load_archived_trajectories: whether to load archived trajectories
+
+
+
+   .. py:method:: load_archived_trajectories() -> None
+
+      Load the archived trajectories data.
+
+
+
+   .. py:method:: name() -> str
+
+      Accessor to DB name.
+
+      :returns: DB name
+
+
+
+   .. py:method:: strategy() -> str
+
+      Accessor to DB strategy.
+
+      :returns: DB strategy
+
+
+
+   .. py:method:: to_disk() -> bool
+
+      Check if the database is stored on disk.
+
+
+
+   .. py:method:: append_traj(a_traj: pyrevs.trajectory.Trajectory[T_Noise, T_State], update_db: bool) -> None
+
+      Append a Trajectory to the internal list.
+
+      :param a_traj: the trajectory
+      :param update_db: True to update the SQL DB content
+
+
+
+   .. py:method:: append_archived_traj(a_traj: pyrevs.trajectory.Trajectory[T_Noise, T_State], update_db: bool) -> None
+
+      Append an archived Trajectory to the internal list.
+
+      :param a_traj: the trajectory
+      :param update_db: True to update the SQL DB content
+
+
+
+   .. py:method:: traj_list() -> list[pyrevs.trajectory.Trajectory[T_Noise, T_State]]
+
+      Access to the trajectory list.
+
+      :returns: Trajectory list
+
+
+
+   .. py:method:: get_traj(idx: int) -> pyrevs.trajectory.Trajectory[T_Noise, T_State]
+
+      Access to a given trajectory.
+
+      :param idx: the index
+
+      :returns: Trajectory
+
+      :raises ValueError if idx is out of range:
+
+
+
+   .. py:method:: overwrite_traj(idx: int, traj: pyrevs.trajectory.Trajectory[T_Noise, T_State]) -> None
+
+      Deep copy a trajectory into internal list.
+
+      :param idx: the index of the trajectory to override
+      :param traj: the new trajectory
+
+      :raises ValueError if idx is out of range:
+
+
+
+   .. py:method:: ping_diag_database() -> None
+
+      Initialize the diagDB from the main process.
+
+      To avoid race condition in creating the DB from workers,
+      let it be initialized from the main process here.
+
+
+
+   .. py:method:: update_diagnostic_weights(tweight: float) -> None
+
+      Update the weights of all the active trajectories.
+
+
+
+   .. py:method:: header_file() -> str
+
+      Helper returning the DB header file.
+
+      :returns: Header file
+
+
+
+   .. py:method:: pool_file() -> str
+
+      Helper returning the DB trajectory pool file.
+
+      :returns: Pool file
+
+
+
+   .. py:method:: get_pool_db() -> pyrevs.core.CoreDB | None
+
+      Get the pool SQL database handle.
+
+
+
+   .. py:method:: is_empty() -> bool
+
+      Check if list of trajectories is empty.
+
+      :returns: True if the list of trajectories is empty
+
+
+
+   .. py:method:: traj_list_len() -> int
+
+      Length of the trajectory list.
+
+      :returns: Trajectory list length
+
+
+
+   .. py:method:: archived_traj_list() -> list[pyrevs.trajectory.Trajectory[T_Noise, T_State]]
+
+      Access to the archived trajectory list.
+
+      :returns: Archived trajectory list
+
+
+
+   .. py:method:: archived_traj_list_len() -> int
+
+      Length of the archived trajectory list.
+
+      :returns: Trajectory list length
+
+
+
+   .. py:method:: archive_discarded() -> bool
+
+      Return True if discarded trajectories should be archived.
+
+
+
+   .. py:method:: update_traj_list(a_traj_list: list[pyrevs.trajectory.Trajectory[T_Noise, T_State]]) -> None
+
+      Overwrite the trajectory list.
+
+      :param a_traj_list: the new trajectory list
+
+
+
+   .. py:method:: archive_trajectory(traj: pyrevs.trajectory.Trajectory[T_Noise, T_State]) -> None
+
+      Archive a trajectory about to be discarded.
+
+      :param traj: the trajectory to archive
+
+
+
+   .. py:method:: lock_trajectory(tid: int, allow_completed_lock: bool = False) -> bool
+
+      Lock a trajectory in the SQL DB.
+
+      :param tid: the trajectory id
+      :param allow_completed_lock: True if the trajectory can be locked even if it is completed
+
+      :returns: True if no disk DB and the trajectory was locked
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: unlock_trajectory(tid: int, has_terminated: bool) -> None
+
+      Unlock a trajectory in the SQL DB.
+
+      :param tid: the trajectory id
+      :param has_terminated: True if the trajectory has terminated
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: update_trajectory(traj_id: int, traj: pyrevs.trajectory.Trajectory[T_Noise, T_State]) -> None
+
+      Update a trajectory file in the DB.
+
+      :param traj_id: The trajectory id
+      :param traj: the trajectory to get the data from
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: n_traj() -> int
+
+      Return the number of trajectory used for sampling run.
+
+      Note that this is the requested number of trajectory, not
+      the current length of the trajectory pool.
+
+      :returns: number of trajectory
+
+
+
+   .. py:method:: path() -> str | None
+
+      Return the path to the database.
+
+
+
+   .. py:method:: count_terminated_traj() -> int
+
+      Return the number of trajectories that terminated.
+
+
+
+   .. py:method:: count_converged_traj() -> int
+
+      Return the number of trajectories that converged.
+
+
+
+   .. py:method:: all_converged() -> bool
+
+      Check if all the trajectory converged.
+
+
+
+   .. py:method:: count_computed_steps() -> int
+
+      Return the total number of steps taken.
+
+      This total count includes both the active and
+      discarded trajectories.
+
+
+
+   .. py:method:: get_event_probability() -> float
+
+      Return the event probability.
+
+      Default to a Monte-Carlo event probability if
+      no strategy extension is attached to the database.
+
+      :returns: the event probability
+
+
+
+   .. py:method:: info() -> None
+
+      Print database info to logger.
+
+
+
+   .. py:method:: print_info() -> None
+
+      Print database info to screen.
+
+
+
+   .. py:method:: plot_score_functions(fname: str | None = None, plot_archived: bool = False) -> None
+
+      Plot the score as function of time for all trajectories.
+
+
+

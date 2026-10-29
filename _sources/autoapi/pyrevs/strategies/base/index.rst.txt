@@ -1,0 +1,211 @@
+pyrevs.strategies.base
+======================
+
+.. py:module:: pyrevs.strategies.base
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/strategies/base/strategy/index
+   /autoapi/pyrevs/strategies/base/termination/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.base.BaseSamplingStrategy
+   pyrevs.strategies.base.LowScoreTerminationCriterion
+   pyrevs.strategies.base.ModelTerminationCriterion
+   pyrevs.strategies.base.TerminationCriterion
+   pyrevs.strategies.base.TimeInterruptionCriterion
+   pyrevs.strategies.base.TimeTerminationCriterion
+
+
+Package Contents
+----------------
+
+.. py:class:: BaseSamplingStrategy
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   An interface for all rare-event algorithms.
+
+   Define the common interface for sampling strategies within
+   the sampler object.
+
+   A registry is used to store all available strategies.
+   It is managed using a decorator and entry_points.
+
+   Subclasses must implement the following methods:
+   - :meth:`sample`
+   - :meth:`out_of_time`
+
+
+   .. py:method:: register(name: str) -> collections.abc.Callable[[type[T]], type[T]]
+      :classmethod:
+
+
+      Register a new strategy.
+
+      :param name: the strategy name
+
+
+
+   .. py:method:: create(name: str, *args: Any, **kwargs: Any) -> BaseSamplingStrategy
+      :classmethod:
+
+
+      Instantiate a strategy out of the registry.
+
+      :param name: the strategy name
+      :param \*args: positional arguments
+      :param \*\*kwargs: keyword arguments
+
+
+
+   .. py:method:: available_strategies() -> list[str]
+      :classmethod:
+
+
+      Return list of registered strategy names.
+
+
+
+   .. py:method:: sample(database: pyrevs.database.Database, walltime: float, plot_diags: bool) -> None
+
+      Run the sampling lifecycle.
+
+      This method handles walltime bookkeeping and delegates the
+      algorithm implementation to ``_execute_sampling``.
+
+      Subclasses must implement ``_execute_sampling`` and should
+      regularly check ``out_of_time()`` to terminate gracefully.
+
+      :param database: Database used for storing results.
+      :param walltime: Maximum allowed runtime in seconds.
+      :param plot_diags: Whether to enable diagnostic plotting.
+
+
+
+   .. py:method:: remaining_time() -> float
+
+      Return the remaining wallclock time.
+
+
+
+   .. py:method:: out_of_time() -> bool
+
+      Return true if insufficient walltime remains.
+
+
+
+   .. py:method:: elapsed_time() -> float
+
+      Return the elapsed wallclock time.
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+      :abstractmethod:
+
+
+      Initialize the schema of the database.
+
+
+
+.. py:class:: LowScoreTerminationCriterion(score_threshold: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on score.
+
+   Will trigger termination if the current score is less than or equal
+   to a threshold.
+
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: ModelTerminationCriterion
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on model.
+
+   Will trigger termination if the forward model has decides to.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: TerminationCriterion
+
+   Bases: :py:obj:`Protocol`
+
+
+   Termination criterion interface.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+      :abstractmethod:
+
+
+      Check if the trajectory should terminate.
+
+      :param model: the forward model
+      :param trajectory: the trajectory
+
+      :returns: One of the TrajectoryStateType
+
+
+
+.. py:class:: TimeInterruptionCriterion(end_time: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Interruption criterion based on time.
+
+   Will trigger interruption if the current time is greater than or equal
+   to the end time.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+
+.. py:class:: TimeTerminationCriterion(end_time: float)
+
+   Bases: :py:obj:`TerminationCriterion`
+
+
+   Termination criterion based on time.
+
+   Will trigger termination if the current time is greater than or equal
+   to the end time.
+
+
+   .. py:method:: should_terminate(model: pyrevs.core.ForwardModelBaseClass[T_Noise, T_State], trajectory: pyrevs.trajectory.Trajectory) -> pyrevs.trajectory.TrajectoryStateType
+
+      Check if the trajectory should terminate.
+
+
+

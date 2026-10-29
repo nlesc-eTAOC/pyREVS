@@ -1,0 +1,37 @@
+pyrevs.utils
+============
+
+.. py:module:: pyrevs.utils
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/utils/dbutils/index
+   /autoapi/pyrevs/utils/utils/index
+   /autoapi/pyrevs/utils/xmlutils/index
+   /autoapi/pyrevs/utils/yamlutils/index
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.utils.setup_logger
+
+
+Package Contents
+----------------
+
+.. py:function:: setup_logger(loglevel: str, logfile: str | None = None) -> None
+
+   Setup the logger parameters.
+
+   :param loglevel: logging level
+   :param logfile: optional logging file
+
+

@@ -1,0 +1,34 @@
+pyrevs.sampler.config
+=====================
+
+.. py:module:: pyrevs.sampler.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.sampler.config.SamplerConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: SamplerConfig
+
+   Sampler configuration.
+
+
+   .. py:attribute:: strategy
+      :type:  str
+      :value: 'ams'
+
+
+
+   .. py:attribute:: deterministic
+      :type:  bool
+      :value: False
+
+
+

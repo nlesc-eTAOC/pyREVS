@@ -1,0 +1,1005 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html"><link rel="next" title="pyrevs.trajectory.config" href="config/index.html"><link rel="prev" title="pyrevs.strategies.montecarlo.montecarlo" href="../strategies/montecarlo/montecarlo/index.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>pyrevs.trajectory - pyREVS 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/theme.css?v=df66b05f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">pyREVS 1.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <span class="sidebar-brand-text">pyREVS 1.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../Implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Extension.html">Extension</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">pyrevs</a><input aria-label="Toggle navigation of pyrevs" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../bin/index.html">pyrevs.bin</a><input aria-label="Toggle navigation of pyrevs.bin" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../bin/bin/index.html">pyrevs.bin.bin</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core/index.html">pyrevs.core</a><input aria-label="Toggle navigation of pyrevs.core" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core/config/index.html">pyrevs.core.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/fmodel/index.html">pyrevs.core.fmodel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/runtime_cfg/index.html">pyrevs.core.runtime_cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/snapshot/index.html">pyrevs.core.snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/sqlcore/index.html">pyrevs.core.sqlcore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core/sqlmanager/index.html">pyrevs.core.sqlmanager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../database/index.html">pyrevs.database</a><input aria-label="Toggle navigation of pyrevs.database" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../database/bootstrap/index.html">pyrevs.database.bootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../database/config/index.html">pyrevs.database.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../database/database/index.html">pyrevs.database.database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../database/extension/index.html">pyrevs.database.extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../diagnostics/index.html">pyrevs.diagnostics</a><input aria-label="Toggle navigation of pyrevs.diagnostics" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../diagnostics/diagdb/index.html">pyrevs.diagnostics.diagdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diagnostics/diagnostic/index.html">pyrevs.diagnostics.diagnostic</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../runner/index.html">pyrevs.runner</a><input aria-label="Toggle navigation of pyrevs.runner" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../runner/config/index.html">pyrevs.runner.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../runner/taskrunner/index.html">pyrevs.runner.taskrunner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../runner/worker/index.html">pyrevs.runner.worker</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sampler/index.html">pyrevs.sampler</a><input aria-label="Toggle navigation of pyrevs.sampler" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sampler/config/index.html">pyrevs.sampler.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sampler/sampler/index.html">pyrevs.sampler.sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sampler/system_config/index.html">pyrevs.sampler.system_config</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../strategies/index.html">pyrevs.strategies</a><input aria-label="Toggle navigation of pyrevs.strategies" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../strategies/ams/index.html">pyrevs.strategies.ams</a><input aria-label="Toggle navigation of pyrevs.strategies.ams" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/ams/ams/index.html">pyrevs.strategies.ams.ams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/ams/config/index.html">pyrevs.strategies.ams.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/ams/extension/index.html">pyrevs.strategies.ams.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/ams/sql/index.html">pyrevs.strategies.ams.sql</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../strategies/base/index.html">pyrevs.strategies.base</a><input aria-label="Toggle navigation of pyrevs.strategies.base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/base/strategy/index.html">pyrevs.strategies.base.strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/base/termination/index.html">pyrevs.strategies.base.termination</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../strategies/gktl/index.html">pyrevs.strategies.gktl</a><input aria-label="Toggle navigation of pyrevs.strategies.gktl" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/gktl/config/index.html">pyrevs.strategies.gktl.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/gktl/extension/index.html">pyrevs.strategies.gktl.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/gktl/gktl/index.html">pyrevs.strategies.gktl.gktl</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../strategies/montecarlo/index.html">pyrevs.strategies.montecarlo</a><input aria-label="Toggle navigation of pyrevs.strategies.montecarlo" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/montecarlo/config/index.html">pyrevs.strategies.montecarlo.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/montecarlo/extension/index.html">pyrevs.strategies.montecarlo.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategies/montecarlo/montecarlo/index.html">pyrevs.strategies.montecarlo.montecarlo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">pyrevs.trajectory</a><input aria-label="Toggle navigation of pyrevs.trajectory" checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../utils/index.html">pyrevs.utils</a><input aria-label="Toggle navigation of pyrevs.utils" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../utils/dbutils/index.html">pyrevs.utils.dbutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/utils/index.html">pyrevs.utils.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/xmlutils/index.html">pyrevs.utils.xmlutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/yamlutils/index.html">pyrevs.utils.yamlutils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../../_sources/autoapi/pyrevs/trajectory/index.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="module-pyrevs.trajectory">
+<span id="pyrevs-trajectory"></span><h1>pyrevs.trajectory<a class="headerlink" href="#module-pyrevs.trajectory" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig" title="pyrevs.trajectory.TrajectoryConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrajectoryConfig</span></code></a></p></td>
+<td><p>Trajectory configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trajectory</span></code></a></p></td>
+<td><p>A class defining a stochastic trajectory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType" title="pyrevs.trajectory.TrajectoryStateType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrajectoryStateType</span></code></a></p></td>
+<td><p>Enumeration of trajectory state types.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TrajectoryConfig</span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/config.html#TrajectoryConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig" title="Link to this definition">¶</a></dt>
+<dd><p>Trajectory configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.step_size">
+<span class="sig-name descname"><span class="pre">step_size</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1.0</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.step_size" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.end_time">
+<span class="sig-name descname"><span class="pre">end_time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1.0</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.end_time" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.targetscore">
+<span class="sig-name descname"><span class="pre">targetscore</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.95</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.targetscore" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.sparse_freq">
+<span class="sig-name descname"><span class="pre">sparse_freq</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.sparse_freq" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.sparse_start">
+<span class="sig-name descname"><span class="pre">sparse_start</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.sparse_start" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.chkfile_dump_all">
+<span class="sig-name descname"><span class="pre">chkfile_dump_all</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.chkfile_dump_all" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryConfig.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/config.html#TrajectoryConfig.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.TrajectoryConfig.validate" title="Link to this definition">¶</a></dt>
+<dd><p>Validate trajectory configuration.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../runner/config/index.html#pyrevs.runner.config.RunnerConfig.type" title="pyrevs.runner.config.RunnerConfig.type"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/index.html#pyrevs.core.ForwardModelBaseClass" title="pyrevs.core.ForwardModelBaseClass"><span class="pre">pyrevs.core.ForwardModelBaseClass</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config/index.html#pyrevs.trajectory.config.TrajectoryConfig" title="pyrevs.trajectory.config.TrajectoryConfig"><span class="pre">pyrevs.trajectory.config.TrajectoryConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/index.html#pyrevs.core.Config" title="pyrevs.core.Config"><span class="pre">pyrevs.core.Config</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frozen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T_Noise</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T_State</span></code>]</p>
+<p>A class defining a stochastic trajectory.</p>
+<p>Each trajectory is a MCMC simulation of the forward model.</p>
+<p>The trajectory class is a container for time-ordered snapshots.
+It contains an instance of the forward model, current and end times, and
+a list of the model snapshots. Note that the class uses a plain list of snapshots
+and not a more computationally efficient data structure such as a numpy array
+for convenience. It is assumed that the computational cost of running the sampling algorithm
+resides in the forward model and the overhead of the trajectory class is negligible.</p>
+<p>It also provide the forward model with the necessary context to advance in time,
+method to move forward in time, methods to save/load the trajectory to/from disk
+as well as accessor to the trajectory history (time, state, score, …).</p>
+<p>The _computed_steps variable store the number of steps actually taken by the
+trajectory. It differs from the _step variable when a trajectory is branched
+from an ancestor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_tid</strong> – the trajectory index</p></li>
+<li><p><strong>_checkFile</strong> – the trajectory checkpoint file</p></li>
+<li><p><strong>_workdir</strong> – the model working directory</p></li>
+<li><p><strong>_score_max</strong> – the maximum score</p></li>
+<li><p><strong>_snaps</strong> – a list of snapshots</p></li>
+<li><p><strong>_step</strong> – the current step counter</p></li>
+<li><p><strong>_computed_steps</strong> – the number of steps explicitly advanced by the trajectory</p></li>
+<li><p><strong>_t_cur</strong> – the current time</p></li>
+<li><p><strong>_t_end</strong> – the end time</p></li>
+<li><p><strong>_dt</strong> – the stochastic time step size</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.max_ntraj">
+<span class="sig-name descname"><span class="pre">max_ntraj</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10000</span></span><a class="headerlink" href="#pyrevs.trajectory.Trajectory.max_ntraj" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.max_nbranch">
+<span class="sig-name descname"><span class="pre">max_nbranch</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9999</span></span><a class="headerlink" href="#pyrevs.trajectory.Trajectory.max_nbranch" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.noise_backlog">
+<span class="sig-name descname"><span class="pre">noise_backlog</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyrevs.trajectory.Trajectory.noise_backlog" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.set_checkfile">
+<span class="sig-name descname"><span class="pre">set_checkfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.set_checkfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.set_checkfile" title="Link to this definition">¶</a></dt>
+<dd><p>Setter of the trajectory checkFile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – the new checkFile</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.set_workdir">
+<span class="sig-name descname"><span class="pre">set_workdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.set_workdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.set_workdir" title="Link to this definition">¶</a></dt>
+<dd><p>Setter of the trajectory working directory.</p>
+<p>And propagate the workdir to the forward model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – the new working directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_workdir">
+<span class="sig-name descname"><span class="pre">get_workdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_workdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_workdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get the trajectory working directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the working directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.id" title="Link to this definition">¶</a></dt>
+<dd><p>Return trajectory index.</p>
+<p>This is the index of the trajectory in the ensemble.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the trajectory id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.unique_id">
+<span class="sig-name descname"><span class="pre">unique_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.unique_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.unique_id" title="Link to this definition">¶</a></dt>
+<dd><p>Return trajectory unique Id.</p>
+<p>Combining the index and the number of branching events.
+This makes a unique ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the trajectory unique id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.idstr">
+<span class="sig-name descname"><span class="pre">idstr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.idstr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.idstr" title="Link to this definition">¶</a></dt>
+<dd><p>Return trajectory Id as a padded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the trajectory id as a string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">termination_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../strategies/base/index.html#pyrevs.strategies.base.TerminationCriterion" title="pyrevs.strategies.base.TerminationCriterion"><span class="pre">pyrevs.strategies.base.TerminationCriterion</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nstep_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000000000000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.advance" title="Link to this definition">¶</a></dt>
+<dd><p>Advance the trajectory to a prescribed end time.</p>
+<p>This is the main time loop of the trajectory object.
+Unless specified otherwise, the trajectory will advance until
+the end time is reached or the model has converged.</p>
+<p>If the walltime limit is reached, a WallTimeLimitError exception is raised.
+If a ‘pyrevs_stop’ file is found, a UserInterruptError exception is raised.
+Note that this exception is treated as a warning not an error by the
+pyREVS workers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nstep_end</strong> – the number of steps to advance</p></li>
+<li><p><strong>t_end</strong> – the end time of the advance</p></li>
+<li><p><strong>walltime</strong> – a walltime limit to advance the model to t_end</p></li>
+<li><p><strong>termination_criteria</strong> – a list of termination criterion</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="trajectory/index.html#pyrevs.trajectory.trajectory.WallTimeLimitError" title="pyrevs.trajectory.trajectory.WallTimeLimitError"><strong>WallTimeLimitError</strong></a> – if the walltime limit is reached</p></li>
+<li><p><a class="reference internal" href="trajectory/index.html#pyrevs.trajectory.trajectory.UserInterruptError" title="pyrevs.trajectory.trajectory.UserInterruptError"><strong>UserInterruptError</strong></a> – if a ‘pyrevs_stop’ file is found</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.15)"><strong>RuntimeError</strong></a> – if the model advance run into a problem</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.interrupt_trigger">
+<span class="sig-name descname"><span class="pre">interrupt_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.interrupt_trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.interrupt_trigger" title="Link to this definition">¶</a></dt>
+<dd><p>Check for user interrupt trigger.</p>
+<p>pyREVS can be interrupted cleanly by creating a
+pyrevs_stop file in the run folder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.setup_noise">
+<span class="sig-name descname"><span class="pre">setup_noise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.setup_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.setup_noise" title="Link to this definition">¶</a></dt>
+<dd><p>Prepare the noise for the next step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.init_from_metadata">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">init_from_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../runner/config/index.html#pyrevs.runner.config.RunnerConfig.type" title="pyrevs.runner.config.RunnerConfig.type"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/index.html#pyrevs.core.ForwardModelBaseClass" title="pyrevs.core.ForwardModelBaseClass"><span class="pre">pyrevs.core.ForwardModelBaseClass</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config/index.html#pyrevs.trajectory.config.TrajectoryConfig" title="pyrevs.trajectory.config.TrajectoryConfig"><span class="pre">pyrevs.trajectory.config.TrajectoryConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/index.html#pyrevs.core.Config" title="pyrevs.core.Config"><span class="pre">pyrevs.core.Config</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frozen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.init_from_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.init_from_metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize a trajectory from serialized metadata.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.restore_from_checkfile">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">restore_from_checkfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkfile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../runner/config/index.html#pyrevs.runner.config.RunnerConfig.type" title="pyrevs.runner.config.RunnerConfig.type"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/index.html#pyrevs.core.ForwardModelBaseClass" title="pyrevs.core.ForwardModelBaseClass"><span class="pre">pyrevs.core.ForwardModelBaseClass</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config/index.html#pyrevs.trajectory.config.TrajectoryConfig" title="pyrevs.trajectory.config.TrajectoryConfig"><span class="pre">pyrevs.trajectory.config.TrajectoryConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/index.html#pyrevs.core.Config" title="pyrevs.core.Config"><span class="pre">pyrevs.core.Config</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frozen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.restore_from_checkfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.restore_from_checkfile" title="Link to this definition">¶</a></dt>
+<dd><p>Return a trajectory restored from an XML chkfile.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.branch_from_trajectory">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">branch_from_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rst_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.branch_from_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.branch_from_trajectory" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new trajectory.</p>
+<p>Loading the beginning of a provided trajectory
+for all entries with score below a given score.
+This effectively branches the trajectory.</p>
+<p>Although the rst_traj is provided as an argument, it is
+only used to set metadata of the branched trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_traj</strong> – an already existing trajectory to restart from</p></li>
+<li><p><strong>rst_traj</strong> – the trajectory being restarted</p></li>
+<li><p><strong>score</strong> – a threshold score</p></li>
+<li><p><strong>new_weight</strong> – the weight of the child trajectory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.clone_from_trajectory">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">clone_from_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rst_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_Noise" title="pyrevs.core.fmodel.T_Noise"><span class="pre">T_Noise</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyrevs.trajectory.Trajectory" title="pyrevs.trajectory.Trajectory"><span class="pre">Trajectory</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.clone_from_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.clone_from_trajectory" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new trajectory as a clone of an ancestor at its current time.</p>
+<p>Unlike <a class="reference internal" href="#pyrevs.trajectory.Trajectory.branch_from_trajectory" title="pyrevs.trajectory.Trajectory.branch_from_trajectory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">branch_from_trajectory()</span></code></a>, the entire history of the ancestor
+is copied. If the last snapshot of the ancestor does not hold a model
+state (sparse state), the noise needed to reconstruct the history from
+the last available state is put in the backlog and replayed upon the
+next call to advance.</p>
+<p>The noise the ancestor has already drawn for its upcoming step is <em>not</em>
+transferred: the clone draws fresh noise beyond the ancestor current time,
+such that clones diverge from their ancestor.</p>
+<p>Although the rst_traj is provided as an argument, it is
+only used to set metadata of the cloned trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_traj</strong> – an already existing trajectory to clone</p></li>
+<li><p><strong>rst_traj</strong> – the trajectory being replaced</p></li>
+<li><p><strong>new_weight</strong> – the weight of the clone trajectory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.store">
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_metadata_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.store" title="Link to this definition">¶</a></dt>
+<dd><p>Store the trajectory data to an XML chkfile.</p>
+<p>The default behavior is to store the trajectory into the
+file specified by the attribute self._checkFile unless a
+different path is provided.
+The metadata are not writen to file by default, as the pyREVS database
+handle metadata in an SQL file. It can be triggered when using trajectories
+in stand-alone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj_file</strong> – an optional path file to store the trajectory to</p></li>
+<li><p><strong>write_metadata_json</strong> – an optional boolean to also write the metadata json dict</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.set_weight">
+<span class="sig-name descname"><span class="pre">set_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.set_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.set_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Set the trajectory weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>weight</strong> – the (new) trajectory weight in the ensemble</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.weight" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory weight in the ensemble.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.update_metadata">
+<span class="sig-name descname"><span class="pre">update_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.update_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.update_metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Update trajectory score/ending metadata.</p>
+<p>Update the maximum of the score function over the trajectory
+as well as the bool values for has_converged and has_terminated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.set_current_time_and_step">
+<span class="sig-name descname"><span class="pre">set_current_time_and_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.set_current_time_and_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.set_current_time_and_step" title="Link to this definition">¶</a></dt>
+<dd><p>Set the current time and step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.current_time">
+<span class="sig-name descname"><span class="pre">current_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.current_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.current_time" title="Link to this definition">¶</a></dt>
+<dd><p>Return the current trajectory time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.current_step">
+<span class="sig-name descname"><span class="pre">current_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.current_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.current_step" title="Link to this definition">¶</a></dt>
+<dd><p>Return the current trajectory step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.step_size">
+<span class="sig-name descname"><span class="pre">step_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.step_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.step_size" title="Link to this definition">¶</a></dt>
+<dd><p>Return the time step size.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.score_max">
+<span class="sig-name descname"><span class="pre">score_max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.score_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.score_max" title="Link to this definition">¶</a></dt>
+<dd><p>Return the maximum of the score function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.is_converged">
+<span class="sig-name descname"><span class="pre">is_converged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.is_converged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.is_converged" title="Link to this definition">¶</a></dt>
+<dd><p>Return True for converged trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.is_terminated">
+<span class="sig-name descname"><span class="pre">is_terminated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.is_terminated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.is_terminated" title="Link to this definition">¶</a></dt>
+<dd><p>Return True for terminated trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.has_started">
+<span class="sig-name descname"><span class="pre">has_started</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.has_started"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.has_started" title="Link to this definition">¶</a></dt>
+<dd><p>Return True if computation has started.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_checkfile">
+<span class="sig-name descname"><span class="pre">get_checkfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><span class="pre">pathlib.Path</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_checkfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_checkfile" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory check file name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_time_array">
+<span class="sig-name descname"><span class="pre">get_time_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.number</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_time_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_time_array" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory time instants.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_score_array">
+<span class="sig-name descname"><span class="pre">get_score_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.number</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_score_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_score_array" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory scores.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_noise_array">
+<span class="sig-name descname"><span class="pre">get_noise_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_noise_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_noise_array" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory noises.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_state_list">
+<span class="sig-name descname"><span class="pre">get_state_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_state_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_state_list" title="Link to this definition">¶</a></dt>
+<dd><p>Return a list of states and associated indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of tuples with index and states</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_length">
+<span class="sig-name descname"><span class="pre">get_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_length" title="Link to this definition">¶</a></dt>
+<dd><p>Return the trajectory length.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_nbranching">
+<span class="sig-name descname"><span class="pre">get_nbranching</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_nbranching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_nbranching" title="Link to this definition">¶</a></dt>
+<dd><p>Return the number of branching events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_computed_steps_count">
+<span class="sig-name descname"><span class="pre">get_computed_steps_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_computed_steps_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_computed_steps_count" title="Link to this definition">¶</a></dt>
+<dd><p>Return the number of compute steps taken.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_last_state">
+<span class="sig-name descname"><span class="pre">get_last_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../core/fmodel/index.html#pyrevs.core.fmodel.T_State" title="pyrevs.core.fmodel.T_State"><span class="pre">T_State</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_last_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_last_state" title="Link to this definition">¶</a></dt>
+<dd><p>Return the last state in the trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_last_state_id">
+<span class="sig-name descname"><span class="pre">get_last_state_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_last_state_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_last_state_id" title="Link to this definition">¶</a></dt>
+<dd><p>Return the id of the last state in the trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.get_metadata">
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.get_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.get_metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Return a dict with traj metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The trajectory metadata in a dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.serialize_metadata_json">
+<span class="sig-name descname"><span class="pre">serialize_metadata_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.serialize_metadata_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.serialize_metadata_json" title="Link to this definition">¶</a></dt>
+<dd><p>Return a json string with metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A json string with the trajectory metadata</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.deserialize_metadata">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">deserialize_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.deserialize_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.deserialize_metadata" title="Link to this definition">¶</a></dt>
+<dd><p>Load a json string into a properly typed metadata dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary with the metadata</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrevs.trajectory.Trajectory.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#Trajectory.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.Trajectory.delete" title="Link to this definition">¶</a></dt>
+<dd><p>Clear the trajectory on-disk data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TrajectoryStateType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrevs/trajectory/trajectory.html#TrajectoryStateType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></a></p>
+<p>Enumeration of trajectory state types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>UNINIT</strong> – trajectory has not been initialized</p></li>
+<li><p><strong>ONGOING</strong> – trajectory is running</p></li>
+<li><p><strong>INTERRUPTED</strong> – trajectory has been interrupted (expected to continue later)</p></li>
+<li><p><strong>TERMINATED</strong> – trajectory has been terminated</p></li>
+<li><p><strong>CONVERGED</strong> – trajectory has converged</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType.UNINIT">
+<span class="sig-name descname"><span class="pre">UNINIT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType.UNINIT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType.ONGOING">
+<span class="sig-name descname"><span class="pre">ONGOING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType.ONGOING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType.INTERRUPTED">
+<span class="sig-name descname"><span class="pre">INTERRUPTED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType.INTERRUPTED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType.TERMINATED">
+<span class="sig-name descname"><span class="pre">TERMINATED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType.TERMINATED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyrevs.trajectory.TrajectoryStateType.CONVERGED">
+<span class="sig-name descname"><span class="pre">CONVERGED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#pyrevs.trajectory.TrajectoryStateType.CONVERGED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="config/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pyrevs.trajectory.config</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../strategies/montecarlo/montecarlo/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">pyrevs.strategies.montecarlo.montecarlo</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Netherlands eScience Center
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pyrevs.trajectory</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#package-contents">Package Contents</a><ul>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig</span></code></a><ul>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.step_size"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.step_size</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.end_time"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.end_time</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.targetscore"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.targetscore</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.sparse_freq"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.sparse_freq</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.sparse_start"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.sparse_start</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.chkfile_dump_all"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.chkfile_dump_all</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryConfig.validate"><code class="docutils literal notranslate"><span class="pre">TrajectoryConfig.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.max_ntraj"><code class="docutils literal notranslate"><span class="pre">Trajectory.max_ntraj</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.max_nbranch"><code class="docutils literal notranslate"><span class="pre">Trajectory.max_nbranch</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.noise_backlog"><code class="docutils literal notranslate"><span class="pre">Trajectory.noise_backlog</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.set_checkfile"><code class="docutils literal notranslate"><span class="pre">Trajectory.set_checkfile()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.set_workdir"><code class="docutils literal notranslate"><span class="pre">Trajectory.set_workdir()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_workdir"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_workdir()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.id"><code class="docutils literal notranslate"><span class="pre">Trajectory.id()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.unique_id"><code class="docutils literal notranslate"><span class="pre">Trajectory.unique_id()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.idstr"><code class="docutils literal notranslate"><span class="pre">Trajectory.idstr()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.advance"><code class="docutils literal notranslate"><span class="pre">Trajectory.advance()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.interrupt_trigger"><code class="docutils literal notranslate"><span class="pre">Trajectory.interrupt_trigger()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.setup_noise"><code class="docutils literal notranslate"><span class="pre">Trajectory.setup_noise()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.init_from_metadata"><code class="docutils literal notranslate"><span class="pre">Trajectory.init_from_metadata()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.restore_from_checkfile"><code class="docutils literal notranslate"><span class="pre">Trajectory.restore_from_checkfile()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.branch_from_trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory.branch_from_trajectory()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.clone_from_trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory.clone_from_trajectory()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.store"><code class="docutils literal notranslate"><span class="pre">Trajectory.store()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.set_weight"><code class="docutils literal notranslate"><span class="pre">Trajectory.set_weight()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.weight"><code class="docutils literal notranslate"><span class="pre">Trajectory.weight()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.update_metadata"><code class="docutils literal notranslate"><span class="pre">Trajectory.update_metadata()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.set_current_time_and_step"><code class="docutils literal notranslate"><span class="pre">Trajectory.set_current_time_and_step()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.current_time"><code class="docutils literal notranslate"><span class="pre">Trajectory.current_time()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.current_step"><code class="docutils literal notranslate"><span class="pre">Trajectory.current_step()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.step_size"><code class="docutils literal notranslate"><span class="pre">Trajectory.step_size()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.score_max"><code class="docutils literal notranslate"><span class="pre">Trajectory.score_max()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.is_converged"><code class="docutils literal notranslate"><span class="pre">Trajectory.is_converged()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.is_terminated"><code class="docutils literal notranslate"><span class="pre">Trajectory.is_terminated()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.has_started"><code class="docutils literal notranslate"><span class="pre">Trajectory.has_started()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_checkfile"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_checkfile()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_time_array"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_time_array()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_score_array"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_score_array()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_noise_array"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_noise_array()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_state_list"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_state_list()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_length"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_length()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_nbranching"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_nbranching()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_computed_steps_count"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_computed_steps_count()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_last_state"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_last_state()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_last_state_id"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_last_state_id()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.get_metadata"><code class="docutils literal notranslate"><span class="pre">Trajectory.get_metadata()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.serialize_metadata_json"><code class="docutils literal notranslate"><span class="pre">Trajectory.serialize_metadata_json()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.deserialize_metadata"><code class="docutils literal notranslate"><span class="pre">Trajectory.deserialize_metadata()</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.Trajectory.delete"><code class="docutils literal notranslate"><span class="pre">Trajectory.delete()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType</span></code></a><ul>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType.UNINIT"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType.UNINIT</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType.ONGOING"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType.ONGOING</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType.INTERRUPTED"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType.INTERRUPTED</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType.TERMINATED"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType.TERMINATED</span></code></a></li>
+<li><a class="reference internal" href="#pyrevs.trajectory.TrajectoryStateType.CONVERGED"><code class="docutils literal notranslate"><span class="pre">TrajectoryStateType.CONVERGED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=fc837d61"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

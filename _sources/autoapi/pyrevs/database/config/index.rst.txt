@@ -1,0 +1,46 @@
+pyrevs.database.config
+======================
+
+.. py:module:: pyrevs.database.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.database.config.DatabaseConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: DatabaseConfig
+
+   Database configuration.
+
+
+   .. py:attribute:: path
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: restart
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: format
+      :type:  str
+      :value: 'XML'
+
+
+
+   .. py:attribute:: archive_discarded
+      :type:  bool
+      :value: True
+
+
+

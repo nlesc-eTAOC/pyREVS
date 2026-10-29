@@ -1,0 +1,76 @@
+pyrevs.strategies.gktl.config
+=============================
+
+.. py:module:: pyrevs.strategies.gktl.config
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.config.GKTL_OBSERVABLES
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.gktl.config.GKTLConfig
+
+
+Module Contents
+---------------
+
+.. py:data:: GKTL_OBSERVABLES
+   :value: ('integral', 'increment')
+
+
+.. py:class:: GKTLConfig
+
+   GKTL strategy configuration.
+
+
+   .. py:attribute:: ntrajectories
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: end_time
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: resampling_interval
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: k
+      :type:  float
+      :value: 0.01
+
+
+
+   .. py:attribute:: bias_observable
+      :type:  str
+      :value: 'integral'
+
+
+
+   .. py:attribute:: use_custom_termination
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate GKTL configuration.
+
+
+
