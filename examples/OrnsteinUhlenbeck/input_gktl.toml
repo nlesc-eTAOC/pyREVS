@@ -29,5 +29,4 @@ theta = 1.0
 epsilon = 0.50
 
 [database]
-# Killed clones hold a copy of their ancestors' history: do not keep them
 archive_discarded = false
