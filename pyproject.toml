@@ -130,6 +130,7 @@ ignore = [
     "B027", # Empty default in ABC.
     "COM812", # Trailing comma missing
     "FURB110",
+    "CPY001", # Missing copyright notice: license is in the LICENSE file
 ]
 pydocstyle.convention = "google"
 fixable = ["A", "B", "C", "D", "E", "F", "I"]
