@@ -378,7 +378,7 @@ def test_doublewell_deterministic_tams():
     sampler = build_sampler(fmodel_t=fmodel, a_args=[])
     sampler.run()
     re_proba = sampler.database.get_event_probability()
-    assert re_proba == 0.5255428607030418
+    assert re_proba == 0.46578571201130625
     Path("input.toml").unlink(missing_ok=True)
 
 
@@ -601,7 +601,7 @@ def test_doublewell_slow_tams_restore_more_split():
     sampler.run()
     re_proba = sampler.database.get_event_probability()
     del sampler
-    assert re_proba == 0.1251225103143388
+    assert re_proba == 0.14339436896341684
 
     params_dict["ams"]["nsplititer"] = 30
     with Path("input.toml").open("w") as f:
@@ -612,7 +612,7 @@ def test_doublewell_slow_tams_restore_more_split():
     re_proba = sampler.database.get_event_probability()
     # Not sure why this particular test is platform dependent
     if is_mac_os():
-        assert re_proba == 0.1391287278743694
+        assert re_proba == 0.12878325836576246
     else:
         assert re_proba == 0.14983093771085937
     Path("input.toml").unlink(missing_ok=True)

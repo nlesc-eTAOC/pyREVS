@@ -150,7 +150,7 @@ force-single-line = true
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]
 
 [tool.ruff.lint.flake8-self]
-ignore-names = ["_snaps", "_fmodel"]
+ignore-names = ["_snaps", "_tail", "_fmodel"]
 
 [tool.mypy]
 python_version = "3.11"
