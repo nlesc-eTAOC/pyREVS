@@ -1,0 +1,32 @@
+# GKTL setup of Ragone et al. 2018 (PNAS, SI Fig. S2):
+# dx = -x dt + dW, i.e. theta = 1 and epsilon = 0.5
+[sampler]
+strategy = "gktl"
+
+[runtime]
+loglevel = "WARNING"
+
+[gktl]
+ntrajectories = 600
+end_time = 100.0
+resampling_interval = 0.5
+k = 0.3
+bias_observable = "integral"
+
+[runner]
+type = "asyncio"
+nworkers = 4
+
+[trajectory]
+# Statistics of time-averaged observables are insensitive to the
+# Euler-Maruyama step size to leading order
+step_size = 0.05
+# Never reached: GKTL trajectories run up to end_time
+targetscore = 100.0
+
+[model]
+theta = 1.0
+epsilon = 0.50
+
+[database]
+archive_discarded = false

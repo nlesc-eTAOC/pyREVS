@@ -43,7 +43,7 @@ def manual_cast(elem: ET.Element) -> Any:
     """Manually cast XML elements reads."""
     if not elem.text:
         error_msg = f"Unable to parse XML element {elem.tag} since it is empty"
-        _logger.exception(error_msg)
+        _logger.error(error_msg)
         raise XMLUtilsError(error_msg)
 
     return elem.tag, manual_cast_str(elem.attrib["type"], elem.text)
@@ -120,7 +120,7 @@ def xml_to_dict(elem: ET.Element | None) -> dict[Any, Any]:
     """
     if elem is None:
         error_msg = "Unable to parse XML element to dict since 'None' was passed"
-        _logger.exception(error_msg)
+        _logger.error(error_msg)
         raise XMLUtilsError(error_msg)
 
     d = {}

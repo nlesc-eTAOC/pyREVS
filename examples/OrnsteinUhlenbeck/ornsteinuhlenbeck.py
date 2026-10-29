@@ -62,7 +62,7 @@ class OrnsteinUhlenbeck(ForwardModelBaseClass):
             Some model will not do exactly dt (e.g. sub-stepping) return the actual dt
         """
         # Advance using Euler-Maruyama explicit scheme
-        noise_scaling = np.sqrt(2.0 * self._epsilon * dt)
+        noise_scaling = float(np.sqrt(2.0 * self._epsilon * dt))
         self._state = (1.0 - self._theta * dt) * self._state + noise_scaling * noise
         return dt
 
@@ -99,7 +99,8 @@ class OrnsteinUhlenbeck(ForwardModelBaseClass):
         Returns:
             The model next noise increment
         """
-        return self._rng.standard_normal(1)[0]
+        # Return a builtin float: numpy scalars are slow to pickle
+        return float(self._rng.standard_normal())
 
     @classmethod
     def name(cls) -> str:

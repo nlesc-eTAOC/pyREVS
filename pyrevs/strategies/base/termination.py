@@ -5,6 +5,7 @@ from math import isclose
 from typing import TYPE_CHECKING
 from typing import Protocol
 from typing import TypeVar
+from pyrevs.trajectory import TrajectoryStateType
 
 if TYPE_CHECKING:
     from pyrevs.core import ForwardModelBaseClass
@@ -21,7 +22,7 @@ class TerminationCriterion(Protocol):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> bool:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate.
 
         Args:
@@ -29,7 +30,7 @@ class TerminationCriterion(Protocol):
             trajectory: the trajectory
 
         Returns:
-            True if the trajectory should terminate
+            One of the TrajectoryStateType
         """
         raise NotImplementedError
 
@@ -53,13 +54,45 @@ class TimeTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> bool:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         _ = model
-        return (
+        if (
             isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
             or trajectory.current_time() >= self._end_time
-        )
+        ):
+            return TrajectoryStateType.TERMINATED
+        return TrajectoryStateType.ONGOING
+
+
+class TimeInterruptionCriterion(TerminationCriterion):
+    """Interruption criterion based on time.
+
+    Will trigger interruption if the current time is greater than or equal
+    to the end time.
+    """
+
+    def __init__(self, end_time: float) -> None:
+        """Initialize the termination criterion.
+
+        Args:
+            end_time: the end time
+        """
+        self._end_time = end_time
+
+    def should_terminate(
+        self,
+        model: ForwardModelBaseClass[T_Noise, T_State],
+        trajectory: Trajectory,
+    ) -> TrajectoryStateType:
+        """Check if the trajectory should terminate."""
+        _ = model
+        if (
+            isclose(trajectory.current_time(), self._end_time, abs_tol=1e-9)
+            or trajectory.current_time() >= self._end_time
+        ):
+            return TrajectoryStateType.INTERRUPTED
+        return TrajectoryStateType.ONGOING
 
 
 class LowScoreTerminationCriterion(TerminationCriterion):
@@ -82,10 +115,12 @@ class LowScoreTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> bool:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
         _ = trajectory
-        return model.score() <= self._score_threshold
+        if model.score() <= self._score_threshold:
+            return TrajectoryStateType.TERMINATED
+        return TrajectoryStateType.ONGOING
 
 
 class ModelTerminationCriterion(TerminationCriterion):
@@ -98,7 +133,8 @@ class ModelTerminationCriterion(TerminationCriterion):
         self,
         model: ForwardModelBaseClass[T_Noise, T_State],
         trajectory: Trajectory,
-    ) -> bool:
+    ) -> TrajectoryStateType:
         """Check if the trajectory should terminate."""
-        _ = trajectory
-        return model.check_termination(trajectory.current_step(), trajectory.current_time())
+        if model.check_termination(trajectory.current_step(), trajectory.current_time()):
+            return TrajectoryStateType.TERMINATED
+        return TrajectoryStateType.ONGOING

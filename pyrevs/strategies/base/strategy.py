@@ -1,7 +1,7 @@
 """Defines the generic interface for sampling strategies."""
 
 from __future__ import annotations
-import datetime
+import datetime as dt
 import logging
 from abc import ABC
 from abc import abstractmethod
@@ -98,8 +98,8 @@ class BaseSamplingStrategy(ABC):
         return sorted(cls._registry.keys())
 
     # Time management uses UTC date
-    _start_date: datetime.datetime
-    _end_date: datetime.datetime
+    _start_date: dt.datetime
+    _end_date: dt.datetime
     _min_remaining_time: float
     _MIN_REMAINING_TIME_RATIO: ClassVar[float] = 0.05
 
@@ -119,13 +119,13 @@ class BaseSamplingStrategy(ABC):
             plot_diags: Whether to enable diagnostic plotting.
         """
         self._start_date = self._now()
-        self._end_date = self._start_date + datetime.timedelta(seconds=walltime)
+        self._end_date = self._start_date + dt.timedelta(seconds=walltime)
         self._min_remaining_time = self._MIN_REMAINING_TIME_RATIO * walltime
         self._execute_sampling(database, plot_diags)
 
-    def _now(self) -> datetime.datetime:
+    def _now(self) -> dt.datetime:
         """Return the current time."""
-        return datetime.datetime.now(tz=datetime.timezone.utc)
+        return dt.datetime.now(tz=dt.timezone.utc)
 
     def remaining_time(self) -> float:
         """Return the remaining wallclock time."""

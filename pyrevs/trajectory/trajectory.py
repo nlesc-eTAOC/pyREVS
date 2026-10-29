@@ -8,6 +8,8 @@ import shutil
 import time
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
+from dataclasses import replace
+from enum import Enum
 from math import isclose
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -35,6 +37,24 @@ _logger = logging.getLogger(__name__)
 
 T_Noise = TypeVar("T_Noise")
 T_State = TypeVar("T_State")
+
+
+class TrajectoryStateType(Enum):
+    """Enumeration of trajectory state types.
+
+    Attributes:
+        UNINIT : trajectory has not been initialized
+        ONGOING : trajectory is running
+        INTERRUPTED : trajectory has been interrupted (expected to continue later)
+        TERMINATED : trajectory has been terminated
+        CONVERGED : trajectory has converged
+    """
+
+    UNINIT = 0
+    ONGOING = 1
+    INTERRUPTED = 2
+    TERMINATED = 3
+    CONVERGED = 4
 
 
 class WallTimeLimitError(Exception):
@@ -189,6 +209,35 @@ class Trajectory(Generic[T_Noise, T_State]):
         self._ddb: DiagDB | None = None
         self._initialized_diags = False
 
+    def __getstate__(self) -> dict[str, Any]:
+        """Return the trajectory state for pickling.
+
+        The snapshots are stored column-wise, which is much faster
+        to pickle than a list of snapshot objects.
+        """
+        state = self.__dict__.copy()
+        snaps = state.pop("_snaps")
+        state["_snaps"] = (
+            [s.time for s in snaps],
+            [s.score for s in snaps],
+            [s.noise for s in snaps],
+            [s.state for s in snaps],
+        )
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore the trajectory from its pickled state.
+
+        Args:
+            state: the state returned by __getstate__
+        """
+        times, scores, noises, states = state.pop("_snaps")
+        self.__dict__.update(state)
+        self._snaps = [
+            Snapshot(time=t, score=s, noise=n, state=x)
+            for t, s, n, x in zip(times, scores, noises, states, strict=True)
+        ]
+
     def set_checkfile(self, path: Path) -> None:
         """Setter of the trajectory checkFile.
 
@@ -293,32 +342,30 @@ class Trajectory(Generic[T_Noise, T_State]):
 
         # or from runtime arguments (end time, nstep_end)
         # (A previous call to advance with other arguments might have switched the boolean)
-        self._has_terminated = any(
-            c.should_terminate(self._fmodel, self) for c in termination_criteria
-        ) or self._runtime_termination(end_time, nstep_end)
+        # An interruption criterion already met (e.g. when resuming a run) prevents
+        # taking any step.
+        self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
 
-        while not (self._has_terminated or self._has_converged):
+        while not (self._has_terminated or self._has_converged or interrupt):
             # Do a single model step
             score = self._one_step()
 
-            # Check for termination/convergence
+            # Check for termination/convergence/interruption
             self._has_converged = self._fmodel.check_convergence(
                 self._step, self._t_cur, score, self._traj_cfg.targetscore
             )
-            self._has_terminated = any(
-                c.should_terminate(self._fmodel, self) for c in termination_criteria
-            ) or self._runtime_termination(end_time, nstep_end)
+            self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
 
             # Handle diagnostics
             self._update_diagnostics()
 
             # Check timeout before continuing
             if (time.monotonic() - start_time) >= walltime:
-                break
+                interrupt = True
 
             # Check for user interruption
             if self.interrupt_trigger():
-                break
+                interrupt = True
 
         # Wrap-up the advance function
         self._terminate_advance(start_time, walltime)
@@ -369,6 +416,26 @@ class Trajectory(Generic[T_Noise, T_State]):
         """
         return Path("./pyrevs_stop").exists()
 
+    def _check_criteria(
+        self, termination_criteria: list[TerminationCriterion], end_time: float, nstep_end: int
+    ) -> tuple[bool, bool]:
+        """Evaluate the termination criteria, each only once.
+
+        Args:
+            termination_criteria: a list of termination criterion
+            end_time: the end time of the advance
+            nstep_end: the number of steps to advance
+
+        Returns:
+            a tuple of bool: (should terminate, should interrupt)
+        """
+        if self._fmodel is None:
+            return self._runtime_termination(end_time, nstep_end), False
+        states = [c.should_terminate(self._fmodel, self) for c in termination_criteria]
+        terminate = TrajectoryStateType.TERMINATED in states or self._runtime_termination(end_time, nstep_end)
+        interrupt = TrajectoryStateType.INTERRUPTED in states
+        return terminate, interrupt
+
     def _runtime_termination(self, end_time: float, nstep_end: int) -> bool:
         """Returns True if the trajectory should terminate from the runtime arguments."""
         step_termination = self._step >= nstep_end if nstep_end > 0 else False
@@ -415,7 +482,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """
         if not self._fmodel:
             err_msg = f"Trajectory {self.idstr()} is frozen, without forward model. Advance() deactivated."
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
         # Add the initial snapshot to the list
@@ -515,7 +582,8 @@ class Trajectory(Generic[T_Noise, T_State]):
             self._snaps.append(
                 Snapshot[T_Noise, T_State](
                     time=self._t_cur,
-                    score=score if score else self._fmodel.score(),
+                    # Cast to builtin float: numpy scalars are slow to pickle
+                    score=float(score if score is not None else self._fmodel.score()),
                     noise=self._fmodel.noise,
                     state=self._fmodel.get_current_state() if need_state else None,
                 ),
@@ -571,7 +639,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """Return a trajectory restored from an XML chkfile."""
         if not checkfile.exists():
             err_msg = f"Trajectory {checkfile} does not exist."
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise FileNotFoundError
 
         rest_traj: Trajectory[T_Noise, T_State] = Trajectory.init_from_metadata(
@@ -657,6 +725,69 @@ class Trajectory(Generic[T_Noise, T_State]):
         # Finalize branching
         ancestor_workdir = from_traj.get_workdir()
         cls._finalize_branch(from_traj.unique_id(), rst_traj.unique_id(), rest_traj, new_weight, ancestor_workdir)
+
+        return rest_traj
+
+    @classmethod
+    def clone_from_trajectory(
+        cls,
+        from_traj: Trajectory[T_Noise, T_State],
+        rst_traj: Trajectory[T_Noise, T_State],
+        new_weight: float,
+    ) -> Trajectory:
+        """Create a new trajectory as a clone of an ancestor at its current time.
+
+        Unlike :meth:`branch_from_trajectory`, the entire history of the ancestor
+        is copied. If the last snapshot of the ancestor does not hold a model
+        state (sparse state), the noise needed to reconstruct the history from
+        the last available state is put in the backlog and replayed upon the
+        next call to advance.
+
+        The noise the ancestor has already drawn for its upcoming step is *not*
+        transferred: the clone draws fresh noise beyond the ancestor current time,
+        such that clones diverge from their ancestor.
+
+        Although the rst_traj is provided as an argument, it is
+        only used to set metadata of the cloned trajectory.
+
+        Args:
+            from_traj: an already existing trajectory to clone
+            rst_traj: the trajectory being replaced
+            new_weight: the weight of the clone trajectory
+        """
+        # Initialize the new trajectory object (handles path and ID logic)
+        rest_traj = cls._init_branched_trajectory(from_traj, rst_traj, new_weight)
+
+        # Return empty the empty trajectory immediately
+        if not from_traj._snaps:
+            return rest_traj
+
+        last_idx = len(from_traj._snaps) - 1
+        state_idx = from_traj.get_last_state_id()
+        if state_idx is None:
+            err_msg = f"Unable to clone {from_traj.idstr()}: no state available in the trajectory"
+            _logger.error(err_msg)
+            raise RuntimeError(err_msg)
+
+        # Everything up to the last state is a full snapshot
+        rest_traj._snaps = from_traj._snaps[: state_idx + 1]
+
+        # The noise from the last state up to (excluding) the last snapshot
+        # is needed to reconstruct the ancestor history
+        for k in range(state_idx, last_idx):
+            rest_traj.noise_backlog.append(from_traj._snaps[k].noise)
+        rest_traj.noise_backlog.reverse()
+
+        # Finalize branching
+        ancestor_workdir = from_traj.get_workdir()
+        cls._finalize_branch(from_traj.unique_id(), rst_traj.unique_id(), rest_traj, new_weight, ancestor_workdir)
+
+        # Without replay, the clone starts with freshly drawn noise: make the last
+        # snapshot consistent with it so that restoring from a checkfile replays the
+        # clone history, not the ancestor one
+        if state_idx == last_idx and rest_traj._fmodel:
+            last_snap = rest_traj._snaps[-1]
+            rest_traj._snaps[-1] = replace(last_snap, noise=rest_traj._fmodel.noise)
 
         return rest_traj
 
@@ -843,6 +974,10 @@ class Trajectory(Generic[T_Noise, T_State]):
         """
         self._weight = weight
 
+    def weight(self) -> float:
+        """Return the trajectory weight in the ensemble."""
+        return self._weight
+
     def update_metadata(self) -> None:
         """Update trajectory score/ending metadata.
 
@@ -936,7 +1071,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """Return the number of branching events."""
         if len(self._branching_history) > self.max_nbranch:
             err_msg = f"Branching history size exceeds maximum of {self.max_nbranch}!"
-            _logger.exception(err_msg)
+            _logger.error(err_msg)
             raise RuntimeError(err_msg)
         return len(self._branching_history)
 

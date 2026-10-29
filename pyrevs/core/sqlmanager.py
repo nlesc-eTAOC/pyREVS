@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
+from pyrevs.utils.utils import is_windows_os
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -93,8 +94,10 @@ class BaseSQLManager:
     def __del__(self) -> None:
         """Explicit delete function.
 
-        On windows, the SQL file might be locked.
+        On windows, the SQL file might be locked: force garbage collection
+        to release it. This is skipped on other platforms as it is costly.
         """
         del self._Session
         self.close()
-        gc.collect()
+        if is_windows_os():
+            gc.collect()

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 import copy
-import datetime
+import datetime as dt
 import importlib
 import logging
 import sys
@@ -94,7 +94,7 @@ class Database(Generic[T_Noise, T_State]):
         self._read_only = read_only
 
         # Metadata and immutable parameters
-        self._creation_date = datetime.datetime.now(tz=datetime.timezone.utc)
+        self._creation_date = dt.datetime.now(tz=dt.timezone.utc)
         self._version = version("pyrevs")
         self._name = "pyREVS_" + fmodel_t.name()
         self._strategy = "unknown"
@@ -632,6 +632,10 @@ class Database(Generic[T_Noise, T_State]):
             Trajectory list length
         """
         return len(self._archived_trajs_db)
+
+    def archive_discarded(self) -> bool:
+        """Return True if discarded trajectories should be archived."""
+        return self._database_cfg.archive_discarded
 
     def update_traj_list(self, a_traj_list: list[Trajectory[T_Noise, T_State]]) -> None:
         """Overwrite the trajectory list.

@@ -25,7 +25,7 @@ class MCDatabaseExtension(StrategyDatabaseExtension):
     """
 
     def initialize(self, tdb: Database) -> None:
-        """Initialize the AMS database extension.
+        """Initialize the MC database extension.
 
         Args:
             tdb: the core trajectory database
@@ -33,7 +33,7 @@ class MCDatabaseExtension(StrategyDatabaseExtension):
         self._tdb = tdb
 
     def initialize_from_database(self, tdb: Database) -> None:
-        """Initialize the AMS database extension.
+        """Initialize the MC database extension.
 
         Args:
             tdb: the core trajectory database

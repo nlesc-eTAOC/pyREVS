@@ -132,7 +132,7 @@ def get_module_local_import(module_name: str) -> list[str]:
     # Check that module exists
     if module_name not in sys.modules:
         err_msg = f"Attempting to extract sub import from {module_name} missing from currently loaded modules"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise ValueError(err_msg)
 
     # Check access to the module file
@@ -140,7 +140,7 @@ def get_module_local_import(module_name: str) -> list[str]:
         mfile = Path(str(sys.modules[module_name].__file__))
     else:
         err_msg = f"Attempting to locate sub import file from {module_name}, but file is missing or undefined"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise FileNotFoundError(err_msg)
 
     # Parse the module file
@@ -191,11 +191,11 @@ def import_forward_model(file: str, abc_cls: ABCMeta) -> type[ABCMeta]:
     spec = importlib.util.spec_from_file_location(module, file)
     if spec is None:
         err_msg = f"Could not get spec from Python's module in {file}"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise RuntimeError(err_msg)
     if spec.loader is None:
         err_msg = f"{spec.name} module is missing loader !"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise RuntimeError(err_msg)
 
     mod = importlib.util.module_from_spec(spec)
@@ -216,13 +216,13 @@ def import_forward_model(file: str, abc_cls: ABCMeta) -> type[ABCMeta]:
                     f"pyREVS can only define one {abc_cls.__name__} subclass: "
                     f"both {fmodel_class.__name__} and {obj.__name__} found in {file}!"
                 )
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise RuntimeError(err_msg)
             fmodel_class = obj
 
     if fmodel_class is None:
         err_msg = f"pyREVS could not locate subclass of {abc_cls.__name__} in {module}"
-        _logger.exception(err_msg)
+        _logger.error(err_msg)
         raise RuntimeError(err_msg)
 
     return fmodel_class

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 import asyncio
-import datetime
+import datetime as dt
 import functools
 import logging
+import multiprocessing
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
@@ -12,6 +13,7 @@ from pyrevs.core import CoreDB
 from pyrevs.trajectory import Trajectory
 from pyrevs.trajectory.trajectory import UserInterruptError
 from pyrevs.trajectory.trajectory import WallTimeLimitError
+from pyrevs.utils.utils import is_windows_os
 
 if TYPE_CHECKING:
     import concurrent.futures
@@ -20,6 +22,29 @@ if TYPE_CHECKING:
 
 
 _logger = logging.getLogger(__name__)
+
+
+# CoreDB handles of the worker process, keyed by path
+_coredb_cache: dict[str, CoreDB] = {}
+
+
+def get_coredb(trajdb_path: str) -> CoreDB:
+    """Return a handle to the SQL database of trajectories.
+
+    Opening the database is costly compared to the work done by a worker on
+    small models: the handle is cached in worker (child) processes, which only
+    live for the duration of a runner. It is not cached in the main process,
+    which might run several samplers on the same path, nor on Windows where open
+    handles might lock the database file.
+
+    Args:
+        trajdb_path: the path to the SQL database
+    """
+    if is_windows_os() or multiprocessing.parent_process() is None:
+        return CoreDB(trajdb_path)
+    if trajdb_path not in _coredb_cache:
+        _coredb_cache[trajdb_path] = CoreDB(trajdb_path)
+    return _coredb_cache[trajdb_path]
 
 
 def update_trajectory_in_sql(traj: Trajectory, trajdb: CoreDB | None = None, db_path: str | None = None) -> None:
@@ -92,7 +117,7 @@ def traj_advance_with_exception(
 def pool_worker(
     traj: Trajectory,
     termination_criteria: list[TerminationCriterion],
-    end_date: datetime.date,
+    end_date: dt.date,
     trajdb_path: str | None = None,
     db_path: str | None = None,
 ) -> Trajectory:
@@ -110,15 +135,15 @@ def pool_worker(
     """
     # Get wall time
     wall_time = -1.0
-    timedelta: datetime.timedelta = end_date - datetime.datetime.now(tz=datetime.timezone.utc)
-    if timedelta:
-        wall_time = timedelta.total_seconds()
+    remaining: dt.timedelta = end_date - dt.datetime.now(tz=dt.timezone.utc)
+    if remaining:
+        wall_time = remaining.total_seconds()
 
     if wall_time > 0.0 and not traj.is_terminated():
         # Try to lock the trajectory in the DB
         trajdb = None
         if trajdb_path:
-            trajdb = CoreDB(trajdb_path)
+            trajdb = get_coredb(trajdb_path)
             get_to_work = trajdb.lock_trajectory(traj.id(), allow_completed_lock=True)
             if not get_to_work:
                 return traj
@@ -137,7 +162,7 @@ def ms_worker(
     min_val: float,
     new_weight: float,
     termination_criteria: list[TerminationCriterion],
-    end_date: datetime.date,
+    end_date: dt.date,
     trajdb_path: str | None = None,
     db_path: str | None = None,
 ) -> Trajectory:
@@ -155,13 +180,13 @@ def ms_worker(
     """
     # Get wall time
     wall_time = -1.0
-    timedelta: datetime.timedelta = end_date - datetime.datetime.now(tz=datetime.timezone.utc)
-    if timedelta:
-        wall_time = timedelta.total_seconds()
+    remaining: dt.timedelta = end_date - dt.datetime.now(tz=dt.timezone.utc)
+    if remaining:
+        wall_time = remaining.total_seconds()
 
     trajdb = None
     if trajdb_path:
-        trajdb = CoreDB(trajdb_path)
+        trajdb = get_coredb(trajdb_path)
 
     if wall_time > 0.0:
         # Try to lock the trajectory in the DB

@@ -104,7 +104,7 @@ class CoreDB(BaseSQLManager):
                 traj.t_metadata = metadata
             else:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
     def update_trajectory_file(self, traj_id: int, traj_file: str) -> None:
@@ -123,7 +123,7 @@ class CoreDB(BaseSQLManager):
                 traj.traj_file = traj_file
             else:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
     def update_trajectory_weight(self, traj_id: int, weight: float) -> None:
@@ -140,12 +140,35 @@ class CoreDB(BaseSQLManager):
             traj = session.get(Trajectory, traj_id + 1)
             if traj is None:
                 err_msg = f"Trajectory {traj_id} not found !"
-                _logger.exception(err_msg)
+                _logger.error(err_msg)
                 raise ValueError(err_msg)
 
             metadata_d = dict(traj.t_metadata)
             metadata_d["weight"] = weight
             traj.t_metadata = metadata_d
+
+    def update_trajectory_weights(self, weights: dict[int, float]) -> None:
+        """Update the weight of several trajectories in the DB.
+
+        All the weights are updated in a single transaction.
+
+        Args:
+            weights: the new weight of each trajectory, keyed by trajectory id
+
+        Raises:
+            SQLAlchemyError if the DB could not be accessed
+        """
+        with self.session_scope() as session:
+            for traj_id, weight in weights.items():
+                traj = session.get(Trajectory, traj_id + 1)
+                if traj is None:
+                    err_msg = f"Trajectory {traj_id} not found !"
+                    _logger.error(err_msg)
+                    raise ValueError(err_msg)
+
+                metadata_d = dict(traj.t_metadata)
+                metadata_d["weight"] = weight
+                traj.t_metadata = metadata_d
 
     def lock_trajectory(self, traj_id: int, allow_completed_lock: bool = False) -> bool:
         """Set the status of a trajectory to "locked" if possible.

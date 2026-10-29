@@ -13,6 +13,7 @@ from pyrevs.core.config import print_config_help
 from pyrevs.database import DatabaseConfig
 from pyrevs.runner import RunnerConfig
 from pyrevs.strategies.ams import AMSConfig
+from pyrevs.strategies.gktl import GKTLConfig
 from pyrevs.strategies.montecarlo import MCConfig
 from pyrevs.trajectory import TrajectoryConfig
 from .config import SamplerConfig
@@ -32,7 +33,7 @@ class SystemConfig:
 
     sampler: SamplerConfig
     runtime: RuntimeConfig
-    strategy: AMSConfig | MCConfig
+    strategy: AMSConfig | MCConfig | GKTLConfig
     database: DatabaseConfig
     runner: RunnerConfig
     trajectory: TrajectoryConfig
@@ -41,12 +42,14 @@ class SystemConfig:
     def __load__(cls, cfg: Config) -> SystemConfig:
         sampler = cfg.load(SamplerConfig)
 
-        strategy_cls: type[AMSConfig | MCConfig]
+        strategy_cls: type[AMSConfig | MCConfig | GKTLConfig]
 
         if sampler.strategy == "ams":
             strategy_cls = AMSConfig
         elif sampler.strategy == "montecarlo":
             strategy_cls = MCConfig
+        elif sampler.strategy == "gktl":
+            strategy_cls = GKTLConfig
         else:
             err_msg = f"Unknown strategy '{sampler.strategy}'"
             raise ValueError(err_msg)
@@ -111,6 +114,7 @@ class SystemConfig:
         print_config_help(RuntimeConfig)
         print_config_help(AMSConfig)
         print_config_help(MCConfig)
+        print_config_help(GKTLConfig)
         print_config_help(DatabaseConfig)
         print_config_help(RunnerConfig)
         print_config_help(TrajectoryConfig)
