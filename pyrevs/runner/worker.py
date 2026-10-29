@@ -5,6 +5,7 @@ import asyncio
 import datetime
 import functools
 import logging
+import multiprocessing
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
@@ -12,6 +13,7 @@ from pyrevs.core import CoreDB
 from pyrevs.trajectory import Trajectory
 from pyrevs.trajectory.trajectory import UserInterruptError
 from pyrevs.trajectory.trajectory import WallTimeLimitError
+from pyrevs.utils.utils import is_windows_os
 
 if TYPE_CHECKING:
     import concurrent.futures
@@ -20,6 +22,29 @@ if TYPE_CHECKING:
 
 
 _logger = logging.getLogger(__name__)
+
+
+# CoreDB handles of the worker process, keyed by path
+_coredb_cache: dict[str, CoreDB] = {}
+
+
+def get_coredb(trajdb_path: str) -> CoreDB:
+    """Return a handle to the SQL database of trajectories.
+
+    Opening the database is costly compared to the work done by a worker on
+    small models: the handle is cached in worker (child) processes, which only
+    live for the duration of a runner. It is not cached in the main process,
+    which might run several samplers on the same path, nor on Windows where open
+    handles might lock the database file.
+
+    Args:
+        trajdb_path: the path to the SQL database
+    """
+    if is_windows_os() or multiprocessing.parent_process() is None:
+        return CoreDB(trajdb_path)
+    if trajdb_path not in _coredb_cache:
+        _coredb_cache[trajdb_path] = CoreDB(trajdb_path)
+    return _coredb_cache[trajdb_path]
 
 
 def update_trajectory_in_sql(traj: Trajectory, trajdb: CoreDB | None = None, db_path: str | None = None) -> None:
@@ -118,7 +143,7 @@ def pool_worker(
         # Try to lock the trajectory in the DB
         trajdb = None
         if trajdb_path:
-            trajdb = CoreDB(trajdb_path)
+            trajdb = get_coredb(trajdb_path)
             get_to_work = trajdb.lock_trajectory(traj.id(), allow_completed_lock=True)
             if not get_to_work:
                 return traj
@@ -161,7 +186,7 @@ def ms_worker(
 
     trajdb = None
     if trajdb_path:
-        trajdb = CoreDB(trajdb_path)
+        trajdb = get_coredb(trajdb_path)
 
     if wall_time > 0.0:
         # Try to lock the trajectory in the DB
