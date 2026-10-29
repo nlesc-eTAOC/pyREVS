@@ -141,7 +141,7 @@ def test_run_ms_worker_model_outoftime(caplog: pytest.LogCaptureFixture):
     t_test = Trajectory(1, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params=model_params)
     t_test.advance()
     rst_test = Trajectory(2, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params=model_params)
-    enddate = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=0.1)
+    enddate = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=0.01)
     _ = ms_worker(t_test, rst_test, 0.1, 1.0, [], enddate)
     assert "advance ran out of time" in caplog.text
 
