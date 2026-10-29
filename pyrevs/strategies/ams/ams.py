@@ -374,6 +374,14 @@ class AMS(BaseSamplingStrategy):
         # Get the ensemble maximums and check for early exit conditions
         early_exit, maxes = self.check_exit_splitting_loop(tdb, k, k_it)
 
+        # Exit the loop before recording a new iteration: no trajectory
+        # is discarded, and the ensemble weight must not be updated
+        if early_exit:
+            # If AMS converged, final update of the weights.
+            if tdb.all_converged():
+                self._req_db_ext().update_trajectories_weights()
+            return True, 0
+
         # Get the l_j lower scored trajectories
         # or more if equal score
         min_idx_list, min_vals = get_min_scored(maxes, self._ams_cfg.l_j)
@@ -392,13 +400,6 @@ class AMS(BaseSamplingStrategy):
         # to compute the individual weight of each trajectory in the ensemble
         # at the end of the splitting iteration
         new_traj_weight = self._req_db_ext().weights()[-1]
-
-        # Exit the loop if needed
-        if early_exit:
-            # If AMS converged, final update of the weights.
-            if tdb.all_converged():
-                self._req_db_ext().update_trajectories_weights()
-            return True, n_discarded
 
         # Assemble a list of promises
         # and archive the discarded trajectories

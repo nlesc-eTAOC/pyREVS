@@ -378,7 +378,7 @@ def test_doublewell_deterministic_tams():
     sampler = build_sampler(fmodel_t=fmodel, a_args=[])
     sampler.run()
     re_proba = sampler.database.get_event_probability()
-    assert re_proba == 0.5202874320960114
+    assert re_proba == 0.5255428607030418
     Path("input.toml").unlink(missing_ok=True)
 
 
@@ -435,7 +435,7 @@ def test_doublewell_2_workers_tams():
     sampler = build_sampler(fmodel_t=fmodel, a_args=[])
     sampler.run()
     re_proba = sampler.database.get_event_probability()
-    assert re_proba == 0.6925339958244802
+    assert re_proba == 0.7213895789838335
     del sampler
     Path("input.toml").unlink(missing_ok=True)
 
@@ -470,7 +470,7 @@ def test_doublewell_2_workers_restore_sampler():
     sampler = build_sampler(fmodel_t=fmodel, a_args=[])
     sampler.run()
     re_proba = sampler.database.get_event_probability()
-    assert re_proba == 0.6925339958244802
+    assert re_proba == 0.7213895789838335
     Path("input.toml").unlink(missing_ok=True)
     del sampler
     if not is_windows_os():
