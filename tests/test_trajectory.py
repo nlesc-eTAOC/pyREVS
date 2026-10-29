@@ -3,6 +3,7 @@
 from dataclasses import FrozenInstanceError
 from math import isclose
 from pathlib import Path
+import numpy as np
 import pytest
 from pyrevs.core import Config
 from pyrevs.core import ForwardModelBaseClass
@@ -134,6 +135,148 @@ def test_branch_simple_model_traj():
     assert t_branched.get_computed_steps_count() == 0
     t_branched.advance()
     assert t_branched.get_computed_steps_count() == 149
+
+
+@pytest.mark.parametrize("sparse_freq", [1, 4])
+def test_branch_diverges_at_level_crossing(sparse_freq: int):
+    """Test that a branched trajectory diverges right after the first snapshot above the level."""
+    fmodel = DoubleWellModel
+    cfg = Config({"trajectory": {"end_time": 3.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": sparse_freq}})
+    t_ancestor = Trajectory(
+        1, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 1.0}, deterministic=True
+    )
+    t_ancestor.advance()
+    level = 0.5 * t_ancestor.score_max()
+    ancestor_scores = t_ancestor.get_score_array()
+    high_idx = int(np.argmax(ancestor_scores > level))
+    t_branched = Trajectory(
+        2, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 1.0}, deterministic=True
+    )
+    t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
+
+    # The last snapshot holds the noise of the next model step
+    assert np.array_equal(t_branched._snaps[-1].noise, t_branched._fmodel.noise)
+
+    t_branched.advance(nstep_end=high_idx + 2)
+    branched_scores = t_branched.get_score_array()
+    assert np.array_equal(branched_scores[: high_idx + 1], ancestor_scores[: high_idx + 1])
+    assert branched_scores[high_idx + 1] != ancestor_scores[high_idx + 1]
+
+
+def _sparse_ancestor_with_tail_crossing(cfg: Config) -> tuple[Trajectory, float, int]:
+    """Return a sparse trajectory and a level first crossed after its last state."""
+    for tid in range(1, 50):
+        t_ancestor = Trajectory(
+            tid,
+            0.5,
+            DoubleWellModel,
+            cfg.load(TrajectoryConfig),
+            model_params={"noise_amplitude": 0.8},
+            deterministic=True,
+        )
+        t_ancestor.advance()
+        scores = t_ancestor.get_score_array()
+        last_state_idx = t_ancestor.get_last_state_id()
+        # The level is first crossed after the last state, and before the last snapshot
+        level = np.max(scores[: last_state_idx + 1])
+        high_idx = int(np.argmax(scores > level))
+        if last_state_idx < high_idx < len(scores) - 1:
+            return t_ancestor, level, high_idx
+    pytest.fail("No trajectory with a level crossing after its last state")
+
+
+def test_branch_restored_sparse_traj_crossing_in_tail(tmp_path: Path):
+    """Test branching a restored sparse trajectory, with the level crossing after its last state."""
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    t_ancestor, level, high_idx = _sparse_ancestor_with_tail_crossing(cfg)
+    ancestor_scores = t_ancestor.get_score_array()
+    chkfile = tmp_path / "ancestor.xml"
+    t_ancestor.store(chkfile)
+    t_restored = Trajectory.restore_from_checkfile(
+        chkfile,
+        t_ancestor.get_metadata(),
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 0.8},
+    )
+    # The restored trajectory holds its complete history
+    assert np.allclose(t_restored.get_score_array(), ancestor_scores, rtol=0.0, atol=1e-12)
+
+    t_branched = Trajectory(
+        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+    )
+    t_branched = Trajectory.branch_from_trajectory(t_restored, t_branched, level, 0.25)
+    assert t_branched.score_max() > level
+
+    t_branched.advance(nstep_end=high_idx + 2)
+    branched_scores = t_branched.get_score_array()
+    assert np.allclose(branched_scores[: high_idx + 1], ancestor_scores[: high_idx + 1], rtol=0.0, atol=1e-12)
+    assert abs(branched_scores[high_idx + 1] - ancestor_scores[high_idx + 1]) > 1e-9
+
+
+def test_store_and_restore_branched_traj_before_replay(tmp_path: Path):
+    """Test restoring a branched trajectory which has not replayed its ancestor history yet."""
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    t_ancestor, level, high_idx = _sparse_ancestor_with_tail_crossing(cfg)
+    t_branched = Trajectory(
+        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+    )
+    t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
+    chkfile = tmp_path / "branched.xml"
+    t_branched.store(chkfile)
+    t_restored = Trajectory.restore_from_checkfile(
+        chkfile,
+        t_branched.get_metadata(),
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 0.8},
+    )
+    assert t_restored.get_length() == high_idx + 1
+
+    # Both replay the ancestor history up to the crossing, and take the same (new) step from it
+    t_branched.advance(nstep_end=high_idx + 1)
+    t_restored.advance(nstep_end=high_idx + 1)
+    assert np.allclose(t_restored.get_score_array(), t_branched.get_score_array(), rtol=0.0, atol=1e-12)
+
+
+def test_replay_mismatch_warning(tmp_path: Path, caplog: pytest.LogCaptureFixture):
+    """Test the warning issued when replaying the tail of a trajectory does not reproduce it."""
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    t_ancestor, level, _ = _sparse_ancestor_with_tail_crossing(cfg)
+    t_branched = Trajectory(
+        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+    )
+    t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
+    chkfile = tmp_path / "branched.xml"
+    t_branched.store(chkfile)
+    # Restore with a different noise amplitude: the replayed history differs
+    t_restored = Trajectory.restore_from_checkfile(
+        chkfile, t_branched.get_metadata(), DoubleWellModel, cfg.load(TrajectoryConfig), model_params={}
+    )
+    t_restored.advance(nstep_end=t_restored.current_step() + 1)
+    assert "replay mismatch" in caplog.text
+
+
+class NegativeScoreModel(SimpleFModel):
+    """Simple forward model with a negative score."""
+
+    def score(self) -> float:
+        """Override the template."""
+        return super().score() - 2.0
+
+
+def test_branch_negative_score_max():
+    """Test the score maximum of a branched trajectory with negative scores."""
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002, "targetscore": 0.5}})
+    t_ancestor = Trajectory(1, 0.5, NegativeScoreModel, cfg.load(TrajectoryConfig))
+    t_ancestor.advance()
+    assert t_ancestor.score_max() == pytest.approx(-1.6)
+    t_branched = Trajectory(2, 0.5, NegativeScoreModel, cfg.load(TrajectoryConfig))
+    t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, -1.8, 0.25)
+    assert t_branched.score_max() == pytest.approx(np.max(t_branched.get_score_array()))
+    assert t_branched.score_max() < 0.0
+    t_branched.advance()
+    assert t_branched.score_max() == pytest.approx(-1.6)
 
 
 def test_simple_model_traj_end_nstep():

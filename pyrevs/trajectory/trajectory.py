@@ -35,6 +35,10 @@ if TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 
+# Tolerances used when checking the scores of replayed snapshots
+REPLAY_RTOL = 1e-6
+REPLAY_ATOL = 1e-12
+
 T_Noise = TypeVar("T_Noise")
 T_State = TypeVar("T_State")
 
@@ -116,6 +120,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         _workdir : the model working directory
         _score_max : the maximum score
         _snaps : a list of snapshots
+        _tail : a list of known snapshots beyond the model current state, to be replayed
         _step : the current step counter
         _computed_steps : the number of steps explicitly advanced by the trajectory
         _t_cur : the current time
@@ -178,9 +183,10 @@ class Trajectory(Generic[T_Noise, T_State]):
         # List of snapshots
         self._snaps: list[Snapshot[T_Noise, T_State]] = []
 
-        # When using sparse state or for other reasons, the noise for the next few
-        # steps might be already available. This backlog is used to store them.
-        self.noise_backlog: list[T_Noise] = []
+        # When using sparse state (e.g. upon restoring or branching), the snapshots
+        # following the last available state might already be known. These form
+        # the tail of the trajectory, replayed upon the next call to advance.
+        self._tail: list[Snapshot[T_Noise, T_State]] = []
 
         # Keep track of the branching history for iterative
         # sampling algorithms
@@ -474,7 +480,7 @@ class Trajectory(Generic[T_Noise, T_State]):
 
         Perform a single time step of the forward model. This
         function will also set the noise to use for the next step
-        in the forward model if a backlog is available.
+        in the forward model, replaying the tail if any.
 
         Args:
             nstep_end: the maximum number of steps to advance
@@ -506,7 +512,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         score = self._fmodel.score()
 
         # Prepare the noise for the next step
-        self.setup_noise()
+        self.setup_noise(score)
 
         # Append a snapshot at the beginning of the time step
         self._append_snapshot(score)
@@ -563,14 +569,25 @@ class Trajectory(Generic[T_Noise, T_State]):
         ddb.duplicate_diagnostic_history_from_time(ancestor_id, discarded_id, child_id, child_weight, branching_time)
         ddb.close()
 
-    def setup_noise(self) -> None:
-        """Prepare the noise for the next step."""
-        # Set the noise for the next model step
-        # if a noise backlog is available, use it otherwise
-        # make a new noise increment
+    def setup_noise(self, score: float | None = None) -> None:
+        """Prepare the noise for the next step.
+
+        When replaying the tail of the trajectory, the noise is the one of the
+        replayed snapshot, otherwise a new noise increment is made.
+
+        Args:
+            score: an optional score of the new snapshot, checked against the replayed one
+        """
         if self._fmodel:
-            if self.noise_backlog:
-                self._fmodel.noise = self.noise_backlog.pop()
+            if self._tail:
+                replayed = self._tail.pop(0)
+                if score is not None and not isclose(score, replayed.score, rel_tol=REPLAY_RTOL, abs_tol=REPLAY_ATOL):
+                    warn_msg = (
+                        f"{self.idstr()} replay mismatch at time {self._t_cur}: score {score} instead of"
+                        f" {replayed.score}. Is the model deterministic for a given noise ?"
+                    )
+                    _logger.warning(warn_msg)
+                self._fmodel.noise = replayed.noise
             else:
                 self._fmodel.noise = self._fmodel.make_noise()
 
@@ -656,26 +673,20 @@ class Trajectory(Generic[T_Noise, T_State]):
                 rest_traj._snaps.append(Snapshot[T_Noise, T_State](time=time, score=score, noise=noise, state=state))
 
         # If the trajectory is frozen, that is all we need. Otherwise
-        # handle sparse state, noise backlog and necessary fmodel initialization
+        # handle sparse state, tail and necessary fmodel initialization
         if rest_traj._fmodel:
-            # Remove snapshots from the list until a state is available
-            for k in range(len(rest_traj._snaps) - 1, -1, -1):
-                if not rest_traj._snaps[k].has_state:
-                    # Append the noise history to the backlog
-                    rest_traj.noise_backlog.append(rest_traj._snaps[k].noise)
-                    rest_traj._snaps.pop()
-                else:
-                    break
-
-            # Because the noise in the snapshot is the noise
-            # used to reach the next state, append the last to the backlog too
-            rest_traj.noise_backlog.append(rest_traj._snaps[-1].noise)
+            # The snapshots after the last available state form the tail,
+            # replayed upon the next call to advance
+            state_idx = rest_traj.get_last_state_id() or 0
+            rest_traj._tail = rest_traj._snaps[state_idx + 1 :]
+            rest_traj._snaps = rest_traj._snaps[: state_idx + 1]
 
             # Current step with python indexing, so remove 1
             rest_traj.set_current_time_and_step(rest_traj._snaps[-1].time, len(rest_traj._snaps) - 1)
 
-            # Ensure everything is set to start the time stepping loop
-            rest_traj.setup_noise()
+            # Ensure everything is set to start the time stepping loop:
+            # the noise in the snapshot is the noise used to reach the next state
+            rest_traj._fmodel.noise = rest_traj._snaps[-1].noise
             # mypy is not that bright, need explicit check here
             if rest_traj._snaps[-1].state is not None:
                 rest_traj._fmodel.set_current_state(rest_traj._snaps[-1].state)
@@ -716,11 +727,16 @@ class Trajectory(Generic[T_Noise, T_State]):
         if not from_traj._snaps:
             return rest_traj
 
-        # locate the branching points
-        high_score_idx, last_snap_with_state = cls._find_branch_indices(from_traj, score)
+        # Locate the branching points in the known history of the ancestor,
+        # including its tail if not replayed yet
+        known_snaps = from_traj._snaps + from_traj._tail
+        high_score_idx, last_snap_with_state = cls._find_branch_indices(known_snaps, score)
 
         # Transfer the data from the ancestor to the child
-        cls._transfer_data(from_traj, rest_traj, high_score_idx, last_snap_with_state)
+        cls._transfer_data(known_snaps, rest_traj, high_score_idx, last_snap_with_state)
+
+        # The child diverges from the ancestor after the first snapshot above the threshold
+        cls._renew_last_noise(rest_traj)
 
         # Finalize branching
         ancestor_workdir = from_traj.get_workdir()
@@ -739,9 +755,8 @@ class Trajectory(Generic[T_Noise, T_State]):
 
         Unlike :meth:`branch_from_trajectory`, the entire history of the ancestor
         is copied. If the last snapshot of the ancestor does not hold a model
-        state (sparse state), the noise needed to reconstruct the history from
-        the last available state is put in the backlog and replayed upon the
-        next call to advance.
+        state (sparse state), the snapshots after the last available state are
+        put in the tail and replayed upon the next call to advance.
 
         The noise the ancestor has already drawn for its upcoming step is *not*
         transferred: the clone draws fresh noise beyond the ancestor current time,
@@ -762,32 +777,24 @@ class Trajectory(Generic[T_Noise, T_State]):
         if not from_traj._snaps:
             return rest_traj
 
-        last_idx = len(from_traj._snaps) - 1
         state_idx = from_traj.get_last_state_id()
         if state_idx is None:
             err_msg = f"Unable to clone {from_traj.idstr()}: no state available in the trajectory"
             _logger.error(err_msg)
             raise RuntimeError(err_msg)
 
-        # Everything up to the last state is a full snapshot
-        rest_traj._snaps = from_traj._snaps[: state_idx + 1]
+        # Everything up to the last state is a full snapshot, the rest
+        # of the known history of the ancestor forms the tail
+        known_snaps = from_traj._snaps + from_traj._tail
+        rest_traj._snaps = known_snaps[: state_idx + 1]
+        rest_traj._tail = known_snaps[state_idx + 1 :]
 
-        # The noise from the last state up to (excluding) the last snapshot
-        # is needed to reconstruct the ancestor history
-        for k in range(state_idx, last_idx):
-            rest_traj.noise_backlog.append(from_traj._snaps[k].noise)
-        rest_traj.noise_backlog.reverse()
+        # The clone diverges from the ancestor after its last known snapshot
+        cls._renew_last_noise(rest_traj)
 
         # Finalize branching
         ancestor_workdir = from_traj.get_workdir()
         cls._finalize_branch(from_traj.unique_id(), rst_traj.unique_id(), rest_traj, new_weight, ancestor_workdir)
-
-        # Without replay, the clone starts with freshly drawn noise: make the last
-        # snapshot consistent with it so that restoring from a checkfile replays the
-        # clone history, not the ancestor one
-        if state_idx == last_idx and rest_traj._fmodel:
-            last_snap = rest_traj._snaps[-1]
-            rest_traj._snaps[-1] = replace(last_snap, noise=rest_traj._fmodel.noise)
 
         return rest_traj
 
@@ -832,14 +839,14 @@ class Trajectory(Generic[T_Noise, T_State]):
         return new_traj
 
     @staticmethod
-    def _find_branch_indices(from_traj: Trajectory[T_Noise, T_State], score_threshold: float) -> tuple[int, int]:
+    def _find_branch_indices(snaps: list[Snapshot[T_Noise, T_State]], score_threshold: float) -> tuple[int, int]:
         """Finds the split index and the last index containing a state.
 
         To ensure that sampling converges, branching occurs on
         the first snapshot with a score *strictly* above the target.
 
         Args:
-            from_traj: the ancestor trajectory
+            snaps: the known snapshots of the ancestor trajectory
             score_threshold: the score threshold up to which we must copy
 
         Returns:
@@ -848,7 +855,7 @@ class Trajectory(Generic[T_Noise, T_State]):
         """
         high_score_idx = 0
         last_state_idx = 0
-        for i, snap in enumerate(from_traj._snaps):
+        for i, snap in enumerate(snaps):
             if snap.has_state:
                 last_state_idx = i
             if snap.score > score_threshold:
@@ -858,34 +865,43 @@ class Trajectory(Generic[T_Noise, T_State]):
 
     @staticmethod
     def _transfer_data(
-        from_traj: Trajectory[T_Noise, T_State], rest_traj: Trajectory[T_Noise, T_State], high_idx: int, state_idx: int
+        snaps: list[Snapshot[T_Noise, T_State]], rest_traj: Trajectory[T_Noise, T_State], high_idx: int, state_idx: int
     ) -> None:
         """Transfer data from the ancestor to the child.
 
+        The child gets the ancestor snapshots up to the last state, and replays
+        the following ones up to the snapshot high_idx.
+
         Args:
-            from_traj: the ancestor trajectory
+            snaps: the known snapshots of the ancestor trajectory
             rest_traj: the child trajectory
-            high_idx: the highest index of the snapshot to transfer
-            state_idx: the highest index of the snapshot with noise to transfer
+            high_idx: the index of the first snapshot above the threshold
+            state_idx: the index of the last snapshot with a state (equal or below high_idx)
         """
-        # Prepend existing backlog if states align
-        if state_idx == from_traj.get_last_state_id() and from_traj.noise_backlog:
-            # Grab the noise that might already has been moved from the backlog
-            # to the current noise increment
-            if from_traj._fmodel and from_traj._fmodel.noise is not None:
-                rest_traj.noise_backlog.append(from_traj._fmodel.noise)
-
-            rest_traj.noise_backlog.extend(reversed(from_traj.noise_backlog))
-
-        # Separate snapshots from noise backlog
         # Everything up to the last state is a full snapshot
-        rest_traj._snaps = from_traj._snaps[: state_idx + 1]
+        rest_traj._snaps = snaps[: state_idx + 1]
 
-        # Everything from last state and high_score_idx becomes noise backlog
-        for k in range(state_idx, high_idx + 1):
-            rest_traj.noise_backlog.append(from_traj._snaps[k].noise)
+        # The snapshots from the last state up to high_idx form the tail
+        rest_traj._tail = snaps[state_idx + 1 : high_idx + 1]
 
-        rest_traj.noise_backlog.reverse()
+    @staticmethod
+    def _renew_last_noise(traj: Trajectory[T_Noise, T_State]) -> None:
+        """Make a new noise increment for the step following the last known snapshot.
+
+        The snapshot noise is the noise of the next step: renewing it makes a
+        branched or cloned trajectory diverge from its ancestor after its last
+        known snapshot, and keeps the snapshots consistent with the noise actually
+        used, such that restoring from a checkfile replays the trajectory history.
+
+        Args:
+            traj: the branched or cloned trajectory
+        """
+        if traj._fmodel:
+            noise = traj._fmodel.make_noise()
+            if traj._tail:
+                traj._tail[-1] = replace(traj._tail[-1], noise=noise)
+            else:
+                traj._snaps[-1] = replace(traj._snaps[-1], noise=noise)
 
     @staticmethod
     def _finalize_branch(
@@ -908,8 +924,9 @@ class Trajectory(Generic[T_Noise, T_State]):
         rest_traj._step = len(rest_traj._snaps) - 1
 
         if rest_traj._fmodel:
-            rest_traj.setup_noise()
+            # The noise in the snapshot is the noise used to reach the next state
             last_snap = rest_traj._snaps[-1]
+            rest_traj._fmodel.noise = last_snap.noise
             if last_snap.state is not None:
                 rest_traj._fmodel.set_current_state(last_snap.state)
 
@@ -938,16 +955,9 @@ class Trajectory(Generic[T_Noise, T_State]):
         root = ET.Element(self.idstr())
         root.append(dict_to_xml("params", asdict(self._traj_cfg)))
         snaps_xml = ET.SubElement(root, "snapshots")
-        for k in range(len(self._snaps)):
-            snaps_xml.append(
-                make_xml_snapshot(
-                    k,
-                    self._snaps[k].time,
-                    self._snaps[k].score,
-                    self._snaps[k].noise,
-                    self._snaps[k].state,
-                ),
-            )
+        # The tail is part of the known trajectory history
+        for k, snap in enumerate(self._snaps + self._tail):
+            snaps_xml.append(make_xml_snapshot(k, snap.time, snap.score, snap.noise, snap.state))
         tree = ET.ElementTree(root)
         ET.indent(tree, space="\t", level=0)
 
@@ -984,10 +994,8 @@ class Trajectory(Generic[T_Noise, T_State]):
         Update the maximum of the score function over the trajectory
         as well as the bool values for has_converged and has_terminated
         """
-        new_score_max = 0.0
-        for snap in self._snaps:
-            new_score_max = max(new_score_max, snap.score)
-        self._score_max = new_score_max
+        # Scores can be negative: same default as upon initialization
+        self._score_max = max((snap.score for snap in self._snaps + self._tail), default=-1.0e12)
         if self._fmodel:
             self._has_converged = self._fmodel.check_convergence(
                 self._step, self._t_cur, self._score_max, self._traj_cfg.targetscore
@@ -1041,19 +1049,19 @@ class Trajectory(Generic[T_Noise, T_State]):
         return self._checkFile
 
     def get_time_array(self) -> npt.NDArray[np.number]:
-        """Return the trajectory time instants."""
-        return np.array([snap.time for snap in self._snaps], dtype=np.float64)
+        """Return the trajectory time instants, including the tail."""
+        return np.array([snap.time for snap in self._snaps + self._tail], dtype=np.float64)
 
     def get_score_array(self) -> npt.NDArray[np.number]:
-        """Return the trajectory scores."""
-        return np.array([snap.score for snap in self._snaps], dtype=np.float64)
+        """Return the trajectory scores, including the tail."""
+        return np.array([snap.score for snap in self._snaps + self._tail], dtype=np.float64)
 
     def get_noise_array(self) -> npt.NDArray[Any]:
-        """Return the trajectory noises."""
+        """Return the trajectory noises, including the tail."""
         if not self._snaps:
             return np.array([])
 
-        return np.array([snap.noise for snap in self._snaps])
+        return np.array([snap.noise for snap in self._snaps + self._tail])
 
     def get_state_list(self) -> list[tuple[int, T_State | None]]:
         """Return a list of states and associated indices.
@@ -1064,8 +1072,8 @@ class Trajectory(Generic[T_Noise, T_State]):
         return [(k, self._snaps[k].state) for k in range(len(self._snaps)) if self._snaps[k].has_state]
 
     def get_length(self) -> int:
-        """Return the trajectory length."""
-        return len(self._snaps)
+        """Return the trajectory length, including the tail."""
+        return len(self._snaps) + len(self._tail)
 
     def get_nbranching(self) -> int:
         """Return the number of branching events."""
