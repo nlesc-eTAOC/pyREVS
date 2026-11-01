@@ -11,6 +11,7 @@ from pyrevs.runner import RunnerConfig
 from pyrevs.runner import make_runner
 from pyrevs.runner import pool_worker
 from pyrevs.strategies.base import BaseSamplingStrategy
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.strategies.base import TerminationCriterion
 from pyrevs.strategies.base import TimeTerminationCriterion
 from .config import MCConfig
@@ -71,6 +72,9 @@ class MonteCarlo(BaseSamplingStrategy):
 
         if strategy_cfg.end_time is not None:
             self._term_crit.append(TimeTerminationCriterion(strategy_cfg.end_time))
+
+        # The rare event: trajectories reaching the target score have converged
+        self._term_crit.append(TargetScoreConvergenceCriterion(strategy_cfg.target_score))
 
     def generate_trajectory_ensemble(self, tdb: Database) -> None:
         """Schedule the generation of an ensemble of stochastic trajectories.
