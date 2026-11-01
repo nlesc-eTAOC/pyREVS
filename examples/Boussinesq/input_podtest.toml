@@ -4,6 +4,7 @@ nsplititer = 1000
 variant = "tams"
 end_time = 20.0
 l_j = 2
+target_score = 0.96
 
 [sampler]
 strategy = "ams"
@@ -14,7 +15,6 @@ walltime = 7200.0
 
 [trajectory]
 step_size = 0.01
-targetscore = 0.96
 sparse_freq = 10
 
 [model]
