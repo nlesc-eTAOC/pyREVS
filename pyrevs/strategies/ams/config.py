@@ -52,6 +52,12 @@ class AMSConfig:
             "doc": "The minimum score of the trajectory (AMS)",
         },
     )
+    target_score: float = field(
+        default=0.95,
+        metadata={
+            "doc": "The target score defining the rare event: a trajectory reaching it has converged",
+        },
+    )
     use_custom_termination: bool = field(
         default=False,
         metadata={
@@ -83,4 +89,8 @@ class AMSConfig:
 
         if self.variant == "hams" and (self.min_score is None or self.end_time <= 0.0):
             err_msg = " AMSConfig.min_score and end_time must be set for HAMS"
+            raise ValueError(err_msg)
+
+        if self.min_score is not None and self.target_score <= self.min_score:
+            err_msg = " AMSConfig.target_score must be > AMSConfig.min_score"
             raise ValueError(err_msg)

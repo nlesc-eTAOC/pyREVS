@@ -17,6 +17,7 @@ from pyrevs.runner import pool_worker
 from pyrevs.strategies.base import BaseSamplingStrategy
 from pyrevs.strategies.base import LowScoreTerminationCriterion
 from pyrevs.strategies.base import ModelTerminationCriterion
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.strategies.base import TerminationCriterion
 from pyrevs.strategies.base import TimeTerminationCriterion
 from pyrevs.utils.utils import get_min_scored
@@ -113,6 +114,9 @@ class AMS(BaseSamplingStrategy):
         # If requested, also add the custom model termination check
         if strategy_cfg.use_custom_termination:
             self._term_crit.append(ModelTerminationCriterion())
+
+        # The rare event: trajectories reaching the target score have converged
+        self._term_crit.append(TargetScoreConvergenceCriterion(self._ams_cfg.target_score))
 
     def _req_db_ext(self) -> AMSDatabaseExtension:
         if self._db_ext is None:
