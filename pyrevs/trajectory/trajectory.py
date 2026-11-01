@@ -350,17 +350,21 @@ class Trajectory(Generic[T_Noise, T_State]):
         # (A previous call to advance with other arguments might have switched the boolean)
         # An interruption criterion already met (e.g. when resuming a run) prevents
         # taking any step.
-        self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
+        self._has_terminated, interrupt, converged = self._check_criteria(termination_criteria, end_time, nstep_end)
+
+        # A trajectory resuming from a converged state (e.g. branched right at the
+        # target score) takes no step. A new trajectory is checked after its first step.
+        if self._snaps:
+            self._has_converged = self._has_converged or converged
 
         while not (self._has_terminated or self._has_converged or interrupt):
             # Do a single model step
-            score = self._one_step()
+            self._one_step()
 
             # Check for termination/convergence/interruption
-            self._has_converged = self._fmodel.check_convergence(
-                self._step, self._t_cur, score, self._traj_cfg.targetscore
+            self._has_terminated, interrupt, self._has_converged = self._check_criteria(
+                termination_criteria, end_time, nstep_end
             )
-            self._has_terminated, interrupt = self._check_criteria(termination_criteria, end_time, nstep_end)
 
             # Handle diagnostics
             self._update_diagnostics()
@@ -424,8 +428,8 @@ class Trajectory(Generic[T_Noise, T_State]):
 
     def _check_criteria(
         self, termination_criteria: list[TerminationCriterion], end_time: float, nstep_end: int
-    ) -> tuple[bool, bool]:
-        """Evaluate the termination criteria, each only once.
+    ) -> tuple[bool, bool, bool]:
+        """Evaluate the termination criteria.
 
         Args:
             termination_criteria: a list of termination criterion
@@ -433,14 +437,15 @@ class Trajectory(Generic[T_Noise, T_State]):
             nstep_end: the number of steps to advance
 
         Returns:
-            a tuple of bool: (should terminate, should interrupt)
+            a tuple of bool: (should terminate, should interrupt, has converged)
         """
         if self._fmodel is None:
-            return self._runtime_termination(end_time, nstep_end), False
+            return self._runtime_termination(end_time, nstep_end), False, False
         states = [c.should_terminate(self._fmodel, self) for c in termination_criteria]
         terminate = TrajectoryStateType.TERMINATED in states or self._runtime_termination(end_time, nstep_end)
         interrupt = TrajectoryStateType.INTERRUPTED in states
-        return terminate, interrupt
+        converged = TrajectoryStateType.CONVERGED in states
+        return terminate, interrupt, converged
 
     def _runtime_termination(self, end_time: float, nstep_end: int) -> bool:
         """Returns True if the trajectory should terminate from the runtime arguments."""
@@ -997,16 +1002,13 @@ class Trajectory(Generic[T_Noise, T_State]):
         # Scores can be negative: same default as upon initialization
         self._score_max = max((snap.score for snap in self._snaps + self._tail), default=-1.0e12)
         if self._fmodel:
-            self._has_converged = self._fmodel.check_convergence(
-                self._step, self._t_cur, self._score_max, self._traj_cfg.targetscore
+            # Convergence is a termination criterion of the sampling strategy,
+            # evaluated upon the next call to advance
+            self._has_converged = False
+            self._has_terminated = self._fmodel.check_termination(
+                self._step,
+                self._t_cur,
             )
-            if self._has_converged:
-                self._has_terminated = True
-            else:
-                self._has_terminated = self._fmodel.check_termination(
-                    self._step,
-                    self._t_cur,
-                )
         else:
             self._has_converged = False
             self._has_terminated = False
@@ -1023,6 +1025,14 @@ class Trajectory(Generic[T_Noise, T_State]):
     def current_step(self) -> int:
         """Return the current trajectory step."""
         return self._step
+
+    def current_score(self) -> float:
+        """Return the score of the current trajectory snapshot."""
+        if self._snaps:
+            return self._snaps[-1].score
+        if self._fmodel:
+            return float(self._fmodel.score())
+        return self._score_max
 
     def step_size(self) -> float:
         """Return the time step size."""
