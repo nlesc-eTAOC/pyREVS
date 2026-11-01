@@ -3,6 +3,7 @@ ntrajectories = 5
 nsplititer = 10
 variant = "tams"
 end_time = 200.0
+target_score = 0.96
 
 [runtime]
 loglevel = "INFO"
@@ -11,7 +12,6 @@ diagnostics = true
 
 [trajectory]
 step_size = 0.01
-targetscore = 0.96
 sparse_freq = 5
 
 [model]

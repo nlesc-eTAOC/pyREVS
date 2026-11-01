@@ -3,6 +3,7 @@ ntrajectories = 32
 nsplititer = 5000
 variant = "tams"
 end_time = 5.0
+target_score = 4.24264068712
 
 [sampler]
 strategy = "ams"
@@ -13,7 +14,6 @@ loglevel = "INFO"
 [trajectory]
 step_size = 0.01
 # 6 sigma
-targetscore = 4.24264068712
 
 [model]
 theta = 1.0 

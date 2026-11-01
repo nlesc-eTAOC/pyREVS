@@ -1,6 +1,5 @@
 [trajectory]
 step_size = 0.01
-targetscore = 10.0
 
 [model]
 theta = 1.0 

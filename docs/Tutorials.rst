@@ -319,10 +319,10 @@ to the algorithm parameters. We will start with a Monte-Carlo sampling approach.
     [montecarlo]
     ntrajectories = 200
     end_time = 10.0
+    target_score = 0.95
 
     [trajectory]
     step_size = 0.01
-    targetscore = 0.95
 
     [model]
     epsilon = 0.04
@@ -642,6 +642,7 @@ All of these parameter can be set in the ``input.toml`` file (differs from defau
     nsplititer = 1000
     variant = "tams"
     end_time = 20.0
+    target_score = 1.05
 
     [sampler]
     strategy = "ams"
@@ -651,7 +652,6 @@ All of these parameter can be set in the ``input.toml`` file (differs from defau
 
     [trajectory]
     step_size = 0.01
-    targetscore = 1.05
 
     [model]
     inv_temperature = 5.67
@@ -1193,6 +1193,7 @@ Let's review the content of the input file ``input.toml``:
     nsplititer = 200
     variant = "tams"
     end_time = 20.0
+    target_score = 0.95
 
     [runtime]
     loglevel = "INFO"
@@ -1207,7 +1208,6 @@ of the iterations, as depicted in the last graph of the :ref:`Theory Section <se
 
     [trajectory]
     step_size = 0.005
-    targetscore = 0.95
     sparse_freq = 10
 
 The time horizon is set to :math:`T_a = 20` time units and the step size 0.005. The target score function

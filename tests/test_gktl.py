@@ -14,6 +14,7 @@ from pyrevs.strategies.base import TimeInterruptionCriterion
 from pyrevs.strategies.gktl import GKTLConfig
 from pyrevs.strategies.gktl.gktl import observable_increment
 from pyrevs.strategies.gktl.gktl import select_clones
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.trajectory import Trajectory
 from pyrevs.trajectory import TrajectoryConfig
 from pyrevs.utils.utils import is_windows_os
@@ -71,9 +72,9 @@ def test_select_clones_survivors_keep_slot():
 
 def test_observable_increment():
     """Test observable increment on the simple model (score = 10 * t)."""
-    cfg = Config({"trajectory": {"step_size": 0.001, "targetscore": 0.95}})
+    cfg = Config({"trajectory": {"step_size": 0.001}})
     traj = Trajectory(1, 1.0, SimpleFModel, cfg.load(TrajectoryConfig))
-    traj.advance(t_end=0.02)
+    traj.advance(t_end=0.02, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     assert isclose(observable_increment(traj, 0.01, "increment"), 0.1, abs_tol=1e-9)
     assert isclose(observable_increment(traj, 0.01, "integral"), 0.0015, abs_tol=1e-9)
     assert observable_increment(traj, 0.03, "integral") == 0.0
@@ -81,25 +82,25 @@ def test_observable_increment():
 
 def test_interruption_no_extra_step():
     """Test that an already met interruption criterion prevents stepping."""
-    cfg = Config({"trajectory": {"step_size": 0.001, "targetscore": 0.95}})
+    cfg = Config({"trajectory": {"step_size": 0.001}})
     traj = Trajectory(1, 1.0, SimpleFModel, cfg.load(TrajectoryConfig))
     crit = [TimeInterruptionCriterion(0.01)]
-    traj.advance(termination_criteria=crit)
+    traj.advance(termination_criteria=[*crit, TargetScoreConvergenceCriterion(0.95)])
     assert isclose(traj.current_time(), 0.01, abs_tol=1e-9)
     assert not traj.is_terminated()
     nsteps = traj.get_computed_steps_count()
-    traj.advance(termination_criteria=crit)
+    traj.advance(termination_criteria=[*crit, TargetScoreConvergenceCriterion(0.95)])
     assert traj.get_computed_steps_count() == nsteps
 
 
 @pytest.mark.parametrize("sparse_freq", [1, 7])
 def test_clone_diverges_from_ancestor(sparse_freq):
     """Test that a clone holds the ancestor history and then diverges."""
-    cfg = Config({"trajectory": {"step_size": 0.01, "targetscore": 2.0, "sparse_freq": sparse_freq}})
+    cfg = Config({"trajectory": {"step_size": 0.01, "sparse_freq": sparse_freq}})
     traj_cfg = cfg.load(TrajectoryConfig)
     params = {"noise_amplitude": 0.8}
     ancestor = Trajectory(1, 1.0, DoubleWellModel, traj_cfg, model_params=params, deterministic=True)
-    ancestor.advance(t_end=0.5)
+    ancestor.advance(t_end=0.5, termination_criteria=[TargetScoreConvergenceCriterion(2.0)])
     killed = Trajectory(2, 1.0, DoubleWellModel, traj_cfg, model_params=params, deterministic=True)
     clone = Trajectory.clone_from_trajectory(ancestor, killed, 0.5)
     assert clone.id() == 2
@@ -107,8 +108,8 @@ def test_clone_diverges_from_ancestor(sparse_freq):
 
     # Advance both: the clone first replays the ancestor history (if sparse)
     ancestor_scores = ancestor.get_score_array().copy()
-    ancestor.advance(t_end=1.0)
-    clone.advance(t_end=1.0)
+    ancestor.advance(t_end=1.0, termination_criteria=[TargetScoreConvergenceCriterion(2.0)])
+    clone.advance(t_end=1.0, termination_criteria=[TargetScoreConvergenceCriterion(2.0)])
     n_hist = len(ancestor_scores)
     assert np.allclose(clone.get_score_array()[:n_hist], ancestor_scores)
     assert not np.allclose(clone.get_score_array()[n_hist:], ancestor.get_score_array()[n_hist:])
@@ -118,9 +119,9 @@ def _gktl_input(db_path: str | None = None, k: float = 0.0) -> dict:
     params = {
         "sampler": {"strategy": "gktl"},
         "runtime": {"loglevel": "WARNING"},
-        "gktl": {"ntrajectories": 20, "end_time": 0.02, "resampling_interval": 0.005, "k": k},
+        "gktl": {"target_score": 0.15, "ntrajectories": 20, "end_time": 0.02, "resampling_interval": 0.005, "k": k},
         "runner": {"type": "asyncio", "nworkers": 2},
-        "trajectory": {"step_size": 0.001, "targetscore": 0.15},
+        "trajectory": {"step_size": 0.001},
     }
     if db_path:
         params["database"] = {"path": db_path}
@@ -134,6 +135,22 @@ def test_simple_model_gktl():
     sampler = build_sampler(fmodel_t=SimpleFModel, a_args=[])
     sampler.run()
     assert isclose(sampler.database.get_event_probability(), 1.0, abs_tol=1e-9)
+    del sampler
+    Path("input.toml").unlink(missing_ok=True)
+
+
+def test_simple_model_gktl_no_target_score():
+    """Test GKTL without a target score: no trajectory converges."""
+    params = _gktl_input(k=1.0)
+    del params["gktl"]["target_score"]
+    with Path("input.toml").open("w") as f:
+        toml.dump(params, f)
+    sampler = build_sampler(fmodel_t=SimpleFModel, a_args=[])
+    sampler.run()
+    tdb = sampler.database
+    assert not any(t.is_converged() for t in tdb.traj_list())
+    assert max(t.score_max() for t in tdb.traj_list()) > 0.15
+    assert tdb.get_event_probability() == 0.0
     del sampler
     Path("input.toml").unlink(missing_ok=True)
 
@@ -172,10 +189,10 @@ def test_doublewell_gktl_deterministic():
     params = {
         "sampler": {"strategy": "gktl", "deterministic": True},
         "runtime": {"loglevel": "WARNING"},
-        "gktl": {"ntrajectories": 30, "end_time": 3.0, "resampling_interval": 0.25, "k": 2.0},
+        "gktl": {"target_score": 0.6, "ntrajectories": 30, "end_time": 3.0, "resampling_interval": 0.25, "k": 2.0},
         "runner": {"type": "asyncio", "nworkers": 2},
         "model": {"noise_amplitude": 0.8},
-        "trajectory": {"step_size": 0.01, "targetscore": 0.6},
+        "trajectory": {"step_size": 0.01},
     }
     with Path("input.toml").open("w") as f:
         toml.dump(params, f)

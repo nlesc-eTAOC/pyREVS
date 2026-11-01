@@ -21,8 +21,6 @@ nworkers = 4
 # Statistics of time-averaged observables are insensitive to the
 # Euler-Maruyama step size to leading order
 step_size = 0.05
-# Never reached: GKTL trajectories run up to end_time
-targetscore = 100.0
 
 [model]
 theta = 1.0

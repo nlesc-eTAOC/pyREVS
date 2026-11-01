@@ -18,6 +18,7 @@ from pyrevs.runner import pool_worker
 from pyrevs.runner.worker import update_trajectory_in_sql
 from pyrevs.strategies.base import BaseSamplingStrategy
 from pyrevs.strategies.base import ModelTerminationCriterion
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.strategies.base import TerminationCriterion
 from pyrevs.strategies.base import TimeInterruptionCriterion
 from pyrevs.strategies.base import TimeTerminationCriterion
@@ -112,8 +113,9 @@ class GKTL(BaseSamplingStrategy):
     observable. The bias is accounted for when computing estimates (see
     :class:`GKTLDatabaseExtension`).
 
-    Trajectories that converge (reach the target score) before the end time
-    are frozen: their observable increment is zero over later intervals.
+    If a target score is set, trajectories that converge (reach the target score)
+    before the end time are frozen: their observable increment is zero over later
+    intervals. Without a target score, trajectories never converge.
 
     Notes:
         This strategy relies on time management provided by
@@ -157,6 +159,10 @@ class GKTL(BaseSamplingStrategy):
         self._term_crit: list[TerminationCriterion] = [TimeTerminationCriterion(self._gktl_cfg.end_time)]
         if strategy_cfg.use_custom_termination:
             self._term_crit.append(ModelTerminationCriterion())
+
+        # Optional: clones reaching the target score have converged and are frozen
+        if strategy_cfg.target_score is not None:
+            self._term_crit.append(TargetScoreConvergenceCriterion(strategy_cfg.target_score))
 
     def _req_db_ext(self) -> GKTLDatabaseExtension:
         if self._db_ext is None:

@@ -4,6 +4,7 @@ nsplititer = 1000
 variant = "tams"
 end_time = 20.0
 l_j = 2
+target_score = 0.96
 
 [sampler]
 strategy = "ams"
@@ -14,13 +15,12 @@ walltime = 7200.0
 
 [trajectory]
 step_size = 0.01
-targetscore = 0.96
 sparse_freq = 10
 
 [model]
 size_M = 40
 size_N = 80
-epsilon = 0.01
+epsilon = 0.04
 K = 7
 delta_stoch = 0.05
 score_time_dep = true
@@ -30,7 +30,7 @@ step_size = 0.01
 
 [runner]
 type = "asyncio"
-nworkers=2
+nworkers = 2
 
 [database]
 path = "2DBoussinesq.tdb"

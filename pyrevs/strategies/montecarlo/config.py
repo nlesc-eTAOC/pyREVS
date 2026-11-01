@@ -24,6 +24,13 @@ class MCConfig:
         },
     )
 
+    target_score: float = field(
+        default=0.95,
+        metadata={
+            "doc": "The target score defining the rare event: a trajectory reaching it has converged",
+        },
+    )
+
     def validate(self) -> None:
         """Validate MC configuration."""
         if self.ntrajectories <= 0:
