@@ -5,6 +5,7 @@ import numpy as np
 import toml
 from bichannel2d import BiChannel2D
 from pyrevs.core import Config
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.trajectory import Trajectory
 from pyrevs.trajectory import TrajectoryConfig
 
@@ -25,7 +26,8 @@ if __name__ == "__main__":
     traj = Trajectory(traj_id=0, weight=1.0, fmodel_t=fmodel, traj_cfg=tcfg, model_params=model_params)
 
     # Advance the model
-    traj.advance(t_end=10.0)
+    # Convergence to the target score of the sampling strategy
+    traj.advance(t_end=10.0, termination_criteria=[TargetScoreConvergenceCriterion(cfg.get("ams", "target_score"))])
 
     x_range = np.linspace(-1.6, 1.6, 101)
     y_range = np.linspace(-1.6, 2.6, 132)
