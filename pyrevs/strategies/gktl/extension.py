@@ -191,7 +191,8 @@ class GKTLDatabaseExtension(StrategyDatabaseExtension):
         """Return the event probability.
 
         The event is the convergence of the trajectory (i.e. reaching the
-        target score) within the sampling end time.
+        target score) within the sampling end time. Without a target score,
+        trajectories never converge and the probability is zero.
         """
         weights = self.clone_weights()
         converged = np.array([m["converged"] for m in self._clones_metadata()], dtype=float)

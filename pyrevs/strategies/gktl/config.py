@@ -50,6 +50,13 @@ class GKTLConfig:
             "doc": "Trigger use of the fmodel check_termination during sampling",
         },
     )
+    target_score: float | None = field(
+        default=None,
+        metadata={
+            "doc": "Optional target score: a clone reaching it has converged and is frozen. "
+            "Without a target score, clones never converge.",
+        },
+    )
 
     def validate(self) -> None:
         """Validate GKTL configuration."""
