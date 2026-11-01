@@ -138,3 +138,32 @@ class ModelTerminationCriterion(TerminationCriterion):
         if model.check_termination(trajectory.current_step(), trajectory.current_time()):
             return TrajectoryStateType.TERMINATED
         return TrajectoryStateType.ONGOING
+
+
+class TargetScoreConvergenceCriterion(TerminationCriterion):
+    """Convergence criterion based on a target score.
+
+    Will trigger convergence if the forward model decides that the current score
+    reached the target score (by default, if the score is greater than or equal
+    to the target score).
+    """
+
+    def __init__(self, target_score: float) -> None:
+        """Initialize the convergence criterion.
+
+        Args:
+            target_score: the target score
+        """
+        self._target_score = target_score
+
+    def should_terminate(
+        self,
+        model: ForwardModelBaseClass[T_Noise, T_State],
+        trajectory: Trajectory,
+    ) -> TrajectoryStateType:
+        """Check if the trajectory has converged."""
+        if model.check_convergence(
+            trajectory.current_step(), trajectory.current_time(), trajectory.current_score(), self._target_score
+        ):
+            return TrajectoryStateType.CONVERGED
+        return TrajectoryStateType.ONGOING
