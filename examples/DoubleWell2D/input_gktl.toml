@@ -1,0 +1,22 @@
+[gktl]
+ntrajectories = 50
+end_time = 5.0
+resampling_interval = 0.1
+k = 6.0
+target_score = 0.95
+
+[sampler]
+strategy = "gktl"
+
+[runtime]
+loglevel = "INFO"
+
+[trajectory]
+step_size = 0.01
+
+[model]
+epsilon = 0.2
+
+[runner]
+type = "asyncio"
+nworkers=2
