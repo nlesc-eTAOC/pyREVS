@@ -9,6 +9,7 @@ from pyrevs.core import Config
 from pyrevs.core import ForwardModelBaseClass
 from pyrevs.core import Snapshot
 from pyrevs.diagnostics import DiagnosticAnalyst
+from pyrevs.strategies.base import TargetScoreConvergenceCriterion
 from pyrevs.trajectory import Trajectory
 from pyrevs.trajectory import TrajectoryConfig
 from pyrevs.utils.utils import moving_avg
@@ -72,7 +73,7 @@ def test_init_blank_traj():
 def test_init_parametrized_traj():
     """Test parametrized trajectory creation."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 2.0, "step_size": 0.01, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 2.0, "step_size": 0.01}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
     t_test.set_workdir(Path())
     assert t_test.step_size() == 0.01
@@ -91,12 +92,12 @@ def test_restart_empty_traj():
 def test_simple_model_traj():
     """Test trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.01)
+    t_test.advance(t_end=0.01, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert isclose(t_test.score_max(), 0.1, abs_tol=1e-9)
     assert t_test.is_converged() is False
-    t_test.advance()
+    t_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert t_test.is_converged() is True
 
 
@@ -105,15 +106,15 @@ def test_simple_model_traj_with_diag():
     fmodel = SimpleFModel
     cfg = Config(
         {
-            "trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25},
+            "trajectory": {"end_time": 0.04, "step_size": 0.001},
             "testd": {"score_min": 0.0, "score_max": 0.25, "n_levels": 11},
         }
     )
     diagdict = {"testd": cfg.section("testd")}
     t_test_1 = Trajectory(1, 0.5, fmodel, cfg.load(TrajectoryConfig), diag_configs=diagdict)
-    t_test_1.advance()
+    t_test_1.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     t_test_2 = Trajectory(2, 0.5, fmodel, cfg.load(TrajectoryConfig), diag_configs=diagdict)
-    t_test_2.advance()
+    t_test_2.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     analyst = DiagnosticAnalyst("./diagDB.db")
     _ = analyst.get_all_diagnostic_data("testd")
     dstat = analyst.compute_weighted_stats("testd")
@@ -126,14 +127,14 @@ def test_simple_model_traj_with_diag():
 def test_branch_simple_model_traj():
     """Test branching a trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002, "targetscore": 0.45}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002}})
     t_ancestor = Trajectory(1, 0.5, fmodel, cfg.load(TrajectoryConfig))
-    t_ancestor.advance()
+    t_ancestor.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.45)])
     assert t_ancestor.get_computed_steps_count() == 200
     t_branched = Trajectory(2, 0.5, fmodel, cfg.load(TrajectoryConfig))
     t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, 0.1, 0.25)
     assert t_branched.get_computed_steps_count() == 0
-    t_branched.advance()
+    t_branched.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.45)])
     assert t_branched.get_computed_steps_count() == 149
 
 
@@ -141,23 +142,33 @@ def test_branch_simple_model_traj():
 def test_branch_diverges_at_level_crossing(sparse_freq: int):
     """Test that a branched trajectory diverges right after the first snapshot above the level."""
     fmodel = DoubleWellModel
-    cfg = Config({"trajectory": {"end_time": 3.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": sparse_freq}})
+    cfg = Config({"trajectory": {"end_time": 3.0, "step_size": 0.01, "sparse_freq": sparse_freq}})
     t_ancestor = Trajectory(
-        1, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 1.0}, deterministic=True
+        1,
+        0.5,
+        fmodel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 1.0},
+        deterministic=True,
     )
-    t_ancestor.advance()
+    t_ancestor.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     level = 0.5 * t_ancestor.score_max()
     ancestor_scores = t_ancestor.get_score_array()
     high_idx = int(np.argmax(ancestor_scores > level))
     t_branched = Trajectory(
-        2, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 1.0}, deterministic=True
+        2,
+        0.5,
+        fmodel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 1.0},
+        deterministic=True,
     )
     t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
 
     # The last snapshot holds the noise of the next model step
     assert np.array_equal(t_branched._snaps[-1].noise, t_branched._fmodel.noise)
 
-    t_branched.advance(nstep_end=high_idx + 2)
+    t_branched.advance(nstep_end=high_idx + 2, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     branched_scores = t_branched.get_score_array()
     assert np.array_equal(branched_scores[: high_idx + 1], ancestor_scores[: high_idx + 1])
     assert branched_scores[high_idx + 1] != ancestor_scores[high_idx + 1]
@@ -174,7 +185,7 @@ def _sparse_ancestor_with_tail_crossing(cfg: Config) -> tuple[Trajectory, float,
             model_params={"noise_amplitude": 0.8},
             deterministic=True,
         )
-        t_ancestor.advance()
+        t_ancestor.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
         scores = t_ancestor.get_score_array()
         last_state_idx = t_ancestor.get_last_state_id()
         # The level is first crossed after the last state, and before the last snapshot
@@ -187,7 +198,7 @@ def _sparse_ancestor_with_tail_crossing(cfg: Config) -> tuple[Trajectory, float,
 
 def test_branch_restored_sparse_traj_crossing_in_tail(tmp_path: Path):
     """Test branching a restored sparse trajectory, with the level crossing after its last state."""
-    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "sparse_freq": 10}})
     t_ancestor, level, high_idx = _sparse_ancestor_with_tail_crossing(cfg)
     ancestor_scores = t_ancestor.get_score_array()
     chkfile = tmp_path / "ancestor.xml"
@@ -203,12 +214,17 @@ def test_branch_restored_sparse_traj_crossing_in_tail(tmp_path: Path):
     assert np.allclose(t_restored.get_score_array(), ancestor_scores, rtol=0.0, atol=1e-12)
 
     t_branched = Trajectory(
-        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+        100,
+        0.5,
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 0.8},
+        deterministic=True,
     )
     t_branched = Trajectory.branch_from_trajectory(t_restored, t_branched, level, 0.25)
     assert t_branched.score_max() > level
 
-    t_branched.advance(nstep_end=high_idx + 2)
+    t_branched.advance(nstep_end=high_idx + 2, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     branched_scores = t_branched.get_score_array()
     assert np.allclose(branched_scores[: high_idx + 1], ancestor_scores[: high_idx + 1], rtol=0.0, atol=1e-12)
     assert abs(branched_scores[high_idx + 1] - ancestor_scores[high_idx + 1]) > 1e-9
@@ -216,10 +232,15 @@ def test_branch_restored_sparse_traj_crossing_in_tail(tmp_path: Path):
 
 def test_store_and_restore_branched_traj_before_replay(tmp_path: Path):
     """Test restoring a branched trajectory which has not replayed its ancestor history yet."""
-    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "sparse_freq": 10}})
     t_ancestor, level, high_idx = _sparse_ancestor_with_tail_crossing(cfg)
     t_branched = Trajectory(
-        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+        100,
+        0.5,
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 0.8},
+        deterministic=True,
     )
     t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
     chkfile = tmp_path / "branched.xml"
@@ -234,26 +255,37 @@ def test_store_and_restore_branched_traj_before_replay(tmp_path: Path):
     assert t_restored.get_length() == high_idx + 1
 
     # Both replay the ancestor history up to the crossing, and take the same (new) step from it
-    t_branched.advance(nstep_end=high_idx + 1)
-    t_restored.advance(nstep_end=high_idx + 1)
+    t_branched.advance(nstep_end=high_idx + 1, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
+    t_restored.advance(nstep_end=high_idx + 1, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     assert np.allclose(t_restored.get_score_array(), t_branched.get_score_array(), rtol=0.0, atol=1e-12)
 
 
 def test_replay_mismatch_warning(tmp_path: Path, caplog: pytest.LogCaptureFixture):
     """Test the warning issued when replaying the tail of a trajectory does not reproduce it."""
-    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10}})
+    cfg = Config({"trajectory": {"end_time": 15.0, "step_size": 0.01, "sparse_freq": 10}})
     t_ancestor, level, _ = _sparse_ancestor_with_tail_crossing(cfg)
     t_branched = Trajectory(
-        100, 0.5, DoubleWellModel, cfg.load(TrajectoryConfig), model_params={"noise_amplitude": 0.8}, deterministic=True
+        100,
+        0.5,
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={"noise_amplitude": 0.8},
+        deterministic=True,
     )
     t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, level, 0.25)
     chkfile = tmp_path / "branched.xml"
     t_branched.store(chkfile)
     # Restore with a different noise amplitude: the replayed history differs
     t_restored = Trajectory.restore_from_checkfile(
-        chkfile, t_branched.get_metadata(), DoubleWellModel, cfg.load(TrajectoryConfig), model_params={}
+        chkfile,
+        t_branched.get_metadata(),
+        DoubleWellModel,
+        cfg.load(TrajectoryConfig),
+        model_params={},
     )
-    t_restored.advance(nstep_end=t_restored.current_step() + 1)
+    t_restored.advance(
+        nstep_end=t_restored.current_step() + 1, termination_criteria=[TargetScoreConvergenceCriterion(0.95)]
+    )
     assert "replay mismatch" in caplog.text
 
 
@@ -267,28 +299,57 @@ class NegativeScoreModel(SimpleFModel):
 
 def test_branch_negative_score_max():
     """Test the score maximum of a branched trajectory with negative scores."""
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002, "targetscore": 0.5}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002}})
     t_ancestor = Trajectory(1, 0.5, NegativeScoreModel, cfg.load(TrajectoryConfig))
-    t_ancestor.advance()
+    t_ancestor.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.5)])
     assert t_ancestor.score_max() == pytest.approx(-1.6)
     t_branched = Trajectory(2, 0.5, NegativeScoreModel, cfg.load(TrajectoryConfig))
     t_branched = Trajectory.branch_from_trajectory(t_ancestor, t_branched, -1.8, 0.25)
     assert t_branched.score_max() == pytest.approx(np.max(t_branched.get_score_array()))
     assert t_branched.score_max() < 0.0
-    t_branched.advance()
+    t_branched.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.5)])
     assert t_branched.score_max() == pytest.approx(-1.6)
+
+
+def test_target_score_convergence_criterion():
+    """Test convergence driven by the target score criterion."""
+    cfg = Config({"trajectory": {"end_time": 0.2, "step_size": 0.001}})
+    converge = [TargetScoreConvergenceCriterion(0.5)]
+
+    # Without the criterion, the trajectory never converges
+    t_free = Trajectory(1, 1.0, SimpleFModel, cfg.load(TrajectoryConfig))
+    t_free.advance()
+    assert t_free.score_max() == pytest.approx(1.0)
+    assert not t_free.is_converged()
+    assert isclose(t_free.current_time(), 0.2, abs_tol=1e-9)
+
+    # With it, the trajectory stops on the first snapshot reaching the target score
+    t_target = Trajectory(2, 1.0, SimpleFModel, cfg.load(TrajectoryConfig))
+    t_target.advance(termination_criteria=converge)
+    assert t_target.is_converged()
+    assert t_target.is_terminated()
+    assert t_target.score_max() >= 0.5
+    assert isclose(t_target.current_time(), 0.05, abs_tol=1.5e-3)
+
+    # A trajectory branched on the converged snapshot is converged without taking any step
+    t_branched = Trajectory(3, 1.0, SimpleFModel, cfg.load(TrajectoryConfig))
+    t_branched = Trajectory.branch_from_trajectory(t_target, t_branched, 0.499, 0.5)
+    assert not t_branched.is_converged()
+    t_branched.advance(termination_criteria=converge)
+    assert t_branched.is_converged()
+    assert t_branched.get_computed_steps_count() == 0
 
 
 def test_simple_model_traj_end_nstep():
     """Test trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"step_size": 0.001, "targetscore": 0.55}})
+    cfg = Config({"trajectory": {"step_size": 0.001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(nstep_end=20)
+    t_test.advance(nstep_end=20, termination_criteria=[TargetScoreConvergenceCriterion(0.55)])
     assert isclose(t_test.score_max(), 0.2, abs_tol=1e-9)
     assert t_test.is_converged() is False
     assert t_test.is_terminated() is True
-    t_test.advance(t_end=0.03)
+    t_test.advance(t_end=0.03, termination_criteria=[TargetScoreConvergenceCriterion(0.55)])
     assert isclose(t_test.score_max(), 0.3, abs_tol=1e-9)
     assert t_test.is_converged() is False
 
@@ -296,9 +357,9 @@ def test_simple_model_traj_end_nstep():
 def test_store_and_restore_simple_traj():
     """Test store and restoring trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.05, "step_size": 0.001, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 0.05, "step_size": 0.001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.02)
+    t_test.advance(t_end=0.02, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert isclose(t_test.score_max(), 0.2, abs_tol=1e-9)
     assert t_test.is_converged() is False
     chkfile = Path("./test.xml")
@@ -307,7 +368,7 @@ def test_store_and_restore_simple_traj():
     metadata = t_test.get_metadata()
     rst_test = Trajectory.restore_from_checkfile(chkfile, metadata, fmodel, cfg.load(TrajectoryConfig))
     assert isclose(rst_test.score_max(), 0.2, abs_tol=1e-9)
-    rst_test.advance()
+    rst_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert rst_test.is_converged() is True
     chkfile.unlink(missing_ok=True)
 
@@ -315,9 +376,9 @@ def test_store_and_restore_simple_traj():
 def test_store_and_restore_frozen_simple_traj():
     """Test store and restoring frozen trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.05, "step_size": 0.001, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 0.05, "step_size": 0.001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.02)
+    t_test.advance(t_end=0.02, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert isclose(t_test.score_max(), 0.2, abs_tol=1e-9)
     assert t_test.is_converged() is False
     chkfile = Path("./test.xml")
@@ -327,7 +388,7 @@ def test_store_and_restore_frozen_simple_traj():
     rst_test = Trajectory.restore_from_checkfile(chkfile, metadata, fmodel, cfg.load(TrajectoryConfig), frozen=True)
     assert isclose(rst_test.score_max(), 0.2, abs_tol=1e-9)
     with pytest.raises(RuntimeError):
-        rst_test.advance()
+        rst_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     with pytest.raises(RuntimeError):
         rst_test._one_step()
     chkfile.unlink(missing_ok=True)
@@ -336,9 +397,9 @@ def test_store_and_restore_frozen_simple_traj():
 def test_restart_simple_traj():
     """Test trajectory restart."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001}})
     from_traj = Trajectory(1, 0.5, fmodel, cfg.load(TrajectoryConfig))
-    from_traj.advance(t_end=0.01)
+    from_traj.advance(t_end=0.01, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     rst_traj = Trajectory(2, 0.5, fmodel, cfg.load(TrajectoryConfig))
     rst_test = Trajectory.branch_from_trajectory(from_traj, rst_traj, 0.05, 0.25)
     assert rst_test.current_time() == 0.006
@@ -347,9 +408,9 @@ def test_restart_simple_traj():
 def test_access_data_simple_traj():
     """Test trajectory data access."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.01)
+    t_test.advance(t_end=0.01, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert t_test.get_length() == 11
     assert isclose(t_test.get_time_array()[-1], 0.01, abs_tol=1e-9)
     assert isclose(t_test.get_score_array()[-1], 0.1, abs_tol=1e-9)
@@ -358,13 +419,13 @@ def test_access_data_simple_traj():
 def test_sparse_simple_traj():
     """Test a sparse trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25, "sparse_freq": 5}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "sparse_freq": 5}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.012)
+    t_test.advance(t_end=0.012, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert isclose(t_test.score_max(), 0.12, abs_tol=1e-9)
     assert t_test.is_converged() is False
     assert isclose(t_test.get_last_state(), 0.01, abs_tol=1e-9)
-    t_test.advance()
+    t_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert t_test.is_converged() is True
     assert isclose(t_test.get_last_state(), 0.025, abs_tol=1e-9)
 
@@ -372,18 +433,18 @@ def test_sparse_simple_traj():
 def test_sparse_simple_traj_access_states():
     """Test a sparse trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002, "targetscore": 0.25, "sparse_freq": 5}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.0002, "sparse_freq": 5}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance()
+    t_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert len(t_test.get_state_list()) == 26
 
 
 def test_store_and_restart_sparse_simple_traj():
     """Test a sparse trajectory with simple model."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "targetscore": 0.25, "sparse_freq": 5}})
+    cfg = Config({"trajectory": {"end_time": 0.04, "step_size": 0.001, "sparse_freq": 5}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance(t_end=0.013)
+    t_test.advance(t_end=0.013, termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert isclose(t_test.score_max(), 0.13, abs_tol=1e-9)
     assert t_test.is_converged() is False
     chkfile = Path("./test.xml")
@@ -391,7 +452,7 @@ def test_store_and_restart_sparse_simple_traj():
     assert chkfile.exists() is True
     metadata = t_test.get_metadata()
     rst_test = Trajectory.restore_from_checkfile(chkfile, metadata, fmodel, cfg.load(TrajectoryConfig))
-    rst_test.advance()
+    rst_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.25)])
     assert rst_test.is_converged() is True
     chkfile.unlink()
 
@@ -399,9 +460,9 @@ def test_store_and_restart_sparse_simple_traj():
 def test_score_moving_average():
     """Test using a moving average on a score array."""
     fmodel = SimpleFModel
-    cfg = Config({"trajectory": {"end_time": 0.9, "step_size": 0.0001, "targetscore": 0.95}})
+    cfg = Config({"trajectory": {"end_time": 0.9, "step_size": 0.0001}})
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig))
-    t_test.advance()
+    t_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     score = t_test.get_score_array()
     avg_score = moving_avg(score, 10)
     assert isclose(avg_score[0], 0.0045, abs_tol=1e-9)
@@ -412,22 +473,27 @@ def test_sparse_dw_traj_with_restore():
     fmodel = DoubleWellModel
     cfg = Config(
         {
-            "trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10},
+            "trajectory": {"end_time": 15.0, "step_size": 0.01, "sparse_freq": 10},
             "model": {"noise_amplitude": 0.8},
         }
     )
     model_params = cfg.section_dict("model")
     t_test = Trajectory(1, 1.0, fmodel, cfg.load(TrajectoryConfig), model_params=model_params, deterministic=True)
-    t_test.advance(t_end=4.07)
+    t_test.advance(t_end=4.07, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     chkfile = Path("./test.xml")
     t_test.store(chkfile, write_metadata_json=True)
     assert isclose(t_test.score_max(), 0.5384037112515893, abs_tol=1e-9)
     assert not t_test.is_converged()
     metadata = t_test.get_metadata()
     rst_test = Trajectory.restore_from_checkfile(
-        chkfile, metadata, fmodel, cfg.load(TrajectoryConfig), model_params=model_params, frozen=False
+        chkfile,
+        metadata,
+        fmodel,
+        cfg.load(TrajectoryConfig),
+        model_params=model_params,
+        frozen=False,
     )
-    rst_test.advance()
+    rst_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     assert rst_test.score_max() > 0.95
     assert rst_test.is_converged()
     chkfile.unlink(missing_ok=True)
@@ -439,7 +505,7 @@ def test_dw_traj_with_restore_and_diags():
     fmodel = DoubleWellModel
     cfg = Config(
         {
-            "trajectory": {"end_time": 15.0, "step_size": 0.01, "targetscore": 0.95},
+            "trajectory": {"end_time": 15.0, "step_size": 0.01},
             "model": {"noise_amplitude": 0.8},
             "testd": {"type": "FirstAndLastEveryCrossing", "score_min": 0.0, "score_max": 0.85, "n_levels": 11},
             "testd2": {"type": "EveryTimeCrossing", "time_start": 0.005, "time_interval": 0.02},
@@ -448,9 +514,15 @@ def test_dw_traj_with_restore_and_diags():
     model_params = cfg.section_dict("model")
     diagdict = {"testd": cfg.section("testd"), "testd2": cfg.section("testd2")}
     t_test = Trajectory(
-        1, 1.0, fmodel, cfg.load(TrajectoryConfig), diag_configs=diagdict, model_params=model_params, deterministic=True
+        1,
+        1.0,
+        fmodel,
+        cfg.load(TrajectoryConfig),
+        diag_configs=diagdict,
+        model_params=model_params,
+        deterministic=True,
     )
-    t_test.advance(t_end=4.07)
+    t_test.advance(t_end=4.07, termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     chkfile = Path("./test.xml")
     t_test.store(chkfile, write_metadata_json=True)
     with Path("./test.json").open("r") as f:
@@ -465,7 +537,7 @@ def test_dw_traj_with_restore_and_diags():
         model_params=model_params,
         frozen=False,
     )
-    rst_test.advance()
+    rst_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     analyst = DiagnosticAnalyst("./diagDB.db")
     _ = analyst.get_traj_diagnostic_data("testd", 1)
     _ = analyst.get_traj_diagnostic_data("testd2", 1, time_ordered=True)
@@ -482,7 +554,7 @@ def test_sparse_dw_traj_with_branching():
     fmodel = DoubleWellModel
     cfg = Config(
         {
-            "trajectory": {"end_time": 2.0, "step_size": 0.01, "targetscore": 0.95, "sparse_freq": 10},
+            "trajectory": {"end_time": 2.0, "step_size": 0.01, "sparse_freq": 10},
             "model": {"noise_amplitude": 0.3},
         }
     )
@@ -491,8 +563,8 @@ def test_sparse_dw_traj_with_branching():
         Trajectory(1, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params=model_params, deterministic=True),
         Trajectory(2, 0.5, fmodel, cfg.load(TrajectoryConfig), model_params=model_params, deterministic=True),
     ]
-    t_test[0].advance()
-    t_test[1].advance()
+    t_test[0].advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
+    t_test[1].advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     if t_test[0].score_max() > t_test[1].score_max():
         rst_idx = 1
         from_idx = 0
@@ -502,5 +574,5 @@ def test_sparse_dw_traj_with_branching():
         from_idx = 1
         rst_val = t_test[0].score_max()
     branched_test = Trajectory.branch_from_trajectory(t_test[from_idx], t_test[rst_idx], rst_val, 0.25)
-    branched_test.advance()
+    branched_test.advance(termination_criteria=[TargetScoreConvergenceCriterion(0.95)])
     assert branched_test.score_max() > t_test[rst_idx].score_max()

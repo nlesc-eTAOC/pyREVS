@@ -40,9 +40,9 @@ def test_sampling_run():
     params_dict = {
         "sampler": {"strategy": "ams", "deterministic": True},
         "runtime": {"walltime": 20.0},
-        "ams": {"ntrajectories": 20, "nsplititer": 20, "variant": "tams", "end_time": 6.0},
+        "ams": {"target_score": 0.6, "ntrajectories": 20, "nsplititer": 20, "variant": "tams", "end_time": 6.0},
         "runner": {"type": "asyncio", "nworkers": 1},
-        "trajectory": {"step_size": 0.01, "targetscore": 0.6},
+        "trajectory": {"step_size": 0.01},
         "model": {"slow_factor": 0.00000001, "noise_amplitude": 0.6},
     }
     with Path("input.toml").open("w") as f:
