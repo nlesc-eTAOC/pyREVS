@@ -86,12 +86,14 @@ data structures of the code:
     variant = "tams"            # [OPT, DEF = "tams"] Sampling variant
     end_time = 10.0             # [OPT, DEF = -1] End time, REQ if variant = "tams"
     min_score = 0.01            # [OPT, DEF = None] Minimum score, REQ if variant = "ams"
+    target_score = 0.95         # [OPT, DEF = 0.95] Target score defining the rare event
     l_j = 2                     # [OPT, DEF = 1] Number of score function levels discarded at each iteration
 
 
     [montecarlo]
     ntrajectories = 20          # [REQ] Number of ensemble members
     end_time = 10.0             # [OPT, DEF = -1] End time
+    target_score = 0.95         # [OPT, DEF = 0.95] Target score defining the rare event
 
     [gktl]
     ntrajectories = 20          # [REQ] Number of clones
@@ -99,12 +101,18 @@ data structures of the code:
     resampling_interval = 0.5   # [REQ] Time interval between resampling steps
     k = 1.0                     # [OPT, DEF = 0.01] Amplitude of the bias
     bias_observable = "integral" # [OPT, DEF = "integral"] "integral" (time integral of the score) or "increment"
+    target_score = 0.95         # [OPT, DEF = None] Target score, clones reaching it are frozen
 
   Depending on the strategy prescribed, one of the above blocks is required.
   Whem running AMS, one must specify the number of members in the ensemble :math:`N`
   (``ntrajectories`` in the snippet above) as well as the maximum number of (splitting) iterations :math:`J`
   (``nsplititer`` above). The ``variant`` enable to switch between TAMS and AMS, and a different termination
   must then be provided. By default, a single score function level is discarded at each iteration (``l_j`` above).
+  The rare event is defined by the target score (``target_score``): a trajectory reaching it has converged.
+  The target score is part of the sampling strategy definition, and is no longer accepted in the
+  ``[trajectory]`` section (formerly ``targetscore``). Internally, the strategy passes it to the trajectories
+  as a termination criterion: when advancing a trajectory outside of a sampler, convergence is only checked
+  if a ``TargetScoreConvergenceCriterion`` is provided to ``advance()``.
   When running a Monte Carlo run, only the number of ensemble members is required (``ntrajectories`` above).
   If no end time is provided when using Monte-Carlo, trajectory will continue until convergence, which might
   take a long time, so it is recommended to provide an end time if only to avoid infinite trajectories.
@@ -112,8 +120,9 @@ data structures of the code:
   resampled every ``resampling_interval``: each clone is killed or cloned according to a weight
   :math:`e^{k \Delta A}`, where :math:`\Delta A` is either the time integral or the increment of the score
   over the interval (``bias_observable``). The event probability returned accounts for the bias, and the
-  extension also provides ``get_exceedance_probability(threshold)`` for any score threshold. Clones reaching
-  the target score before ``end_time`` are frozen (this behavior might change in the future).
+  extension also provides ``get_exceedance_probability(threshold)`` for any score threshold. The target
+  score is optional with GKTL: if provided, clones reaching it before ``end_time`` are frozen, otherwise
+  clones never converge and the event probability is zero.
 
 
 - Trajectory parameters:
@@ -122,7 +131,6 @@ data structures of the code:
     
     [trajectory]
     step_size = 0.01            # [REQ] Step size
-    targetscore = 0.95          # [OPT, DEF = 0.95] Target score
     sparse_freq = 1             # [OPT, DEF = 1] Frequency of states sampling
     sparse_start = 0            # [OPT, DEF = 0] Starting index of states sampling
     chkfile_dump_all = false    # [OPT, DEF = false] Update trajectory checkpoint file at each step
