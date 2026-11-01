@@ -1,0 +1,969 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>pyrevs.diagnostics.diagnostic - pyREVS 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/theme.css?v=df66b05f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">pyREVS 1.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <span class="sidebar-brand-text">pyREVS 1.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Extension.html">Extension</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/index.html">pyrevs</a><input aria-label="Toggle navigation of pyrevs" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/bin/index.html">pyrevs.bin</a><input aria-label="Toggle navigation of pyrevs.bin" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/bin/bin/index.html">pyrevs.bin.bin</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/core/index.html">pyrevs.core</a><input aria-label="Toggle navigation of pyrevs.core" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/config/index.html">pyrevs.core.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/fmodel/index.html">pyrevs.core.fmodel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/runtime_cfg/index.html">pyrevs.core.runtime_cfg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/snapshot/index.html">pyrevs.core.snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/sqlcore/index.html">pyrevs.core.sqlcore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/core/sqlmanager/index.html">pyrevs.core.sqlmanager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/database/index.html">pyrevs.database</a><input aria-label="Toggle navigation of pyrevs.database" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/bootstrap/index.html">pyrevs.database.bootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/config/index.html">pyrevs.database.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/database/index.html">pyrevs.database.database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/database/extension/index.html">pyrevs.database.extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/index.html">pyrevs.diagnostics</a><input aria-label="Toggle navigation of pyrevs.diagnostics" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/diagdb/index.html">pyrevs.diagnostics.diagdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html">pyrevs.diagnostics.diagnostic</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/runner/index.html">pyrevs.runner</a><input aria-label="Toggle navigation of pyrevs.runner" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/config/index.html">pyrevs.runner.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/taskrunner/index.html">pyrevs.runner.taskrunner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/runner/worker/index.html">pyrevs.runner.worker</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/index.html">pyrevs.sampler</a><input aria-label="Toggle navigation of pyrevs.sampler" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/config/index.html">pyrevs.sampler.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/sampler/index.html">pyrevs.sampler.sampler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/sampler/system_config/index.html">pyrevs.sampler.system_config</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/index.html">pyrevs.strategies</a><input aria-label="Toggle navigation of pyrevs.strategies" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/index.html">pyrevs.strategies.ams</a><input aria-label="Toggle navigation of pyrevs.strategies.ams" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/ams/index.html">pyrevs.strategies.ams.ams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/config/index.html">pyrevs.strategies.ams.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/extension/index.html">pyrevs.strategies.ams.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/ams/sql/index.html">pyrevs.strategies.ams.sql</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/index.html">pyrevs.strategies.base</a><input aria-label="Toggle navigation of pyrevs.strategies.base" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/strategy/index.html">pyrevs.strategies.base.strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/base/termination/index.html">pyrevs.strategies.base.termination</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/index.html">pyrevs.strategies.gktl</a><input aria-label="Toggle navigation of pyrevs.strategies.gktl" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/config/index.html">pyrevs.strategies.gktl.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/extension/index.html">pyrevs.strategies.gktl.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/gktl/gktl/index.html">pyrevs.strategies.gktl.gktl</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/index.html">pyrevs.strategies.montecarlo</a><input aria-label="Toggle navigation of pyrevs.strategies.montecarlo" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/config/index.html">pyrevs.strategies.montecarlo.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/extension/index.html">pyrevs.strategies.montecarlo.extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyrevs/strategies/montecarlo/montecarlo/index.html">pyrevs.strategies.montecarlo.montecarlo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/index.html">pyrevs.trajectory</a><input aria-label="Toggle navigation of pyrevs.trajectory" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/config/index.html">pyrevs.trajectory.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/trajectory/trajectory/index.html">pyrevs.trajectory.trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/pyrevs/utils/index.html">pyrevs.utils</a><input aria-label="Toggle navigation of pyrevs.utils" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/dbutils/index.html">pyrevs.utils.dbutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/utils/index.html">pyrevs.utils.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/xmlutils/index.html">pyrevs.utils.xmlutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyrevs/utils/yamlutils/index.html">pyrevs.utils.yamlutils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for pyrevs.diagnostics.diagnostic</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Diagnostic class for pyREVS."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrevs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.diagdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiagDB</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DiagnosticPlugin">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticPlugin">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiagnosticPlugin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A base class for diagnostic plugins.</span>
+
+<span class="sd">    Plugins are attached to the trajectory objects.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _label: the diagnostic label</span>
+<span class="sd">        _tid: the ID of the trajectory the plugin is attached to</span>
+<span class="sd">        _weight: the weight of the trajectory</span>
+<span class="sd">    """</span>
+
+    <span class="n">_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="n">_tid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dlabel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">workdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">fprocess</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">ddb</span><span class="p">:</span> <span class="n">DiagDB</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">dlabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tid</span> <span class="o">=</span> <span class="n">tid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="n">fprocess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workdir</span> <span class="o">=</span> <span class="n">workdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ddb</span> <span class="o">=</span> <span class="n">ddb</span>
+
+<div class="viewcode-block" id="DiagnosticPlugin.get_crossed_levels">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticPlugin.get_crossed_levels">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_crossed_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Test to know if diagnostic is needed."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_record_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">old_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span>
+        <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Write crossing event to DB.</span>
+
+<span class="sd">        This is tailored for recording level crossing event.</span>
+<span class="sd">        """</span>
+        <span class="n">ldata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span>
+            <span class="n">level</span><span class="p">,</span>
+            <span class="n">old_snapshot</span><span class="p">,</span>
+            <span class="n">new_snapshot</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># If the score is constant, use new_snapshot time</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">level</span> <span class="o">-</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">new_snapshot</span><span class="o">.</span><span class="n">score</span> <span class="o">-</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">t_cross</span> <span class="o">=</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_snapshot</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ddb</span><span class="o">.</span><span class="n">add_diagnostic_entry</span><span class="p">(</span>
+            <span class="n">diaglabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span>
+            <span class="n">traj_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">t_cross</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_weight</span><span class="p">,</span>
+            <span class="n">ldata</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">ldata</span><span class="p">),</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="DiagnosticPlugin.update">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticPlugin.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span> <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Standard entry point called after every MCMC step.</span>
+
+<span class="sd">        This base method works for vanilla diagnostics, for which</span>
+<span class="sd">        the trigger logic is not too complex, but it can be overridden</span>
+<span class="sd">        for more complex diagnostics.</span>
+<span class="sd">        """</span>
+        <span class="n">crossed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_crossed_levels</span><span class="p">(</span><span class="n">new_snapshot</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">crossed</span><span class="p">:</span>
+            <span class="c1"># Record a crossing event for this level</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_event</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">old_snapshot</span><span class="p">,</span> <span class="n">new_snapshot</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EveryTimeCrossing">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.EveryTimeCrossing">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EveryTimeCrossing</span><span class="p">(</span><span class="n">DiagnosticPlugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Triggers at fixed time intervals.</span>
+
+<span class="sd">    Check if the time interval between the old and</span>
+<span class="sd">    new snapshot crossed fixed time 'level' defined</span>
+<span class="sd">    evenly from a start time and a time interval:</span>
+<span class="sd">    t_0 + N * delta_t.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _time_interval: the time interval between two recording events</span>
+<span class="sd">        _time_start: the start time</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dlabel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">tweight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">workdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">fprocess</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">ddb</span><span class="p">:</span> <span class="n">DiagDB</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dlabel</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delta_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"time_interval"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"time_start"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EveryTimeCrossing.update">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.EveryTimeCrossing.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span> <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Entry point called after every MCMC step.</span>
+
+<span class="sd">        This plugin does not depends on the score function so bypass</span>
+<span class="sd">        some of the logic of the base class.</span>
+<span class="sd">        """</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-9</span>
+
+        <span class="n">n_old</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">old_snapshot</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t0</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_t</span><span class="p">)</span>
+        <span class="n">n_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">new_snapshot</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t0</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_t</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_old</span> <span class="o">==</span> <span class="n">n_new</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># If more than one level is crossed (because the model time step</span>
+        <span class="c1"># is larger than delta_t) only the last crossing is recorded</span>
+        <span class="c1"># The score associated with the last crossing is linearly interpolated</span>
+        <span class="c1"># between the two snapshots using time</span>
+        <span class="n">time_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t0</span> <span class="o">+</span> <span class="n">n_new</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_t</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">score</span> <span class="o">+</span> <span class="p">(</span><span class="n">new_snapshot</span><span class="o">.</span><span class="n">score</span> <span class="o">-</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">score</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">time_level</span> <span class="o">-</span> <span class="n">old_snapshot</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="c1"># Some duplication of the record_event function since</span>
+        <span class="c1"># we are crossing a time level here</span>
+        <span class="n">ldata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span>
+            <span class="n">score</span><span class="p">,</span>
+            <span class="n">old_snapshot</span><span class="p">,</span>
+            <span class="n">new_snapshot</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ddb</span><span class="o">.</span><span class="n">add_diagnostic_entry</span><span class="p">(</span>
+            <span class="n">diaglabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span>
+            <span class="n">traj_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">time_level</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_weight</span><span class="p">,</span>
+            <span class="n">ldata</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">ldata</span><span class="p">),</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FirstTimeCrossingDiagnostic">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.FirstTimeCrossingDiagnostic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FirstTimeCrossingDiagnostic</span><span class="p">(</span><span class="n">DiagnosticPlugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Triggers when the score function crosses pre-defined levels.</span>
+
+<span class="sd">    This is a central diagnostic plugin to pyREVS, triggered when</span>
+<span class="sd">    the score function crosses pre-defined levels, only for</span>
+<span class="sd">    the first time.</span>
+
+<span class="sd">    This allows to evaluate the probability of crossing any</span>
+<span class="sd">    intermediate score levels from a pyREVS run, as well as</span>
+<span class="sd">    estimating mean first passage time.</span>
+
+<span class="sd">    # Note: might want to always add this diagnostic</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _levels: the threshold levels</span>
+<span class="sd">        _highest_recorded_score: the high water mark of the plugin</span>
+<span class="sd">        _checked_db: True if the DB has been checked</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dlabel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">tweight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">workdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">fprocess</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">ddb</span><span class="p">:</span> <span class="n">DiagDB</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dlabel</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">)</span>
+        <span class="n">s_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score_min"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score_max"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">n_levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"n_levels"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Create the threshold levels</span>
+        <span class="c1"># and keep track of level cleared (diag only once per level)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">s_min</span><span class="p">,</span> <span class="n">s_max</span><span class="p">,</span> <span class="n">n_levels</span><span class="p">)</span>
+
+        <span class="c1"># Watermark to ensure we only record 'first contact' going up</span>
+        <span class="c1"># We will check the DB when the diagnostic is first called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_highest_recorded_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="FirstTimeCrossingDiagnostic.get_crossed_levels">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.FirstTimeCrossingDiagnostic.get_crossed_levels">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_crossed_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get the list of level crossed during last step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_snapshot: the new (end of the time step) snapshot</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            the list of score levels crossed</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span><span class="p">:</span>
+            <span class="c1"># Query the DB to resume the watermark</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_highest_recorded_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ddb</span><span class="o">.</span><span class="n">get_highest_recorded_level</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">s_new</span> <span class="o">=</span> <span class="n">new_snapshot</span><span class="o">.</span><span class="n">score</span>
+
+        <span class="c1"># We only trigger if the new score is higher than anything we've recorded</span>
+        <span class="k">if</span> <span class="n">s_new</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_highest_recorded_score</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="c1"># Find levels that are:</span>
+        <span class="c1"># 1. Between current highest recorded and the new score</span>
+        <span class="c1"># 2. Specifically higher than the previous recorded watermark</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&lt;=</span> <span class="n">s_new</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_highest_recorded_score</span><span class="p">)</span>
+        <span class="n">crossed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">crossed</span><span class="p">:</span>
+            <span class="c1"># Update the watermark to the highest level we just triggered</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_highest_recorded_score</span> <span class="o">=</span> <span class="n">crossed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">crossed</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FirstAndLastEveryCrossingDiagnostic">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.FirstAndLastEveryCrossingDiagnostic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FirstAndLastEveryCrossingDiagnostic</span><span class="p">(</span><span class="n">DiagnosticPlugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Record compressed crossing events across score levels.</span>
+
+<span class="sd">    This diagnostic:</span>
+<span class="sd">    - allows multiple visits to the same level,</span>
+<span class="sd">    - suppresses oscillatory recrossings,</span>
+<span class="sd">    - records:</span>
+<span class="sd">        * FIRST crossing when entering a level,</span>
+<span class="sd">        * LAST crossing before leaving it,</span>
+<span class="sd">    - supports multiple crossed levels per timestep,</span>
+<span class="sd">    - supports restart from DB state.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        During one timestep, several levels may be crossed.</span>
+<span class="sd">        For now, all generated events use `new_snapshot.time`.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dlabel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">tweight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">workdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">fprocess</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">ddb</span><span class="p">:</span> <span class="n">DiagDB</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dlabel</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">)</span>
+
+        <span class="n">s_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score_min"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score_max"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">n_levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"n_levels"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="n">s_min</span><span class="p">,</span>
+            <span class="n">s_max</span><span class="p">,</span>
+            <span class="n">n_levels</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Current active level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Last snapshots associated with current level visit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Restart bookkeeping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># DB restart support</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_restore_state_from_db</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Restore internal state from DB.</span>
+
+<span class="sd">        Assumes the DB can provide the latest diagnostic entry</span>
+<span class="sd">        for this trajectory + diagnostic label.</span>
+
+<span class="sd">        Only the active level is restored.</span>
+<span class="sd">        """</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ddb</span><span class="o">.</span><span class="n">get_last_diagnostic_entry_metadata</span><span class="p">(</span>
+            <span class="n">traj_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tid</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_crossed_levels</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">s_old</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">s_new</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return ordered crossed levels during timestep."""</span>
+        <span class="k">if</span> <span class="n">s_new</span> <span class="o">&gt;</span> <span class="n">s_old</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&gt;</span> <span class="n">s_old</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&lt;=</span> <span class="n">s_new</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="s2">"list[float]"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">s_new</span> <span class="o">&lt;</span> <span class="n">s_old</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&lt;</span> <span class="n">s_old</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">&gt;=</span> <span class="n">s_new</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="s2">"list[float]"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">[</span><span class="n">mask</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Main update logic</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="FirstAndLastEveryCrossingDiagnostic.update">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.FirstAndLastEveryCrossingDiagnostic.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">old_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span>
+        <span class="n">new_snapshot</span><span class="p">:</span> <span class="n">Snapshot</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update diagnostic state after one model step."""</span>
+        <span class="c1"># Restore restart state once</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restore_state_from_db</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_checked_db</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">crossed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_crossed_levels</span><span class="p">(</span>
+            <span class="n">old_snapshot</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+            <span class="n">new_snapshot</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Process every crossed level sequentially</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">crossed</span><span class="p">:</span>
+            <span class="c1"># ----------------------------------------------------------</span>
+            <span class="c1"># First ever visited level</span>
+            <span class="c1"># ----------------------------------------------------------</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Trigger initial record</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_record_event</span><span class="p">(</span>
+                    <span class="n">level</span><span class="p">,</span>
+                    <span class="n">old_snapshot</span><span class="p">,</span>
+                    <span class="n">new_snapshot</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span> <span class="o">=</span> <span class="n">level</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span> <span class="o">=</span> <span class="n">old_snapshot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span> <span class="o">=</span> <span class="n">new_snapshot</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">isclose</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
+                <span class="c1"># We're still in the same level</span>
+                <span class="c1"># Simply update last snapshots</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span> <span class="o">=</span> <span class="n">old_snapshot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span> <span class="o">=</span> <span class="n">new_snapshot</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">level</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span><span class="p">:</span>
+                <span class="c1"># We left the last active level</span>
+                <span class="c1"># Trigger a last crossing record</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">wrn_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Unable to trigger record for level </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">: missing snapshots !"</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">wrn_msg</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_record_event</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Trigger a first crossing for the new level</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_record_event</span><span class="p">(</span>
+                    <span class="n">level</span><span class="p">,</span>
+                    <span class="n">old_snapshot</span><span class="p">,</span>
+                    <span class="n">new_snapshot</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Update active state</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_active_level</span> <span class="o">=</span> <span class="n">level</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_old_last_snapshot</span> <span class="o">=</span> <span class="n">old_snapshot</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_new_last_snapshot</span> <span class="o">=</span> <span class="n">new_snapshot</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="diagnosticfactory">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.diagnosticfactory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">diagnosticfactory</span><span class="p">(</span>
+    <span class="n">configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Config</span><span class="p">],</span> <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tweight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">workdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ddb</span><span class="p">:</span> <span class="n">DiagDB</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DiagnosticPlugin</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Parse input parameters to generate a list of DiagnosticPlugin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        configs: a dict with a Config object for each diagnostic</span>
+<span class="sd">        tid: the ID of the traj the diagnostic is attached to</span>
+<span class="sd">        tweight: the weight of the traj</span>
+<span class="sd">        workdir: the workdir associated with a trajectory</span>
+<span class="sd">        fprocess: the forward model diagnostic function</span>
+<span class="sd">        ddb: the diagnostic database to add the data to</span>
+<span class="sd">    """</span>
+    <span class="n">diags_l</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DiagnosticPlugin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v_cfg</span> <span class="ow">in</span> <span class="n">configs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v_cfg</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Diagnostic </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> is missing a parameter dict !"</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+        <span class="n">diag_type</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="s2">"FirstCrossing"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">diag_type</span> <span class="o">==</span> <span class="s2">"FirstCrossing"</span><span class="p">:</span>
+            <span class="n">diags_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FirstTimeCrossingDiagnostic</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">))</span>
+            <span class="n">dbg_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Created FirstCrossing Diagnostic </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> for traj </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dbg_msg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">diag_type</span> <span class="o">==</span> <span class="s2">"FirstAndLastEveryCrossing"</span><span class="p">:</span>
+            <span class="n">diags_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FirstAndLastEveryCrossingDiagnostic</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">))</span>
+            <span class="n">dbg_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Created FirstAndLastEveryCrossing Diagnostic </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> for traj </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dbg_msg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">diag_type</span> <span class="o">==</span> <span class="s2">"EveryTimeCrossing"</span><span class="p">:</span>
+            <span class="n">diags_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EveryTimeCrossing</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tweight</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">fprocess</span><span class="p">,</span> <span class="n">ddb</span><span class="p">))</span>
+            <span class="n">dbg_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Created EveryTimeCrossing Diagnostic </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> for traj </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dbg_msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Diagnostic </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> has unknown trigger type </span><span class="si">{</span><span class="n">diag_type</span><span class="si">}</span><span class="s2"> !"</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">diags_l</span></div>
+
+
+
+<div class="viewcode-block" id="DiagnosticAnalyst">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiagnosticAnalyst</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A class to handle analysing diagnostic statistics.</span>
+
+<span class="sd">    Let's keep the analysis logic separated from the gathering logic.</span>
+<span class="sd">    This class retrieves data from the diagnostic database and perform</span>
+<span class="sd">    some computation (mostly conditional statistics on score iso-levels).</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="DiagnosticAnalyst.db">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/diagnostic/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst.db">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">DiagDB</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiagnosticAnalyst.get_all_diagnostic_data">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst.get_all_diagnostic_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_diagnostic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">"""A user-facing access to the diag DB.</span>
+
+<span class="sd">        An alias to the DB access for the analyst.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary mapping each score iso-level (float) to a list of tuples.</span>
+<span class="sd">            Each tuple contains (unpickled_data, trajectory_weight, time, tid).</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_diagnostic_data</span><span class="p">(</span><span class="n">label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiagnosticAnalyst.get_traj_diagnostic_data">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst.get_traj_diagnostic_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_traj_diagnostic_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_ordered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">"""A user-facing access to the diag DB.</span>
+
+<span class="sd">        Access to the diagnostic data for a specific trajectory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            label: the label of the diagnostic of interest</span>
+<span class="sd">            tid: the ID of the trajectory</span>
+<span class="sd">            time_ordered: whether to order the results by time (default: False, by level)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary mapping each score iso-level (float) to a (list of) tuple.</span>
+<span class="sd">            Each tuple contains (unpickled_data, trajectory_weight, time).</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_diagnostic_data_traj</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">time_ordered</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiagnosticAnalyst.compute_weighted_stats">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst.compute_weighted_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_weighted_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Aggregate data and compute mean/variance per level."""</span>
+        <span class="c1"># Use a generator to fetch data level by level to save memory</span>
+        <span class="n">data_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_diagnostic_data</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="n">stats_per_level</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">full_sum</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="k">for</span> <span class="n">level</span><span class="p">,</span> <span class="n">tdata</span> <span class="ow">in</span> <span class="n">data_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">td</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">tdata</span><span class="p">])</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">td</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">tdata</span><span class="p">])</span>
+            <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">td</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">td</span> <span class="ow">in</span> <span class="n">tdata</span><span class="p">])</span>
+
+            <span class="n">sum_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">full_sum</span> <span class="o">=</span> <span class="n">sum_w</span>
+
+            <span class="k">if</span> <span class="n">sum_w</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">proba</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">full_sum</span>
+
+            <span class="n">mean_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">proba</span><span class="p">)</span>
+            <span class="n">weighted_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">proba</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">data</span> <span class="o">-</span> <span class="n">weighted_mean</span>
+            <span class="n">weighted_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">delta</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">proba</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">stats_per_level</span><span class="p">[</span><span class="n">level</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"mean"</span><span class="p">:</span> <span class="n">weighted_mean</span><span class="p">,</span>
+                <span class="s2">"var"</span><span class="p">:</span> <span class="n">weighted_variance</span><span class="p">,</span>
+                <span class="s2">"mean_time"</span><span class="p">:</span> <span class="n">mean_time</span><span class="p">,</span>
+                <span class="s2">"count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">tdata</span><span class="p">),</span>
+                <span class="s2">"total_weight"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">proba</span><span class="p">),</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">stats_per_level</span></div>
+
+
+<div class="viewcode-block" id="DiagnosticAnalyst.get_conditional_means">
+<a class="viewcode-back" href="../../../autoapi/pyrevs/diagnostics/index.html#pyrevs.diagnostics.diagnostic.DiagnosticAnalyst.get_conditional_means">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_conditional_means</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Compute means at level L_i conditioned on reaching or not reaching L_{i+1}.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            { level: {"reached_next": mean_val, "failed_next": mean_val} }</span>
+<span class="sd">        """</span>
+        <span class="c1"># 1. Get all raw data for this label</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_diagnostic_data</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">raw_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">current_level</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">next_level</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># Find IDs that exist at the next level</span>
+            <span class="n">successful_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">entry</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">[</span><span class="n">next_level</span><span class="p">]}</span>
+
+            <span class="n">reached_vals</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">reached_weights</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">failed_vals</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">failed_weights</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">[</span><span class="n">current_level</span><span class="p">]:</span>
+                <span class="n">val</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">tid</span> <span class="ow">in</span> <span class="n">successful_ids</span><span class="p">:</span>
+                    <span class="n">reached_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">reached_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">failed_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">failed_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+            <span class="n">results</span><span class="p">[</span><span class="n">current_level</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"reached_next"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">reached_vals</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">reached_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">reached_vals</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"failed_next"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">failed_vals</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">failed_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">failed_vals</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Netherlands eScience Center
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=fc837d61"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

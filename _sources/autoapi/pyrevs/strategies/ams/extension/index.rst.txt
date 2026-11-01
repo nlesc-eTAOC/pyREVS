@@ -1,0 +1,200 @@
+pyrevs.strategies.ams.extension
+===============================
+
+.. py:module:: pyrevs.strategies.ams.extension
+
+.. autoapi-nested-parse::
+
+   An extension class for the AMS strategy.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.extension.T_Noise
+   pyrevs.strategies.ams.extension.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.extension.AMSDatabaseExtension
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: AMSDatabaseExtension
+
+   Bases: :py:obj:`pyrevs.database.StrategyDatabaseExtension`
+
+
+   An extension class for the AMS strategy.
+
+   :ivar _nsplitting: maximum number of splitting iterations
+   :ivar _ams_db: an instance of AMSDB, extending the SQL database
+
+
+
+   .. py:method:: initialize(nsplitting: int, tdb: pyrevs.database.Database) -> None
+
+      Initialize the AMS database extension.
+
+      :param nsplitting: maximum number of splitting iterations
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: initialize_from_database(tdb: pyrevs.database.Database) -> None
+
+      Initialize the AMS database extension.
+
+      :param tdb: the core trajectory database
+
+
+
+   .. py:method:: serialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: deserialize() -> None
+
+      Serialize the extension.
+
+
+
+   .. py:method:: k_split() -> int
+
+      Get the current splitting iteration index.
+
+      The current splitting iteration index is equal to the
+      ksplit + bias (number of branching event in the last iteration)
+      entries of last entry in the SQL db table
+
+      :returns: Internal splitting iteration index
+
+
+
+   .. py:method:: init_ensemble_done() -> bool
+
+      Get the initial ensemble status flag.
+
+      :returns: the flag indicating that the initial ensemble is finished
+
+
+
+   .. py:method:: set_init_ensemble_flag(status: bool) -> None
+
+      Change the initial ensemble status flag.
+
+      :param status: the new status
+
+
+
+   .. py:method:: get_ongoing() -> list[int] | None
+
+      Get the list of ongoing trajectories if any.
+
+      :returns: Either a list trajectories or None if nothing was left to do
+
+
+
+   .. py:method:: weights() -> numpy.typing.NDArray[numpy.number]
+
+      Splitting iterations weights.
+
+
+
+   .. py:method:: mark_last_splitting_iteration_as_done() -> None
+
+      Flag the last splitting iteration as done.
+
+
+
+   .. py:method:: get_iteration_count() -> int
+
+      Get the number of splitting iteration stored.
+
+      :returns: The length of the SplittingIterations table
+
+
+
+   .. py:method:: append_splitting_iteration_data(ksplit: int, bias: int, discarded_ids: list[int], ancestor_ids: list[int], min_vals: list[float], min_max: list[float]) -> None
+
+      Append a set of splitting data to internal list.
+
+      :param ksplit: The splitting iteration index
+      :param bias: The number of restarted trajectories, also ref. to as bias
+      :param discarded_ids: The list of discarded trajectory ids
+      :param ancestor_ids: The list of trajectories used to restart (ancestors)
+      :param min_vals: The list of minimum values
+      :param min_max: The score minimum and maximum values
+
+      :raises ValueError if the provided ksplit is incompatible with the db state:
+
+
+
+   .. py:method:: update_splitting_iteration_data(ksplit: int, bias: int, discarded_ids: list[int], ancestor_ids: list[int], min_vals: list[float], min_max: list[float]) -> None
+
+      Update the last set of splitting data to internal list.
+
+      :param ksplit: The splitting iteration index
+      :param bias: The number of restarted trajectories, also ref. to as bias
+      :param discarded_ids: The list of discarded trajectory ids
+      :param ancestor_ids: The list of trajectories used to restart (ancestors)
+      :param min_vals: The list of minimum values
+      :param min_max: The score minimum and maximum values
+
+      :raises ValueError if the provided ksplit is incompatible with the db state:
+
+
+
+   .. py:method:: update_trajectories_weights() -> None
+
+      Update the weights of all the trajectories.
+
+      Using the the current splitting iteration weight.
+
+
+
+   .. py:method:: get_event_probability() -> float
+
+      Return the event probability.
+
+
+
+   .. py:method:: plot_min_max_span(fname: str | None = None) -> None
+
+      Plot the evolution of the ensemble min/max during iterations.
+
+
+
+   .. py:method:: get_trajectory_active_at_k(k_in: int) -> list[pyrevs.trajectory.Trajectory[T_Noise, T_State]]
+
+      Return the list of trajectory active at a given splitting iteration.
+
+      To explore the ensemble evolution during splitting iterations, it is
+      useful to reconstruct the list of active trajectories at the beginning
+      of any given splitting iteration.
+
+      Note that k here is not the splitting index, but the iteration index.
+      Since more than one child can be spawned at each splitting iteration,
+      the two might differ.
+
+      :param k_in: the index of the splitting iteration
+
+      :returns: The list of trajectories active at the beginning of iteration k
+
+
+

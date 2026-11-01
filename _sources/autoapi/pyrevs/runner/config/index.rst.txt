@@ -1,0 +1,98 @@
+pyrevs.runner.config
+====================
+
+.. py:module:: pyrevs.runner.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.runner.config.DaskConfig
+   pyrevs.runner.config.RunnerConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: DaskConfig
+
+   Dask configuration.
+
+
+   .. py:attribute:: backend
+      :type:  str
+      :value: 'local'
+
+
+
+   .. py:attribute:: slurm_config_file
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: one_worker_with_scheduler
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: queue
+      :type:  str
+      :value: 'regular'
+
+
+
+   .. py:attribute:: ntasks_per_job
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: ntasks_per_node
+      :type:  int
+      :value: -1
+
+
+
+   .. py:attribute:: ncores_per_worker
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: job_prologue
+      :type:  list[str]
+      :value: []
+
+
+
+   .. py:attribute:: worker_walltime
+      :type:  str
+      :value: '04:00:00'
+
+
+
+.. py:class:: RunnerConfig
+
+   Runner configuration.
+
+
+   .. py:attribute:: type
+      :type:  str
+      :value: 'asyncio'
+
+
+
+   .. py:attribute:: nworkers
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: dask_config
+      :type:  DaskConfig
+
+

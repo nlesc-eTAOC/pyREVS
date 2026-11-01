@@ -1,0 +1,138 @@
+pyrevs.utils.xmlutils
+=====================
+
+.. py:module:: pyrevs.utils.xmlutils
+
+.. autoapi-nested-parse::
+
+   A set of utility for XML serializing.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.utils.xmlutils.POD_cast_dict
+
+
+Exceptions
+----------
+
+.. autoapisummary::
+
+   pyrevs.utils.xmlutils.XMLUtilsError
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.utils.xmlutils.oneliner_ndarray
+   pyrevs.utils.xmlutils.manual_cast_snapshot
+   pyrevs.utils.xmlutils.manual_cast_snapshot_noise
+   pyrevs.utils.xmlutils.manual_cast
+   pyrevs.utils.xmlutils.manual_cast_str
+   pyrevs.utils.xmlutils.dict_to_xml
+   pyrevs.utils.xmlutils.xml_to_dict
+   pyrevs.utils.xmlutils.get_val_type
+   pyrevs.utils.xmlutils.new_element
+   pyrevs.utils.xmlutils.make_xml_snapshot
+   pyrevs.utils.xmlutils.read_xml_snapshot
+
+
+Module Contents
+---------------
+
+.. py:function:: oneliner_ndarray() -> collections.abc.Generator[Any, None, None]
+
+   Force ndarray print on a single line temporarily.
+
+
+.. py:exception:: XMLUtilsError
+
+   Bases: :py:obj:`Exception`
+
+
+   Exception class for the xmlutils.
+
+
+.. py:function:: manual_cast_snapshot(elem: xml.etree.ElementTree.Element) -> Any
+
+   Manually cast XML snapshot state.
+
+
+.. py:function:: manual_cast_snapshot_noise(elem: xml.etree.ElementTree.Element) -> Any
+
+   Manually cast XML snapshot noise.
+
+
+.. py:function:: manual_cast(elem: xml.etree.ElementTree.Element) -> Any
+
+   Manually cast XML elements reads.
+
+
+.. py:data:: POD_cast_dict
+   :type:  dict[str, collections.abc.Callable[..., Any]]
+
+.. py:function:: manual_cast_str(type_str: str, elem_text: str) -> Any
+
+   Manually cast from strings.
+
+
+.. py:function:: dict_to_xml(tag: str, d: dict[Any, Any]) -> xml.etree.ElementTree.Element
+
+   Return an Element from a dictionary.
+
+   :param tag: a root tag
+   :param d: a dictionary
+
+
+.. py:function:: xml_to_dict(elem: xml.etree.ElementTree.Element | None) -> dict[Any, Any]
+
+   Return an dictionary an Element.
+
+   :param elem: an etree element
+
+   :returns: a dictionary containing the element entries
+
+
+.. py:function:: get_val_type(val: Any) -> str
+
+   Return the type of val.
+
+   :param val: a value
+
+   :returns: val type
+
+
+.. py:function:: new_element(key: str, val: Any) -> xml.etree.ElementTree.Element
+
+   Return an Element from two args.
+
+   :param key: the element key
+   :param val: the element value
+
+   :returns: an ElementTree element
+
+
+.. py:function:: make_xml_snapshot(idx: int, time: float, score: float, noise: Any, state: Any) -> xml.etree.ElementTree.Element
+
+   Return a snapshot in XML element format.
+
+   :param idx: snapshot index
+   :param time: the time stamp
+   :param score: the snapshot score function
+   :param noise: the stochastic noise
+   :param state: the associated state
+
+
+.. py:function:: read_xml_snapshot(snap: xml.etree.ElementTree.Element) -> tuple[float, float, Any, Any]
+
+   Return snapshot data from an XML snapshot element.
+
+   :param snap: an XML snapshot element
+
+

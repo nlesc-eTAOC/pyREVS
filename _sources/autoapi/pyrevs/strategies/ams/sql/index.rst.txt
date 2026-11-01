@@ -1,0 +1,222 @@
+pyrevs.strategies.ams.sql
+=========================
+
+.. py:module:: pyrevs.strategies.ams.sql
+
+.. autoapi-nested-parse::
+
+   An extension class for the AMS data as an SQL database using SQLAlchemy.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.sql.SplittingIterations
+   pyrevs.strategies.ams.sql.AMSDB
+
+
+Module Contents
+---------------
+
+.. py:class:: SplittingIterations
+
+   Bases: :py:obj:`pyrevs.core.CoreBase`
+
+
+   A table storing the splitting iterations.
+
+
+   .. py:attribute:: id
+      :type:  sqlalchemy.orm.Mapped[int]
+
+
+   .. py:attribute:: split_id
+      :type:  sqlalchemy.orm.Mapped[int]
+
+
+   .. py:attribute:: bias
+      :type:  sqlalchemy.orm.Mapped[int]
+
+
+   .. py:attribute:: weight
+      :type:  sqlalchemy.orm.Mapped[float]
+
+
+   .. py:attribute:: discarded_traj_ids
+      :type:  sqlalchemy.orm.Mapped[list[int]]
+
+
+   .. py:attribute:: ancestor_traj_ids
+      :type:  sqlalchemy.orm.Mapped[list[int]]
+
+
+   .. py:attribute:: min_vals
+      :type:  sqlalchemy.orm.Mapped[list[float]]
+
+
+   .. py:attribute:: min_max
+      :type:  sqlalchemy.orm.Mapped[list[float]]
+
+
+   .. py:attribute:: status
+      :type:  sqlalchemy.orm.Mapped[str]
+
+
+.. py:class:: AMSDB(engine: sqlalchemy.engine.Engine)
+
+   An extension of the core database holding AMS iterations repertoire.
+
+   Allows atomic access to an SQL database from all
+   the workers.
+
+   :ivar _file_name: The file name
+
+
+
+   .. py:method:: session_scope() -> collections.abc.Generator[sqlalchemy.orm.Session, None, None]
+
+      Provide a transactional scope around a series of operations.
+
+
+
+   .. py:method:: add_splitting_data(k: int, bias: int, weight: float, discarded_ids: list[int], ancestor_ids: list[int], min_vals: list[float], min_max: list[float]) -> None
+
+      Add a new splitting data to the DB.
+
+      :param k: The splitting iteration index
+      :param bias: The number of restarted trajectories
+      :param weight: Weight of the ensemble at the current iteration
+      :param discarded_ids: The list of discarded trajectory ids
+      :param ancestor_ids: The list of trajectories used to restart
+      :param min_vals: The list of minimum values
+      :param min_max: The score minimum and maximum values
+
+
+
+   .. py:method:: update_splitting_data(k: int, bias: int, weight: float, discarded_ids: list[int], ancestor_ids: list[int], min_vals: list[float], min_max: list[float]) -> None
+
+      Update the last splitting data row to the DB.
+
+      :param k: The splitting iteration index
+      :param bias: The number of restarted trajectories
+      :param weight: Weight of the ensemble at the current iteration
+      :param discarded_ids: The list of discarded trajectory ids
+      :param ancestor_ids: The list of trajectories used to restart
+      :param min_vals: The list of minimum values
+      :param min_max: The score minimum and maximum values
+
+
+
+   .. py:method:: mark_last_iteration_as_completed() -> None
+
+      Mark the last splitting iteration as complete.
+
+      By default, iteration data append to the SQL table with a state "locked"
+      to indicate an iteration being worked on. Upon completion, mark it as
+      "completed" otherwise the iteration is considered incomplete, i.e.
+      interrupted by some error or wall clock limit.
+
+
+
+   .. py:method:: discard_last_iteration() -> None
+
+      Discard the last iteration from the database.
+
+
+
+   .. py:method:: get_k_split() -> int
+
+      Get the current discarded trajectories counter.
+
+      :returns: The ksplit from the last entry in the SplittingIterations table
+
+
+
+   .. py:method:: check_new_min_of_maxes(newmin: float) -> None
+
+      Compare the incoming min to the last entry.
+
+      When running pyREVS with AMS, at each new iteration the ensemble minimum
+      of maximum should be strictly above the previous iteration's one.
+
+      :param newmin: the new minimum of maximums
+
+
+
+   .. py:method:: get_iteration_count() -> int
+
+      Get the number of splitting iteration stored.
+
+      :returns: The length of the SplittingIterations table
+
+
+
+   .. py:method:: fetch_splitting_data(k_id: int) -> tuple[int, int, float, list[int], list[int], list[float], list[float], str] | None
+
+      Get the splitting iteration data for a given iteration.
+
+      :param k_id: The iteration id
+
+      :returns: The splitting iteration data
+
+      :raises ValueError if the splitting iteration with the given id does not exist:
+
+
+
+   .. py:method:: get_ongoing() -> list[int] | None
+
+      Get the list of ongoing trajectories if any.
+
+      :returns: Either a list trajectories or None if nothing was left to do
+
+
+
+   .. py:method:: get_weights() -> numpy.typing.NDArray[numpy.number]
+
+      Read the weights from the database.
+
+      :returns: the weight for each splitting iteration as a numpy array
+
+
+
+   .. py:method:: get_biases() -> numpy.typing.NDArray[numpy.number]
+
+      Read the biases from the database.
+
+      :returns: the bias for each splitting iteration as a numpy array
+
+
+
+   .. py:method:: get_minmax() -> numpy.typing.NDArray[numpy.number]
+
+      Read the min/max from the database.
+
+      :returns: the 2D Numpy array with k_index, min, max
+
+
+
+   .. py:method:: clear_splitting_data() -> int
+
+      Delete the content of the splitting data table.
+
+      :returns: The number of entries deleted
+
+
+
+   .. py:method:: dump_file_json(json_file: str | None = None) -> None
+
+      Dump the content of the trajectory table to a json file.
+
+      :param json_file: an optional file name (or path) to dump the data to
+
+
+
+   .. py:method:: close() -> None
+
+      Dispose of the engine and clear connections.
+
+
+

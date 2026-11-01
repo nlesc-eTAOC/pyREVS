@@ -1,0 +1,30 @@
+pyrevs.utils.dbutils
+====================
+
+.. py:module:: pyrevs.utils.dbutils
+
+.. autoapi-nested-parse::
+
+   A set of utility functions for database operations.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.utils.dbutils.prepare_database_path
+
+
+Module Contents
+---------------
+
+.. py:function:: prepare_database_path(path: pathlib.Path, restart: bool) -> None
+
+   Archive a database if it already exists.
+
+   :param path: the path to the database
+   :param restart: the database access mode
+
+

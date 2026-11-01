@@ -1,0 +1,64 @@
+pyrevs.trajectory.config
+========================
+
+.. py:module:: pyrevs.trajectory.config
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.trajectory.config.TrajectoryConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: TrajectoryConfig
+
+   Trajectory configuration.
+
+
+   .. py:attribute:: step_size
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: end_time
+      :type:  float
+      :value: -1.0
+
+
+
+   .. py:attribute:: targetscore
+      :type:  float
+      :value: 0.95
+
+
+
+   .. py:attribute:: sparse_freq
+      :type:  int
+      :value: 1
+
+
+
+   .. py:attribute:: sparse_start
+      :type:  int
+      :value: 0
+
+
+
+   .. py:attribute:: chkfile_dump_all
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: validate() -> None
+
+      Validate trajectory configuration.
+
+
+

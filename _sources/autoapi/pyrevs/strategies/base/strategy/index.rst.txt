@@ -1,0 +1,122 @@
+pyrevs.strategies.base.strategy
+===============================
+
+.. py:module:: pyrevs.strategies.base.strategy
+
+.. autoapi-nested-parse::
+
+   Defines the generic interface for sampling strategies.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.base.strategy.T
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.base.strategy.BaseSamplingStrategy
+
+
+Module Contents
+---------------
+
+.. py:data:: T
+
+.. py:class:: BaseSamplingStrategy
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   An interface for all rare-event algorithms.
+
+   Define the common interface for sampling strategies within
+   the sampler object.
+
+   A registry is used to store all available strategies.
+   It is managed using a decorator and entry_points.
+
+   Subclasses must implement the following methods:
+   - :meth:`sample`
+   - :meth:`out_of_time`
+
+
+   .. py:method:: register(name: str) -> collections.abc.Callable[[type[T]], type[T]]
+      :classmethod:
+
+
+      Register a new strategy.
+
+      :param name: the strategy name
+
+
+
+   .. py:method:: create(name: str, *args: Any, **kwargs: Any) -> BaseSamplingStrategy
+      :classmethod:
+
+
+      Instantiate a strategy out of the registry.
+
+      :param name: the strategy name
+      :param \*args: positional arguments
+      :param \*\*kwargs: keyword arguments
+
+
+
+   .. py:method:: available_strategies() -> list[str]
+      :classmethod:
+
+
+      Return list of registered strategy names.
+
+
+
+   .. py:method:: sample(database: pyrevs.database.Database, walltime: float, plot_diags: bool) -> None
+
+      Run the sampling lifecycle.
+
+      This method handles walltime bookkeeping and delegates the
+      algorithm implementation to ``_execute_sampling``.
+
+      Subclasses must implement ``_execute_sampling`` and should
+      regularly check ``out_of_time()`` to terminate gracefully.
+
+      :param database: Database used for storing results.
+      :param walltime: Maximum allowed runtime in seconds.
+      :param plot_diags: Whether to enable diagnostic plotting.
+
+
+
+   .. py:method:: remaining_time() -> float
+
+      Return the remaining wallclock time.
+
+
+
+   .. py:method:: out_of_time() -> bool
+
+      Return true if insufficient walltime remains.
+
+
+
+   .. py:method:: elapsed_time() -> float
+
+      Return the elapsed wallclock time.
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+      :abstractmethod:
+
+
+      Initialize the schema of the database.
+
+
+

@@ -1,0 +1,214 @@
+pyrevs.core.fmodel
+==================
+
+.. py:module:: pyrevs.core.fmodel
+
+.. autoapi-nested-parse::
+
+   A base class for the stochastic forward model.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.core.fmodel.T_Noise
+   pyrevs.core.fmodel.T_State
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.fmodel.ForwardModelBaseClass
+
+
+Module Contents
+---------------
+
+.. py:data:: T_Noise
+
+.. py:data:: T_State
+
+.. py:class:: ForwardModelBaseClass(a_id: int, deterministic: bool, params: dict[str, Any] | None = None, workdir: pathlib.Path | None = None)
+
+   Bases: :py:obj:`abc.ABC`, :py:obj:`Generic`\ [\ :py:obj:`T_Noise`\ , :py:obj:`T_State`\ ]
+
+
+   A base class for the stochastic forward model.
+
+   pyREVS relies on a separation of the stochastic model,
+   encapsulating the physics of interest, and the sampling
+   algorithm itself. The ForwardModelBaseClass defines
+   the API the sampling algorithm requires from the stochastic
+   model.
+
+   Concrete model classes must implement all the abstract
+   functions defined in this base class.
+
+   The base class handles some components needed by pyREVS,
+   so that the user does not have to ensure compatibility
+   with pyREVS requirements.
+
+   :ivar _noise: the noise to be used in the next model step
+   :ivar _step: the current stochastic step counter
+   :ivar _time: the current stochastic time
+   :ivar _workdir: the working directory
+
+
+
+   .. py:method:: advance(dt: float, need_end_state: bool) -> float
+
+      Base class advance function of the model.
+
+      This is the advance function called by pyREVS internals. It
+      handles updating the model time and step counter, as well as
+      reusing or generating noise only when needed.
+      It also handles exceptions.
+
+      :param dt: the time step size over which to advance
+      :param need_end_state: whether the step end state is needed
+
+      :returns: Some model will not do exactly dt (e.g. sub-stepping) return the actual dt
+
+
+
+   .. py:property:: noise
+      :type: T_Noise
+
+
+      Return the model's latest noise increment.
+
+
+   .. py:method:: clear() -> None
+
+      Destroy internal data.
+
+
+
+   .. py:method:: set_workdir(workdir: pathlib.Path) -> None
+
+      Setter of the model working directory.
+
+      :param workdir: the new working directory
+
+
+
+   .. py:method:: get_current_state() -> T_State
+      :abstractmethod:
+
+
+      Return the current state of the model.
+
+      Note that the return type is left to the concrete model definition.
+
+
+
+   .. py:method:: set_current_state(state: T_State) -> None
+      :abstractmethod:
+
+
+      Set the current state of the model.
+
+      :param state: the externally provide state
+
+
+
+   .. py:method:: score() -> float
+      :abstractmethod:
+
+
+      Return the model's current state score.
+
+      The score is a real.
+
+      :returns: the score associated with the current model state
+
+
+
+   .. py:method:: make_noise() -> T_Noise
+      :abstractmethod:
+
+
+      Return the model's latest noise increment.
+
+      Note that the noise type is left to the concrete model definition.
+
+      :returns: The model next noise increment
+
+
+
+   .. py:method:: post_trajectory_branching_hook(step: int, time: float, ancestor_workdir: str) -> None
+
+      Model post trajectory branching hook.
+
+      :param step: the current step counter
+      :param time: the time of the simulation
+      :param ancestor_workdir: the ancestor trajectory workdir
+
+
+
+   .. py:method:: post_trajectory_restore_hook(step: int, time: float) -> None
+
+      Model post trajectory restore hook.
+
+      :param step: the current step counter
+      :param time: the time of the simulation
+
+
+
+   .. py:method:: diagnostic_hook(dlabel: str, tid: int, score_level: float, old_snap: pyrevs.core.snapshot.Snapshot[T_Noise, T_State], new_snap: pyrevs.core.snapshot.Snapshot[T_Noise, T_State]) -> Any
+      :abstractmethod:
+
+
+      Diagnostic hook.
+
+      :param dlabel: the label of the diagnostic calling the hook
+      :param tid: the ID of the trjaectory calling
+      :param score_level: the score level crossed and triggering the call
+      :param old_snap: the snapshot at the beginning of the step
+      :param new_snap: the snapshot at the end of the step
+
+
+
+   .. py:method:: check_convergence(step: int, time: float, current_score: float, target_score: float) -> bool
+
+      Check if the model has converged.
+
+      This default implementation checks if the current score is
+      greater than or equal to the target score. The user can override
+      this method to implement a different convergence criterion.
+
+      :param step: the current step counter
+      :param time: the time of the simulation
+      :param current_score: the current score
+      :param target_score: the target score
+
+
+
+   .. py:method:: check_termination(step: int, time: float) -> bool
+
+      Check for trajectory termination.
+
+      This default always return False. The user can override
+      this method to implement a different termination criterion.
+      Note that simple termination criteria (e.g. end_time, score_min) are
+      handled elsewhere. This function should be used for more complex
+      termination criteria, e.g. entering a given region of the model phase space.
+
+      :param step: the current step counter
+      :param time: the time of the simulation
+
+
+
+   .. py:method:: name() -> str
+      :classmethod:
+
+
+      Return a the model name.
+
+
+

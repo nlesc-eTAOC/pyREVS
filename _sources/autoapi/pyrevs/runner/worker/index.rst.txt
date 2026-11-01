@@ -1,0 +1,103 @@
+pyrevs.runner.worker
+====================
+
+.. py:module:: pyrevs.runner.worker
+
+.. autoapi-nested-parse::
+
+   A set of functions used by pyREVS workers.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.runner.worker.get_coredb
+   pyrevs.runner.worker.update_trajectory_in_sql
+   pyrevs.runner.worker.traj_advance_with_exception
+   pyrevs.runner.worker.pool_worker
+   pyrevs.runner.worker.ms_worker
+   pyrevs.runner.worker.worker_async
+
+
+Module Contents
+---------------
+
+.. py:function:: get_coredb(trajdb_path: str) -> pyrevs.core.CoreDB
+
+   Return a handle to the SQL database of trajectories.
+
+   Opening the database is costly compared to the work done by a worker on
+   small models: the handle is cached in worker (child) processes, which only
+   live for the duration of a runner. It is not cached in the main process,
+   which might run several samplers on the same path, nor on Windows where open
+   handles might lock the database file.
+
+   :param trajdb_path: the path to the SQL database
+
+
+.. py:function:: update_trajectory_in_sql(traj: pyrevs.trajectory.Trajectory, trajdb: pyrevs.core.CoreDB | None = None, db_path: str | None = None) -> None
+
+   Wrapper for update SQL trajectory info.
+
+   :param trajdb: the SQL database to update
+   :param traj: the traj to get the information from
+   :param db_path: an optional pyREVS database path
+
+
+.. py:function:: traj_advance_with_exception(traj: pyrevs.trajectory.Trajectory, termination_criteria: list[pyrevs.strategies.base.TerminationCriterion], walltime: float, trajdb: pyrevs.core.CoreDB | None = None, db_path: str | None = None) -> pyrevs.trajectory.Trajectory
+
+   Advance a trajectory with exception handling.
+
+   :param traj: a trajectory
+   :param termination_criteria: a list of termination criterion for the advance call
+   :param walltime: the time limit to advance the trajectory
+   :param trajdb: a handle to the SQL database
+   :param db_path: an optional path to the run database
+
+   :returns: The updated trajectory
+
+
+.. py:function:: pool_worker(traj: pyrevs.trajectory.Trajectory, termination_criteria: list[pyrevs.strategies.base.TerminationCriterion], end_date: datetime.date, trajdb_path: str | None = None, db_path: str | None = None) -> pyrevs.trajectory.Trajectory
+
+   A worker to generate each initial trajectory.
+
+   :param traj: a trajectory
+   :param termination_criteria: a list of termination criterion for the advance call
+   :param end_date: the time limit to advance the trajectory
+   :param trajdb_path: an optional path to the SQL database
+   :param db_path: an optional path to the run database
+
+   :returns: The updated trajectory
+
+
+.. py:function:: ms_worker(from_traj: pyrevs.trajectory.Trajectory, rst_traj: pyrevs.trajectory.Trajectory, min_val: float, new_weight: float, termination_criteria: list[pyrevs.strategies.base.TerminationCriterion], end_date: datetime.date, trajdb_path: str | None = None, db_path: str | None = None) -> pyrevs.trajectory.Trajectory
+
+   A worker to restart trajectories.
+
+   :param from_traj: a trajectory to restart from
+   :param rst_traj: the trajectory being restarted
+   :param min_val: the value of the score function to restart from
+   :param new_weight: the weight of the new child trajectory
+   :param termination_criteria: a list of termination criterion for the advance call
+   :param end_date: the time limit to advance the trajectory
+   :param trajdb_path: a path to the SQL database
+   :param db_path: an optional path to the run database
+
+
+.. py:function:: worker_async(queue: asyncio.Queue[tuple[collections.abc.Callable[..., Any], pyrevs.trajectory.Trajectory, float, bool, str]], res_queue: asyncio.Queue[asyncio.Future[pyrevs.trajectory.Trajectory]], executor: concurrent.futures.Executor) -> None
+   :async:
+
+
+   An async worker for the asyncio taskrunner.
+
+   It wraps the call to one of the above worker functions
+   with access to the queue.
+
+   :param queue: a queue from which to get tasks
+   :param res_queue: a queue to put the results in
+   :param executor: an executor to launch the work in
+
+

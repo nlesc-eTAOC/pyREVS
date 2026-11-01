@@ -1,0 +1,111 @@
+pyrevs.sampler
+==============
+
+.. py:module:: pyrevs.sampler
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pyrevs/sampler/config/index
+   /autoapi/pyrevs/sampler/sampler/index
+   /autoapi/pyrevs/sampler/system_config/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.sampler.SamplerConfig
+   pyrevs.sampler.RareEventSampler
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyrevs.sampler.build_sampler
+
+
+Package Contents
+----------------
+
+.. py:class:: SamplerConfig
+
+   Sampler configuration.
+
+
+   .. py:attribute:: strategy
+      :type:  str
+      :value: 'ams'
+
+
+
+   .. py:attribute:: deterministic
+      :type:  bool
+      :value: False
+
+
+
+.. py:class:: RareEventSampler(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, strategy: pyrevs.strategies.base.BaseSamplingStrategy, database: pyrevs.database.Database)
+
+   The top-level interface for rare event sampling.
+
+   This class provides a user-facing entry point to perform rare event
+   sampling using a specified :class:`BaseSamplingStrategy`.
+   It is responsible for:
+
+   - Parsing configuration from a TOML input file
+   - Initializing logging
+   - Instanciating the proper sampling strategy
+   - Managing global runtime parameters (e.g., walltime)
+   - Setting up the database
+   - Running the sampling strategy
+
+   :ivar _config: Configuration parameters parsed from the input file
+   :vartype _config: Config
+   :ivar _strategy: The sampling strategy
+
+   :vartype _strategy: BaseSamplingStrategy
+
+   The configuration file is also passed to the logging and strategy setup routine.
+
+
+   .. py:method:: run() -> None
+
+      Execute the rare event sampling procedure.
+
+      This method starts the sampling process by delegating execution to
+      the configured ``BaseSamplingStrategy``.
+
+      .. rubric:: Notes
+
+      This method is typically the main entry point after initialization.
+      At this point, it does not return a value; results are expected to be stored in the
+      database or written to disk by the strategy.
+      Future extensions will allow to perform several runs (possibly in parallel)
+
+
+
+   .. py:property:: database
+      :type: pyrevs.database.Database
+
+
+      Access the sampling database.
+
+
+.. py:function:: build_sampler(fmodel_t: Any, a_args: list[str] | None = None) -> RareEventSampler
+
+   Instantiate the top-level sampler.
+
+   :param fmodel_t: Forward model type
+   :param a_args: optional list of options
+
+   :returns: Ready-to-run RareEventSampler
+
+

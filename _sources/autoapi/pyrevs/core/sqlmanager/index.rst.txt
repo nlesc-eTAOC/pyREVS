@@ -1,0 +1,55 @@
+pyrevs.core.sqlmanager
+======================
+
+.. py:module:: pyrevs.core.sqlmanager
+
+.. autoapi-nested-parse::
+
+   A base class for pyREVS SQL databases.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.sqlmanager.BaseSQLManager
+
+
+Module Contents
+---------------
+
+.. py:class:: BaseSQLManager(file_name: str, base_metadata: sqlalchemy.MetaData, in_memory: bool = False, ro_mode: bool = False)
+
+   A base class to handle SQLAlchemy engine and session boilerplate.
+
+
+   .. py:method:: session_scope() -> collections.abc.Generator[sqlalchemy.orm.Session, None, None]
+
+      Provide a transactional scope around a series of operations.
+
+
+
+   .. py:method:: name() -> str
+
+      Access the DB file name.
+
+      :returns: the database name, empty string if in-memory
+
+
+
+   .. py:method:: engine() -> sqlalchemy.engine.Engine
+
+      Access the DB engine.
+
+      :returns: the database engine
+
+
+
+   .. py:method:: close() -> None
+
+      Dispose of the engine and clear connections.
+
+
+

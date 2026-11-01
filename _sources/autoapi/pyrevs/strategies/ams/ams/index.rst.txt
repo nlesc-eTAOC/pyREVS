@@ -1,0 +1,161 @@
+pyrevs.strategies.ams.ams
+=========================
+
+.. py:module:: pyrevs.strategies.ams.ams
+
+.. autoapi-nested-parse::
+
+   The (T)AMS sampling strategy.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.ams.STALL_TOL
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.strategies.ams.ams.AMS
+
+
+Module Contents
+---------------
+
+.. py:data:: STALL_TOL
+   :value: 1e-10
+
+
+.. py:class:: AMS(fmodel_t: Any, runtime_cfg: pyrevs.core.RuntimeConfig, runner_cfg: pyrevs.runner.RunnerConfig, strategy_cfg: pyrevs.strategies.ams.config.AMSConfig, deterministic: bool)
+
+   Bases: :py:obj:`pyrevs.strategies.base.BaseSamplingStrategy`
+
+
+   A strategy class implementing (T)AMS.
+
+   The interface to (T)AMS, implementing the main steps of
+   the algorithm.
+
+   Initialization of the (T)AMS class requires a forward model
+   type which encapsulate all the model-specific code, and
+   an optional list of options.
+
+   The algorithm is roughly divided in two steps:
+   1. Initialization of the trajectory ensemble
+   2. Splitting iterations
+
+   Separate control of the parallelism is provided for
+   both steps.
+
+   All the algorithm data are contained in the (T)AMS database.
+   For control purposes, a walltime limit is also provided. It is
+   passed to working and lead to the termination of the algorithm
+   in a state that can be saved to disk and restarted at a later stage.
+
+   :ivar _fmodel_t: the forward model type
+   :ivar _config: the config object
+   :ivar _wallTime: the walltime limit
+   :ivar _init_ensemble_only: whether or not to stop after initializing the trajectory ensemble
+
+
+
+   .. py:method:: generate_trajectory_ensemble(tdb: pyrevs.database.Database) -> None
+
+      Schedule the generation of an ensemble of stochastic trajectories.
+
+      Loop over all the trajectories in the database and schedule
+      advancing them to either end time or convergence with the
+      runner.
+
+      The runner will use the number of workers specified in the
+      input file under the runner section.
+
+      :param tdb: the AMS database
+
+      :raises Error if the runner fails:
+
+
+
+   .. py:method:: check_exit_splitting_loop(tdb: pyrevs.database.Database, k: int, k_it: int) -> tuple[bool, numpy.typing.NDArray[numpy.number]]
+
+      Check for exit criterion of the splitting loop.
+
+      :param tdb: the AMS database
+      :param k: counter of discarded trajectories
+      :param k_it: loop counter
+
+      :returns: bool to trigger splitting loop break
+                array of maximas across all trajectories
+
+
+
+   .. py:method:: finish_ongoing_splitting(tdb: pyrevs.database.Database) -> None
+
+      Check and finish unfinished splitting iterations.
+
+      If the run was interrupted during a splitting iteration,
+      the branched trajectories might not have terminated yet. In that case,
+      a list of trajectories to finish is listed in the database.
+
+
+
+   .. py:method:: get_restart_at_random(tdb: pyrevs.database.Database, min_idx_list: list[int]) -> list[int]
+
+      Get a list of trajectory index to restart from at random.
+
+      Select trajectories to restart from among the ones not
+      in min_idx_list.
+
+      :param tdb: the AMS database
+      :param min_idx_list: list of trajectory index to restart from
+
+      :returns: list of trajectory index to restart from
+
+
+
+   .. py:method:: do_multilevel_splitting(tdb: pyrevs.database.Database, plot_diags: bool) -> None
+
+      Schedule splitting of the initial ensemble of stochastic trajectories.
+
+      Perform the multi-level splitting iterations, possibly restarting multiple
+      trajectories at each iterations. All the trajectories in an iterations are
+      advanced together, such that each iteration takes the maximum duration among
+      the branched trajectories.
+
+      If the walltime is exceeded, the splitting loop is stopped and ongoing
+      trajectories are flagged in the database in order to finish them upon
+      restart.
+
+      The runner will use the number of workers specified in the
+      input file under the runner section.
+
+      :param tdb: the AMS database
+      :param plot_diags: whether or not to plot diagnostics
+
+      :raises Error if the runner fails:
+
+
+
+   .. py:method:: compute_probability(tdb: pyrevs.database.Database, plot_diags: bool) -> float
+
+      Compute the probability using AMS.
+
+      :param tdb: the AMS database
+      :param plot_diags: whether or not to plot diagnostics
+
+      :returns: the rare-event probability
+
+
+
+   .. py:method:: initialize_database_schema(database: pyrevs.database.Database, diag_configs: dict[str, pyrevs.core.Config] | None) -> None
+
+      Initialize database core state.
+
+
+

@@ -1,0 +1,306 @@
+pyrevs.core.sqlcore
+===================
+
+.. py:module:: pyrevs.core.sqlcore
+
+.. autoapi-nested-parse::
+
+   A class for the core pyREVS data as an SQL database using SQLAlchemy.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyrevs.core.sqlcore.valid_statuses
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyrevs.core.sqlcore.CoreBase
+   pyrevs.core.sqlcore.Trajectory
+   pyrevs.core.sqlcore.ArchivedTrajectory
+   pyrevs.core.sqlcore.CoreDB
+
+
+Module Contents
+---------------
+
+.. py:class:: CoreBase
+
+   Bases: :py:obj:`sqlalchemy.orm.DeclarativeBase`
+
+
+   A base class for the tables.
+
+
+.. py:class:: Trajectory
+
+   Bases: :py:obj:`CoreBase`
+
+
+   A table storing the active trajectories.
+
+
+   .. py:attribute:: id
+      :type:  sqlalchemy.orm.Mapped[int]
+
+
+   .. py:attribute:: traj_file
+      :type:  sqlalchemy.orm.Mapped[str]
+
+
+   .. py:attribute:: t_metadata
+      :type:  sqlalchemy.orm.Mapped[dict]
+
+
+   .. py:attribute:: status
+      :type:  sqlalchemy.orm.Mapped[str]
+
+
+.. py:class:: ArchivedTrajectory
+
+   Bases: :py:obj:`CoreBase`
+
+
+   A table storing the archived trajectories.
+
+
+   .. py:attribute:: id
+      :type:  sqlalchemy.orm.Mapped[int]
+
+
+   .. py:attribute:: traj_file
+      :type:  sqlalchemy.orm.Mapped[str]
+
+
+   .. py:attribute:: t_metadata
+      :type:  sqlalchemy.orm.Mapped[dict]
+
+
+.. py:data:: valid_statuses
+   :value: ['locked', 'idle', 'completed']
+
+
+.. py:class:: CoreDB(file_name: str, in_memory: bool = False, ro_mode: bool = False)
+
+   Bases: :py:obj:`pyrevs.core.sqlmanager.BaseSQLManager`
+
+
+   A database holding pyREVS trajectories.
+
+   Allows atomic access to an SQL database from all
+   the workers.
+
+   Note: pyREVS works with Python indexing starting at 0,
+   while SQL indexing starts at 1. Trajectory ID is
+   updated accordingly when accessing/updating the DB.
+
+   :ivar _file_name: The file name
+
+
+
+   .. py:method:: add_trajectory(traj_file: str, metadata: dict) -> None
+
+      Add a new trajectory to the DB.
+
+      :param traj_file: The trajectory file of that trajectory
+      :param metadata: a dict with the metadata
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: update_trajectory(traj_id: int, traj_file: str, metadata: dict) -> None
+
+      Update a given trajectory data in the DB.
+
+      :param traj_id: The trajectory id
+      :param traj_file: The new trajectory file of that trajectory
+      :param metadata: a dict with the trajectory metadata
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: update_trajectory_file(traj_id: int, traj_file: str) -> None
+
+      Update the trajectory file of a given trajectory data in the DB.
+
+      :param traj_id: The trajectory id
+      :param traj_file: The new trajectory file of that trajectory
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: update_trajectory_weight(traj_id: int, weight: float) -> None
+
+      Update a given trajectory weight in the DB.
+
+      :param traj_id: The trajectory id
+      :param weight: the new trajectory weight
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: update_trajectory_weights(weights: dict[int, float]) -> None
+
+      Update the weight of several trajectories in the DB.
+
+      All the weights are updated in a single transaction.
+
+      :param weights: the new weight of each trajectory, keyed by trajectory id
+
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: lock_trajectory(traj_id: int, allow_completed_lock: bool = False) -> bool
+
+      Set the status of a trajectory to "locked" if possible.
+
+      :param traj_id: The trajectory id
+      :param allow_completed_lock: Allow to lock a "completed" trajectory
+
+      :returns: True if the trajectory was successfully locked, False otherwise
+
+      :raises ValueError if the trajectory with the given id does not exist:
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: mark_trajectory_as_completed(traj_id: int) -> None
+
+      Set the status of a trajectory to "completed" if possible.
+
+      :param traj_id: The trajectory id
+
+      :raises ValueError if the trajectory with the given id does not exist:
+      :raises SQLAlchemyError if the DB could not be accessed:
+
+
+
+   .. py:method:: release_trajectory(traj_id: int) -> None
+
+      Set the status of a trajectory to "idle" if possible.
+
+      :param traj_id: The trajectory id
+
+      :raises ValueError if the trajectory with the given id does not exist:
+
+
+
+   .. py:method:: get_trajectory_count() -> int
+
+      Get the number of trajectories in the DB.
+
+      :returns: The number of trajectories
+
+
+
+   .. py:method:: get_terminated_trajectory_count() -> int
+
+      Return the number of trajectories that have 'terminated' in their metadata.
+
+
+
+   .. py:method:: get_converged_trajectory_count() -> int
+
+      Return the number of trajectories that have 'converged' in their metadata.
+
+
+
+   .. py:method:: get_total_computed_steps() -> int
+
+      Sum the 'nstep_compute' field across all active and archived trajectories.
+
+
+
+   .. py:method:: fetch_trajectory(traj_id: int) -> tuple[str, dict]
+
+      Get the trajectory file of a trajectory.
+
+      :param traj_id: The trajectory id
+
+      :returns: A tuple with trajectory file as a str and the trajectory metadata as dict
+
+      :raises ValueError if the trajectory with the given id does not exist:
+
+
+
+   .. py:method:: check_trajectory_exist(traj_id: int) -> bool
+
+      Check if a trajectory exist for a given index.
+
+      :param traj_id: The trajectory id
+
+      :returns: True if the trajectory exist, False otherwise
+
+
+
+   .. py:method:: release_all_trajectories() -> None
+
+      Release all trajectories in the DB.
+
+
+
+   .. py:method:: archive_trajectory(traj_file: str, metadata: dict) -> None
+
+      Add a new trajectory to the archive container.
+
+      :param traj_file: The trajectory file of that trajectory
+      :param metadata: a dict with the traj metadata
+
+
+
+   .. py:method:: fetch_archived_trajectory(traj_id: int) -> tuple[str, dict]
+
+      Get the trajectory file of a trajectory in the archive.
+
+      :param traj_id: The trajectory id
+
+      :returns: A tuple with trajectory file as a str and the trajectory metadata as dict
+
+      :raises ValueError if the trajectory with the given id does not exist:
+
+
+
+   .. py:method:: get_archived_trajectory_count() -> int
+
+      Get the number of trajectories in the archive.
+
+      :returns: The number of trajectories
+
+
+
+   .. py:method:: discard_archived_trajectory(traj_id: int) -> None
+
+      Remove a trajectory from the archive.
+
+      :param traj_id: The trajectory id
+
+
+
+   .. py:method:: clear_archived_trajectories() -> int
+
+      Delete the content of the archived traj table.
+
+      :returns: The number of entries deleted
+
+
+
+   .. py:method:: dump_file_json(json_file: str | None = None) -> None
+
+      Dump the content of the trajectory table to a json file.
+
+      :param json_file: an optional file name (or path) to dump the data to
+
+
+
